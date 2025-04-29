@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- metas tags -->
+    <meta name="description" content="Transforme seus palpites em dinheiro com o Bolão Virtual.">
+    <meta name="keywords" content="bolao, brasileirao, virtual, premiacao, bolão virtual, bolão brasileirão">
+    <meta name="author" content="Hiago Souza">
+    <meta property="og:title" content="Bolão Virtual">
+    <meta property="og:description" content="Transforme seus palpites em dinheiro com o Bolão Virtual.">
+    <meta property="og:image" content="{% static 'img/Brasileirao.png' %}">
+    <meta property="og:url" content="http://bolaovirtual.site/">
+    <meta property="og:type" content="website"> <!-- Tipo de conteúdo (ex: 'website', 'article', etc.) -->
+
+
+    <title>{% block title %} {% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="home-page">
+    {% include 'auxiliar/header.html' %}
+
+    {% block body %}
+    {% endblock %}
+
+    {% include 'auxiliar/footer.html' %}
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/shop-scripts.js' %}"></script>
+    <script src="{% static 'js/pagamento.js' %}"></script>
+    <script src="{% static 'js/comunidade.js' %}"></script>
+    <script src="{% static 'js/premios.js' %}"></script>
+</body>
+
+</html>

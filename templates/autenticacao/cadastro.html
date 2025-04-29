@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro - Bolão Virtual</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-page register-page">
+  <div class="auth-container">
+    <div class="auth-header">
+      <h1><i class="fas fa-trophy"></i> Bolão Virtual</h1>
+      <p>Crie sua conta e comece a apostar</p>
+    </div>
+
+    <form class="auth-form">
+      <div class="form-group">
+        <label for="register-name"><i class="fas fa-user"></i> Nome Completo</label>
+        <input type="text" id="register-name" placeholder="Seu nome completo" required>
+      </div>
+
+      <div class="form-group">
+        <label for="register-username"><i class="fas fa-user-tag"></i> Nome de Usuário</label>
+        <input type="text" id="register-username" placeholder="Escolha um nome de usuário" required>
+      </div>
+
+      <div class="form-group">
+        <label for="register-email"><i class="fas fa-envelope"></i> E-mail</label>
+        <input type="email" id="register-email" placeholder="seu@email.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="register-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</label>
+        <input type="tel" id="register-whatsapp" placeholder="(00) 00000-0000" required>
+      </div>
+
+      <div class="form-group">
+        <label for="register-password"><i class="fas fa-lock"></i> Senha</label>
+        <div class="password-input">
+          <input type="password" id="register-password" placeholder="Crie uma senha forte" required>
+          <button type="button" class="toggle-password" aria-label="Mostrar senha">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+        <div class="password-strength">
+          <span class="strength-bar"></span>
+          <span class="strength-bar"></span>
+          <span class="strength-bar"></span>
+          <span class="strength-text">Força da senha</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="register-confirm-password"><i class="fas fa-lock"></i> Confirmar Senha</label>
+        <div class="password-input">
+          <input type="password" id="register-confirm-password" placeholder="Digite a senha novamente" required>
+          <button type="button" class="toggle-password" aria-label="Mostrar senha">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group terms-group">
+        <label class="terms-label">
+          <!-- <input type="checkbox" id="accept-terms" required> -->
+          <span class="checkmark"></span>
+          Eu concordo com os <a href="/termos" target="_blank">Termos de Serviço</a> e <a href="/privacidade" target="_blank">Política de Privacidade</a>
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-auth">
+        <i class="fas fa-user-plus"></i> Criar Conta
+      </button>
+
+      <div class="auth-footer">
+        <p>Já tem uma conta? <a href="/login">Faça login</a></p>
+      </div>
+    </form>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+{% extends 'auxiliar/base.html' %}
+{% load static %}
+{% block title %} Bolão virtual | Troféus {% endblock %}
+
+{% block body %}
+
+<section class="rewards-page">
+
+  <main class="container">
+    <section class="rewards-hero">
+      <h1><i class="fas fa-award"></i> Prêmios e Conquistas</h1>
+      <p>Seu progresso e reconhecimento no Bolão Virtual</p>
+      <div class="user-level">
+        <div class="level-progress">
+          <div class="progress-bar" style="width: 65%"></div>
+        </div>
+        <div class="level-info">
+          <span class="current-level">Nível 7</span>
+          <span class="points-to-next">215/1000 pontos para o próximo nível</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="rewards-tabs">
+      <button class="tab-btn active" data-tab="conquistas">Minhas Conquistas</button>
+      <button class="tab-btn" data-tab="disponiveis">Prêmios Disponíveis</button>
+      <button class="tab-btn" data-tab="trofeus">Troféus</button>
+    </div>
+
+    <div class="tab-content active" id="conquistas">
+      <h2><i class="fas fa-medal"></i> Badges e Emblemas Conquistados</h2>
+
+      <div class="achievements-grid">
+        <div class="achievement-card unlocked">
+          <div class="achievement-badge">
+            <i class="fas fa-bolt"></i>
+            <div class="badge-level">Ouro</div>
+          </div>
+          <div class="achievement-info">
+            <h3>Palpiteiro Relâmpago</h3>
+            <p>Enviou palpites para 50 jogos consecutivos antes do prazo</p>
+            <div class="achievement-meta">
+              <span><i class="fas fa-calendar-alt"></i> Conquistado em: 15/08/2023</span>
+              <span><i class="fas fa-users"></i> 12% dos usuários têm este badge</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="achievement-card unlocked">
+          <div class="achievement-badge">
+            <i class="fas fa-crosshairs"></i>
+            <div class="badge-level">Prata</div>
+          </div>
+          <div class="achievement-info">
+            <h3>Precisão Cirúrgica</h3>
+            <p>Acertou o placar exato em 10 jogos</p>
+            <div class="achievement-meta">
+              <span><i class="fas fa-calendar-alt"></i> Conquistado em: 05/07/2023</span>
+              <span><i class="fas fa-users"></i> 25% dos usuários têm este badge</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="achievement-card unlocked">
+          <div class="achievement-badge">
+            <i class="fas fa-chess-queen"></i>
+            <div class="badge-level">Bronze</div>
+          </div>
+          <div class="achievement-info">
+            <h3>Estratégia de Mestre</h3>
+            <p>Acertou o vencedor em 20 jogos consecutivos</p>
+            <div class="achievement-meta">
+              <span><i class="fas fa-calendar-alt"></i> Conquistado em: 22/06/2023</span>
+              <span><i class="fas fa-users"></i> 45% dos usuários têm este badge</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="history-title"><i class="fas fa-history"></i> Histórico de Conquistas</h3>
+      <div class="achievements-history">
+        <div class="history-item">
+          <div class="history-icon">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <div class="history-details">
+            <h4>Você alcançou o nível 7!</h4>
+            <p>Por acumular 2150 pontos totais no bolão</p>
+            <span class="history-date">10/09/2023</span>
+          </div>
+        </div>
+        <div class="history-item">
+          <div class="history-icon">
+            <i class="fas fa-medal"></i>
+          </div>
+          <div class="history-details">
+            <h4>Badge "Previsão Perfeita" desbloqueado</h4>
+            <p>Por acertar 5 placares exatos consecutivos</p>
+            <span class="history-date">28/08/2023</span>
+          </div>
+        </div>
+        <div class="history-item">
+          <div class="history-icon">
+            <i class="fas fa-star"></i>
+          </div>
+          <div class="history-details">
+            <h4>Top 3 na semana</h4>
+            <p>Por ficar entre os 3 melhores palpiteiros da semana</p>
+            <span class="history-date">14/08/2023</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="disponiveis">
+      <h2><i class="fas fa-gift"></i> Prêmios Disponíveis para Conquistar</h2>
+
+      <div class="available-filters">
+        <div class="filter-group">
+          <label for="type-filter">Filtrar por:</label>
+          <select id="type-filter" class="reward-select">
+            <option value="all">Todos</option>
+            <option value="badges">Badges</option>
+            <option value="rewards">Prêmios</option>
+            <option value="bonuses">Bônus</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="difficulty-filter">Dificuldade:</label>
+          <select id="difficulty-filter" class="reward-select">
+            <option value="all">Todas</option>
+            <option value="easy">Fácil</option>
+            <option value="medium">Médio</option>
+            <option value="hard">Difícil</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="available-grid">
+        <div class="available-card">
+          <div class="available-badge locked">
+            <i class="fas fa-brain"></i>
+            <div class="badge-level">Diamante</div>
+          </div>
+          <div class="available-info">
+            <h3>Gênio da Bola</h3>
+            <p>Acumule 100 palpites exatos</p>
+            <div class="progress-container">
+              <span>Progresso: 32/100</span>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 32%"></div>
+              </div>
+            </div>
+            <div class="reward-details">
+              <span><i class="fas fa-users"></i> Apenas 5% conquistaram</span>
+              <span><i class="fas fa-trophy"></i> +500 pontos</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="available-card">
+          <div class="available-badge locked">
+            <i class="fas fa-calendar-check"></i>
+            <div class="badge-level">Ouro</div>
+          </div>
+          <div class="available-info">
+            <h3>Frequência Máxima</h3>
+            <p>Participe de 10 rodadas consecutivas</p>
+            <div class="progress-container">
+              <span>Progresso: 6/10</span>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 60%"></div>
+              </div>
+            </div>
+            <div class="reward-details">
+              <span><i class="fas fa-users"></i> 18% conquistaram</span>
+              <span><i class="fas fa-coins"></i> +100 moedas</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="available-card">
+          <div class="available-badge locked">
+            <i class="fas fa-chess-knight"></i>
+            <div class="badge-level">Prata</div>
+          </div>
+          <div class="available-info">
+            <h3>Estratégia Vencedora</h3>
+            <p>Fique entre os 3 primeiros em qualquer torneio</p>
+            <div class="progress-container">
+              <span>Progresso: 0/1</span>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%"></div>
+              </div>
+            </div>
+            <div class="reward-details">
+              <span><i class="fas fa-users"></i> 22% conquistaram</span>
+              <span><i class="fas fa-star"></i> Emblema exclusivo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="trofeus">
+      <h2><i class="fas fa-trophy"></i> Seus Troféus Virtuais</h2>
+      <p class="trophies-description">Colecione troféus por conquistas especiais no Bolão Virtual</p>
+
+      <div class="trophies-grid">
+        <div class="trophy-card unlocked">
+          <div class="trophy-icon gold">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <div class="trophy-info">
+            <h3>Campeão do Mês</h3>
+            <p>Termine como 1º colocado no ranking mensal</p>
+            <span class="trophy-date">Conquistado em: Agosto/2023</span>
+          </div>
+        </div>
+
+        <div class="trophy-card locked">
+          <div class="trophy-icon silver">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <div class="trophy-info">
+            <h3>Vice-Campeão</h3>
+            <p>Termine como 2º colocado no ranking mensal</p>
+            <span class="trophy-progress">Seu melhor: 3º lugar</span>
+          </div>
+        </div>
+
+        <div class="trophy-card locked">
+          <div class="trophy-icon bronze">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <div class="trophy-info">
+            <h3>Terceiro Lugar</h3>
+            <p>Termine como 3º colocado no ranking mensal</p>
+            <span class="trophy-progress">Seu melhor: 5º lugar</span>
+          </div>
+        </div>
+
+        <div class="trophy-card unlocked">
+          <div class="trophy-icon special">
+            <i class="fas fa-star"></i>
+          </div>
+          <div class="trophy-info">
+            <h3>Palpiteiro Ouro</h3>
+            <p>Acumule 80% de acertos em um mês com +20 palpites</p>
+            <span class="trophy-date">Conquistado em: Julho/2023</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="trophies-stats">
+        <div class="stat-box">
+          <div class="stat-value">4</div>
+          <div class="stat-label">Troféus Conquistados</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">12</div>
+          <div class="stat-label">Troféus Disponíveis</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">33%</div>
+          <div class="stat-label">Coleção Completa</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</section>
+{% endblock %}

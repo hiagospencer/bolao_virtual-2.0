@@ -1,0 +1,168 @@
+{% extends 'auxiliar/base.html' %}
+{% load static %}
+{% block title %} Bolão virtual | Home {% endblock %}
+
+{% block body %}
+    <main class="container">
+        <section class="rules-container">
+            <div class="rule-card">
+                <i class="fas fa-check-circle"></i>
+                <h3>Acerto do Vencedor/Empate</h3>
+                <p>Ganhe <strong>2 pontos</strong> por acertar o resultado da partida</p>
+            </div>
+
+            <div class="rule-card">
+                <i class="fas fa-bullseye"></i>
+                <h3>Placar Exato</h3>
+                <p>Ganhe <strong>3 pontos adicionais</strong> (total 5) por acertar o placar exato</p>
+            </div>
+
+            <div class="rule-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>Classificação</h3>
+                <p>Suba no ranking e concorra a prêmios em dinheiro via PIX</p>
+            </div>
+        </section>
+
+        <div class="ranking-container">
+            <div class="ranking-header">
+                <h2 class="section-title"><i class="fas fa-medal"></i> Classificação</h2>
+                <div class="ranking-actions">
+                    <a href="premios.html" class="btn btn-trophies"><i class="fas fa-trophy"></i> Ver Troféus</a>
+                    <a href="comunidade.html" class="btn btn-community"><i class="fas fa-users"></i> Comunidade</a>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th>Posição</th>
+                            <th>Jogador</th>
+                            <th >Variação</th>
+                            <th>Pontos</th>
+                            <th >Placar Exato</th>
+                            <th >Vitórias</th>
+                            <th >Conquistas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="first-place">
+                            <td>1 <i class="fas fa-medal gold"></i></td>
+                            <td>
+                                <div class="player-info">
+                                    <img src="img/perfil-null.png" alt="HiagoSouza" class="player-avatar">
+                                    <div class="player-details">
+                                        <span class="player-name">HiagoSouza</span>
+                                        <div class="player-badges">
+                                            <span class="badge gold" title="Top 1"><i class="fas fa-crown"></i></span>
+                                            <span class="badge streak" title="Sequência de 5 acertos"><i
+                                                    class="fas fa-bolt"></i> 5</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="no-change">—</span></td>
+                            <td>84</td>
+                            <td>10</td>
+                            <td>27</td>
+                            <td>
+                                <div class="achievement-icons">
+                                    <i class="fas fa-trophy" title="Campeão do Mês"></i>
+                                    <i class="fas fa-star" title="Palpiteiro Ouro"></i>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="second-place">
+                            <td>2 <i class="fas fa-medal silver"></i></td>
+                            <td>
+                                <div class="player-info">
+                                    <img src="img/perfil-null.png" alt="Jogador2" class="player-avatar">
+                                    <div class="player-details">
+                                        <span class="player-name">Jogador2</span>
+                                        <div class="player-badges">
+                                            <span class="badge silver" title="Top 3"><i class="fas fa-medal"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="up">↑2</span></td>
+                            <td>78</td>
+                            <td>8</td>
+                            <td>25</td>
+                            <td>
+                                <div class="achievement-icons">
+                                    <i class="fas fa-chess-queen" title="Estratégia de Mestre"></i>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="third-place">
+                            <td>3 <i class="fas fa-medal bronze"></i></td>
+                            <td>
+                                <div class="player-info">
+                                    <img src="img/perfil-null.png" alt="Jogador3" class="player-avatar">
+                                    <div class="player-details">
+                                        <span class="player-name">Jogador3</span>
+                                        <div class="player-badges">
+                                            <span class="badge bronze" title="Top 3"><i class="fas fa-medal"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="down">↓1</span></td>
+                            <td>75</td>
+                            <td>7</td>
+                            <td>24</td>
+                            <td>
+                                <div class="achievement-icons">
+                                    <i class="fas fa-crosshairs" title="Precisão Cirúrgica"></i>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Mais linhas de jogadores aqui -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="ranking-footer">
+                <a href="perfil.html" class="btn btn-my-position">
+                    <i class="fas fa-user"></i> Ver minha posição
+                </a>
+            </div>
+        </div>
+
+        <section class="prizes-section">
+            <h2><i class="fas fa-gift"></i> Premiações</h2>
+            <p>Quanto mais participantes, maiores os prêmios! Pagamentos via PIX ao final de cada bolão.</p>
+
+            <div class="prize-cards">
+                <div class="prize-card">
+                    <h3>1º Lugar</h3>
+                    <div class="prize-value">R$ 500</div>
+                    <p>+ Troféu virtual exclusivo</p>
+                    <div class="prize-badges">
+                        <span class="pix-badge"><i class="fas fa-qrcode"></i> PIX</span>
+                    </div>
+                </div>
+
+                <div class="prize-card">
+                    <h3>2º Lugar</h3>
+                    <div class="prize-value">R$ 300</div>
+                    <p>+ Medalha virtual</p>
+                    <div class="prize-badges">
+                        <span class="pix-badge"><i class="fas fa-qrcode"></i> PIX</span>
+                    </div>
+                </div>
+
+                <div class="prize-card">
+                    <h3>3º Lugar</h3>
+                    <div class="prize-value">R$ 150</div>
+                    <p>+ Medalha virtual</p>
+                    <div class="prize-badges">
+                        <span class="pix-badge"><i class="fas fa-qrcode"></i> PIX</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}

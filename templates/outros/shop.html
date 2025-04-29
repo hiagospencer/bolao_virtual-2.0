@@ -1,0 +1,154 @@
+{% extends 'auxiliar/base.html' %}
+{% load static %}
+{% block title %} Bolão virtual | Loja {% endblock %}
+
+{% block body %}
+
+<section class="shop-page">
+
+  <main class="container">
+    <section class="shop-hero">
+      <h1><i class="fas fa-store-alt"></i> Loja do Bolão</h1>
+      <p>Itens exclusivos para turbinar sua experiência</p>
+    </section>
+
+    <div class="shop-filters">
+      <div class="filter-group">
+        <label for="category-filter"><i class="fas fa-filter"></i> Categoria:</label>
+        <select id="category-filter" class="shop-select">
+          <option value="all">Todos os itens</option>
+          <option value="boosts">Boosts</option>
+          <option value="badges">Emblemas</option>
+          <option value="themes">Temas</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="sort-by"><i class="fas fa-sort"></i> Ordenar por:</label>
+        <select id="sort-by" class="shop-select">
+          <option value="popular">Mais populares</option>
+          <option value="price-asc">Preço: menor primeiro</option>
+          <option value="price-desc">Preço: maior primeiro</option>
+          <option value="newest">Mais recentes</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="shop-grid">
+      <!-- Exemplo de card de camisa -->
+  <div class="shop-item" data-category="camisas">
+    <div class="item-badge">Lançamento!</div>
+    <div class="item-image" style="background-color: #FFFFFF;">
+      <img src="https://static.netshoes.com.br/produtos/camiseta-flamengo-codification-masculina/06/D40-8125-006/D40-8125-006_zoom1.jpg?ts=1695699716&ims=544x" alt="Camisa do Flamengo 2023">
+    </div>
+    <div class="item-info">
+      <h3>Camisa Flamengo 2023</h3>
+      <div class="item-details">
+        <span class="item-size">Tamanhos: P, M, G, GG</span>
+        <span class="item-material">Material: 100% Poliéster</span>
+      </div>
+      <div class="item-price">
+        <span class="price">R$ 299,90</span>
+        <span class="original-price">R$ 349,90</span>
+      </div>
+      <button class="btn btn-add-to-cart">
+        <i class="fas fa-cart-plus"></i> Comprar
+      </button>
+    </div>
+  </div>
+
+    <div class="shop-item" data-category="camisas">
+      <div class="item-badge">Lançamento!</div>
+      <div class="item-image" style="background-color: #FFFFFF;">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRqBpq9GkH1XHI58WbWXtViUe-3dVAFx1o2w&s" alt="Camisa do Flamengo 2023">
+      </div>
+      <div class="item-info">
+        <h3>Camisa Vasco da Gama</h3>
+        <div class="item-details">
+          <span class="item-size">Tamanhos: P, M, G, GG</span>
+          <span class="item-material">Material: 100% Poliéster</span>
+        </div>
+        <div class="item-price">
+          <span class="price">R$ 299,90</span>
+          <span class="original-price">R$ 349,90</span>
+        </div>
+        <button class="btn btn-add-to-cart">
+          <i class="fas fa-cart-plus"></i> Comprar
+        </button>
+      </div>
+    </div>
+
+      <div class="shop-item" data-category="camisas">
+    <div class="item-badge">Lançamento!</div>
+    <div class="item-image" style="background-color: #FFFFFF;">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6ChwB9p36PAGxcryBmFmfcWxEmDW4Db_4yA&s" alt="Camisa do Flamengo 2023">
+    </div>
+    <div class="item-info">
+      <h3>Camisa do Corinthians</h3>
+      <div class="item-details">
+        <span class="item-size">Tamanhos: P, M, G, GG</span>
+        <span class="item-material">Material: 100% Poliéster</span>
+      </div>
+      <div class="item-price">
+        <span class="price">R$ 299,90</span>
+        <span class="original-price">R$ 349,90</span>
+      </div>
+      <button class="btn btn-add-to-cart">
+        <i class="fas fa-cart-plus"></i> Comprar
+      </button>
+    </div>
+  </div>
+
+  <div class="shop-item" data-category="camisas">
+    <div class="item-badge">Lançamento!</div>
+    <div class="item-image" style="background-color: #FFFFFF;">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRB3oJxz6nQwhy6rREbCttn3QH7-F4dGD-i9w&s" alt="Camisa do Flamengo 2023">
+    </div>
+    <div class="item-info">
+      <h3>Camisa Barcelona</h3>
+      <div class="item-details">
+        <span class="item-size">Tamanhos: P, M, G, GG</span>
+        <span class="item-material">Material: 100% Poliéster</span>
+      </div>
+      <div class="item-price">
+        <span class="price">R$ 299,90</span>
+        <span class="original-price">R$ 349,90</span>
+      </div>
+      <button class="btn btn-add-to-cart">
+        <i class="fas fa-cart-plus"></i> Comprar
+      </button>
+    </div>
+  </div>
+
+
+    <div class="cart-sidebar" id="cartSidebar">
+      <div class="cart-header">
+        <h3><i class="fas fa-shopping-cart"></i> Seu Carrinho</h3>
+        <button class="btn-close-cart" id="closeCart">&times;</button>
+      </div>
+      <div class="cart-items">
+        <!-- Itens serão adicionados dinamicamente -->
+        <div class="empty-cart">
+          <i class="fas fa-shopping-basket"></i>
+          <p>Seu carrinho está vazio</p>
+        </div>
+      </div>
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>Total:</span>
+          <span class="total-price">R$ 0,00</span>
+        </div>
+        <button class="btn btn-checkout" disabled>
+          <i class="fas fa-credit-card"></i> Finalizar Compra
+        </button>
+      </div>
+    </div>
+
+    <button class="btn btn-cart-toggle" id="toggleCart">
+      <i class="fas fa-shopping-cart"></i>
+      <span class="cart-count">0</span>
+    </button>
+  </main>
+</section>
+<script src="{% static 'shop-scripts.js' %}"></script>
+{% endblock %}

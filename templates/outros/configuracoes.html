@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações Administrativas - Bolão Virtual</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="admin-page">
+    <header class="main-header">
+        <div class="container">
+            <h1><i class="fas fa-trophy"></i> Bolão Virtual</h1>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Palpites <i class="fa-solid fa-caret-down"></i></a>
+                        <!-- Menu dropdown apenas para usuários logados -->
+                        <ul class="dropdown-menu" id="palpites-dropdown">
+                            <li><a href="palpites.html"><i class="fas fa-plus-circle"></i> Novo Palpite</a></li>
+                            <li><a href="meus_palpites.html"><i class="fas fa-history"></i> Meus Palpites</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="comunidade.html"><i class="fas fa-users"></i> Comunidade</a></li>
+                    <li><a href="perfil.html"><i class="fas fa-user"></i> Perfil</a></li>
+                    <li><a href="regras.html"><i class="fas fa-book"></i> Regras</a></li>
+                    <li><a href="shop.html"><i class="fas fa-shopping-cart"></i> Shop</a></li>
+                    <!-- Área do usuário (dinâmica) -->
+                    <div class="user-area" id="user-area">
+                        <!-- Estado não logado (padrão) -->
+                        <!-- <li><a href="login.html" class="btn-login"><i class="fas fa-sign-in-alt"></i> Entrar</a></li> -->
+                        <li><a href="cadastro.html" class="btn-register">Cadastre-se</a></li>
+                        <!-- <li><a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Sair</a></li> -->
+                    </div>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Menu Mobile -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+    <nav class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <img src="img/logo-brasileirao.png" alt="Bolão Virtual" class="mobile-logo">
+            <button class="mobile-menu-close" id="mobileMenuClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <ul class="mobile-nav-list">
+            <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li class="dropdown">
+                <a href="#"><i class="fas fa-clipboard-list"></i> Palpites <i class="fa-solid fa-caret-down"></i></a>
+                <!-- Menu dropdown apenas para usuários logados -->
+                <ul class="dropdown-menu" id="palpites-dropdown">
+                    <li><a href="palpites.html"><i class="fas fa-plus-circle"></i> Novo Palpite</a></li>
+                    <li><a href="meus_palpites.html"><i class="fas fa-history"></i> Meus Palpites</a></li>
+                </ul>
+            </li>
+            <li><a href="comunidade.html"><i class="fas fa-users"></i> Comunidade</a></li>
+            <li><a href="perfil.html"><i class="fas fa-user"></i> Perfil</a></li>
+            <li><a href="regras.html"><i class="fas fa-book"></i> Regras</a></li>
+            <li><a href="shop.html"><i class="fas fa-shopping-cart"></i> Shop</a></li>
+        </ul>
+
+        <div class="mobile-auth-buttons">
+            <a href="login_bolao.html" class="btn btn-mobile-login"><i class="fas fa-sign-in-alt"></i> Entrar</a>
+            <a href="cadastro.html" class="btn btn-mobile-register">Cadastre-se</a>
+        </div>
+    </nav>
+
+    <button type="button" class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <main class="container">
+        <div class="admin-alert">
+            <i class="fas fa-shield-alt"></i>
+            <strong>Área Restrita:</strong> Apenas administradores têm acesso a estas configurações.
+        </div>
+
+        <section class="admin-section">
+            <h2><i class="fas fa-calendar-alt"></i> Gerenciamento de Rodadas</h2>
+
+            <div class="admin-card">
+                <h3><i class="fas fa-play-circle"></i> Configurar Rodadas</h3>
+                <form class="admin-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="rodada-inicial"><i class="fas fa-flag"></i> Rodada Inicial</label>
+                            <select id="rodada-inicial" class="admin-select">
+                                <option value="">Selecione...</option>
+                                <option value="1">Rodada 1</option>
+                                <option value="2">Rodada 2</option>
+                                <!-- Mais opções -->
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="rodada-final"><i class="fas fa-flag-checkered"></i> Rodada Final</label>
+                            <select id="rodada-final" class="admin-select">
+                                <option value="">Selecione...</option>
+                                <option value="1">Rodada 1</option>
+                                <option value="2">Rodada 2</option>
+                                <!-- Mais opções -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-unlock-alt"></i> Tipo de Desbloqueio:</label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="tipo-desbloqueio" value="por-rodada" checked>
+                                <span class="radio-custom"></span>
+                                Desbloquear partidas por rodadas
+                            </label>
+
+                            <label class="radio-option">
+                                <input type="radio" name="tipo-desbloqueio" value="normal">
+                                <span class="radio-custom"></span>
+                                Desbloquear partidas normal
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-admin btn-reset">
+                            <i class="fas fa-undo"></i> Limpar
+                        </button>
+                        <button type="submit" class="btn btn-admin btn-save">
+                            <i class="fas fa-save"></i> Aplicar Configurações
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="admin-card">
+                <h3><i class="fas fa-calendar-plus"></i> Ações de Rodada</h3>
+                <div class="action-buttons">
+                    <button class="btn btn-admin btn-action">
+                        <i class="fas fa-plus-circle"></i> Criar Nova Rodada
+                    </button>
+                    <button class="btn btn-admin btn-action btn-danger">
+                        <i class="fas fa-trash-alt"></i> Apagar Rodada
+                    </button>
+                    <button class="btn btn-admin btn-action">
+                        <i class="fas fa-sync-alt"></i> Restaurar Rodada Original
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="admin-section">
+            <h2><i class="fas fa-trophy"></i> Gerenciamento de Classificação</h2>
+
+            <div class="admin-card">
+                <h3><i class="fas fa-sync"></i> Atualizar Classificação</h3>
+                <form class="admin-form">
+                    <div class="form-group">
+                        <label for="rodada-atualizar"><i class="fas fa-hashtag"></i> Número da Rodada</label>
+                        <input type="number" id="rodada-atualizar" placeholder="Digite o número da rodada" min="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rodada-false"><i class="fas fa-toggle-off"></i> Desativar Rodada</label>
+                        <input type="number" id="rodada-false" placeholder="Digite a rodada para desativar" min="1">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-admin btn-danger">
+                            <i class="fas fa-eraser"></i> Resetar Pontuações
+                        </button>
+                        <button type="button" class="btn btn-admin btn-danger">
+                            <i class="fas fa-money-bill-wave"></i> Resetar Pagamentos
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="admin-card">
+                <h3><i class="fas fa-lock"></i> Controle de Partidas</h3>
+                <div class="action-buttons">
+                    <button class="btn btn-admin btn-action">
+                        <i class="fas fa-lock"></i> Bloquear Todas as Partidas
+                    </button>
+                    <button class="btn btn-admin btn-action">
+                        <i class="fas fa-lock-open"></i> Desbloquear Todas as Partidas
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer admin-footer">
+        <div class="container">
+            <p><i class="fas fa-shield-alt"></i> Acesso Administrativo - © 2024 Bolão Virtual - Criado por Hiago Souza
+            </p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

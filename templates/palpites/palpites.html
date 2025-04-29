@@ -1,0 +1,73 @@
+{% extends 'auxiliar/base.html' %}
+{% load static %}
+{% block title %} Bolão virtual | Criar Palpites {% endblock %}
+
+{% block body %}
+
+<section class="palpites-page">
+  <main class="container">
+    <section class="page-header">
+      <h1><i class="fas fa-clipboard-check"></i> Faça Seus Palpites</h1>
+      <div class="round-info">
+        <span class="round-badge">7ª Rodada</span>
+        <span class="round-status">Envie até: 28/04 - 19:00h</span>
+      </div>
+    </section>
+
+    <div class="bets-grid">
+      <!-- Jogo 1 -->
+      <div class="bet-card">
+        <div class="match-teams">
+          <div class="team">
+            <img src="{% static 'img/flamengo.png' %}" alt="Fluminense" class="team-logo">
+            <span>Flamengo</span>
+          </div>
+          <div class="vs">X</div>
+          <div class="team">
+            <img src="{% static 'img/corinthians.png' %}" alt="Recife" class="team-logo">
+            <span>Corinthinas</span>
+          </div>
+        </div>
+        <div class="bet-inputs">
+          <input type="number" min="0" max="20" placeholder="0">
+          <span>:</span>
+          <input type="number" min="0" max="20" placeholder="0">
+        </div>
+      </div>
+
+      <!-- Jogo 2 -->
+      <div class="bet-card">
+        <div class="match-teams">
+          <div class="team">
+            <img src="{% static 'img/fluminense.png' %}" alt="Corinthians" class="team-logo">
+            <span>Fluminense</span>
+          </div>
+          <div class="vs">X</div>
+          <div class="team">
+            <img src="{% static 'img/fortaleza.png' %}" alt="Internacional" class="team-logo">
+            <span>Fortaleza</span>
+          </div>
+        </div>
+        <div class="bet-inputs">
+          <input type="number" min="0" max="20" placeholder="0">
+          <span>:</span>
+          <input type="number" min="0" max="20" placeholder="0">
+        </div>
+      </div>
+
+      <!-- Demais jogos... -->
+
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-secondary"><i class="fas fa-save"></i> Salvar Rascunho</button>
+      <button class="btn btn-primary"><i class="fas fa-paper-plane"></i> Enviar Palpites</button>
+    </div>
+
+    <div class="locked-rounds">
+      <h3><i class="fas fa-lock"></i> Rodadas Bloqueadas</h3>
+      <p>As rodadas ficam disponíveis para palpites até o horário do primeiro jogo de cada rodada.</p>
+    </div>
+  </main>
+</section>
+{% endblock %}

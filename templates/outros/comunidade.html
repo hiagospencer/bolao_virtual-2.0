@@ -1,0 +1,229 @@
+{% extends 'auxiliar/base.html' %}
+{% load static %}
+{% block title %} Bolão virtual | Comunidade {% endblock %}
+
+{% block body %}
+<section class="community-page">
+
+  <main class="container">
+    <section class="community-hero">
+      <h1><i class="fas fa-users"></i> Comunidade do Bolão</h1>
+      <p>Conecte-se com outros apaixonados por futebol e compartilhe suas análises</p>
+    </section>
+
+    <div class="community-tabs">
+      <button class="tab-btn active" data-tab="forum">Fórum</button>
+      <button class="tab-btn" data-tab="mural">Mural</button>
+      <button class="tab-btn" data-tab="enquetes">Enquetes</button>
+      <button class="tab-btn" data-tab="destaques">Destaques</button>
+    </div>
+
+    <div class="tab-content active" id="forum">
+      <div class="forum-header">
+        <h2><i class="fas fa-comments"></i> Fórum de Discussão</h2>
+        <button class="btn btn-new-topic"><i class="fas fa-plus"></i> Novo Tópico</button>
+      </div>
+
+      <div class="forum-categories">
+        <div class="forum-category">
+          <h3><i class="fas fa-trophy"></i> Campeonato Brasileiro</h3>
+          <div class="forum-topics">
+            <div class="forum-topic">
+              <div class="topic-info">
+                <h4><a href="#">Quem será rebaixado esse ano?</a></h4>
+                <p class="topic-meta">Por: Zé Palpite • 15 comentários • 2 horas atrás</p>
+              </div>
+              <div class="topic-stats">
+                <span class="topic-views"><i class="fas fa-eye"></i> 245</span>
+                <span class="topic-replies"><i class="fas fa-comment"></i> 15</span>
+              </div>
+            </div>
+
+            <div class="forum-topic">
+              <div class="topic-info">
+                <h4><a href="#">Análise: Flamengo x Palmeiras - próxima rodada</a></h4>
+                <p class="topic-meta">Por: Análise Tática • 32 comentários • 1 dia atrás</p>
+              </div>
+              <div class="topic-stats">
+                <span class="topic-views"><i class="fas fa-eye"></i> 512</span>
+                <span class="topic-replies"><i class="fas fa-comment"></i> 32</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="forum-category">
+          <h3><i class="fas fa-globe-americas"></i> Libertadores</h3>
+          <div class="forum-topics">
+            <div class="forum-topic">
+              <div class="topic-info">
+                <h4><a href="#">Times brasileiros na fase de grupos</a></h4>
+                <p class="topic-meta">Por: Continental • 8 comentários • 3 dias atrás</p>
+              </div>
+              <div class="topic-stats">
+                <span class="topic-views"><i class="fas fa-eye"></i> 187</span>
+                <span class="topic-replies"><i class="fas fa-comment"></i> 8</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="mural">
+      <div class="mural-header">
+        <h2><i class="fas fa-clipboard"></i> Mural de Mensagens</h2>
+        <button class="btn btn-new-post"><i class="fas fa-plus"></i> Nova Mensagem</button>
+      </div>
+
+      <div class="mural-posts">
+        <div class="mural-post">
+          <div class="post-author">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Usuário" class="author-avatar">
+            <span class="author-name">Carlos Alberto</span>
+            <span class="post-time">2 horas atrás</span>
+          </div>
+          <div class="post-content">
+            <p>Alguém mais achou o critério de pontuação da última rodada meio estranho? Acho que deveríamos rever como são calculados os pontos para jogos decididos nos acréscimos.</p>
+            <div class="post-actions">
+              <button class="btn-like"><i class="far fa-thumbs-up"></i> 12</button>
+              <button class="btn-comment"><i class="far fa-comment"></i> Responder</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="mural-post">
+          <div class="post-author">
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Usuário" class="author-avatar">
+            <span class="author-name">Ana Santos</span>
+            <span class="post-time">5 horas atrás</span>
+          </div>
+          <div class="post-content">
+            <p>Estou organizando um bolão especial para a Copa do Mundo feminina! Quem tiver interesse em participar pode me chamar no privado. Vamos fazer um grupo no WhatsApp!</p>
+            <div class="post-actions">
+              <button class="btn-like"><i class="far fa-thumbs-up"></i> 28</button>
+              <button class="btn-comment"><i class="far fa-comment"></i> Responder</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="enquetes">
+      <div class="polls-header">
+        <h2><i class="fas fa-poll"></i> Enquetes e Votações</h2>
+        <button class="btn btn-new-poll"><i class="fas fa-plus"></i> Nova Enquete</button>
+      </div>
+
+      <div class="polls-grid">
+        <div class="poll-card">
+          <h3>Quem será o artilheiro do Brasileirão 2023?</h3>
+          <div class="poll-options">
+            <div class="poll-option">
+              <div class="option-result" style="width: 45%"></div>
+              <span class="option-text">Germán Cano</span>
+              <span class="option-percent">45%</span>
+            </div>
+            <div class="poll-option">
+              <div class="option-result" style="width: 30%"></div>
+              <span class="option-text">Tiquinho Soares</span>
+              <span class="option-percent">30%</span>
+            </div>
+            <div class="poll-option">
+              <div class="option-result" style="width: 15%"></div>
+              <span class="option-text">Pedro Raul</span>
+              <span class="option-percent">15%</span>
+            </div>
+            <div class="poll-option">
+              <div class="option-result" style="width: 10%"></div>
+              <span class="option-text">Outro</span>
+              <span class="option-percent">10%</span>
+            </div>
+          </div>
+          <div class="poll-meta">
+            <span>Total de votos: 1.245</span>
+            <span>Encerra em: 3 dias</span>
+          </div>
+        </div>
+
+        <div class="poll-card">
+          <h3>Qual time surpreenderá positivamente nesta temporada?</h3>
+          <div class="poll-options">
+            <div class="poll-option">
+              <div class="option-result" style="width: 35%"></div>
+              <span class="option-text">Fortaleza</span>
+              <span class="option-percent">35%</span>
+            </div>
+            <div class="poll-option">
+              <div class="option-result" style="width: 28%"></div>
+              <span class="option-text">Bragantino</span>
+              <span class="option-percent">28%</span>
+            </div>
+            <div class="poll-option">
+              <div class="option-result" style="width: 22%"></div>
+              <span class="option-text">América-MG</span>
+              <span class="option-percent">22%</span>
+            </div>
+            <div class="poll-option">
+              <div class="option-result" style="width: 15%"></div>
+              <span class="option-text">Cuiabá</span>
+              <span class="option-percent">15%</span>
+            </div>
+          </div>
+          <div class="poll-meta">
+            <span>Total de votos: 892</span>
+            <span>Encerra em: 1 dia</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="destaques">
+      <h2><i class="fas fa-star"></i> Destaques da Comunidade</h2>
+
+      <div class="featured-section">
+        <h3><i class="fas fa-crown"></i> Palpiteiro da Semana</h3>
+        <div class="featured-user">
+          <div class="user-profile">
+            <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Usuário Destacado" class="user-avatar">
+            <div class="user-info">
+              <h4>Marcos "O Profeta" Silva</h4>
+              <p>Acertou 8 dos 10 jogos da última rodada!</p>
+              <div class="user-stats">
+                <span><i class="fas fa-check-circle"></i> 78% de acertos</span>
+                <span><i class="fas fa-trophy"></i> Top 3 semanal</span>
+              </div>
+            </div>
+          </div>
+          <div class="user-tips">
+            <h5>Dica do Mestre:</h5>
+            <p>"Sempre analiso o retrospecto dos times nos últimos 5 jogos e vejo como eles performam contra formações específicas. O detalhe faz a diferença!"</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="featured-section">
+        <h3><i class="fas fa-chart-line"></i> Em Ascensão</h3>
+        <div class="rising-users">
+          <div class="rising-user">
+            <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Usuário em Ascensão">
+            <span>Clara Mendes</span>
+            <span class="rising-badge">+15 posições</span>
+          </div>
+          <div class="rising-user">
+            <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Usuário em Ascensão">
+            <span>Ricardo Alves</span>
+            <span class="rising-badge">+12 posições</span>
+          </div>
+          <div class="rising-user">
+            <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Usuário em Ascensão">
+            <span>Fernando Costa</span>
+            <span class="rising-badge">+9 posições</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</section>
+{% endblock %}
