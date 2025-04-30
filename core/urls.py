@@ -6,4 +6,5 @@ urlpatterns = [
     path('', homepage, name='homepage'),
     path('perfil/', perfil, name='perfil'),
     path('regras/', regras, name='regras'),
+    path('configuracao/', configuracao, name='configuracao'),
 ]

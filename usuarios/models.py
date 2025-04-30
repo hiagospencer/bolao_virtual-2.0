@@ -7,6 +7,8 @@ class Usuario(AbstractUser):
     pontos_totais = models.PositiveIntegerField(default=0)
     moedas_virtuais = models.PositiveIntegerField(default=0)
     is_verified = models.BooleanField(default=False)
+    xp = models.PositiveIntegerField(default=0)
+    moedas = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.username

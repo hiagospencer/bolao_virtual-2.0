@@ -40,8 +40,13 @@
           </div>
 
           <div class="pix-qrcode">
-            <!-- QR Code será gerado dinamicamente -->
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=PIX%3Ahiaguinhospencer%40gmail.com%3Famount%3D29.90%26name%3DHiago%2520Jos%25C3%25A9%2520de%2520Souza" alt="QR Code PIX">
+            <!-- QR Code será gerado dinamicamente
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=PIX%3Ahiaguinhospencer%40gmail.com%3Famount%3D29.90%26name%3DHiago%2520Jos%25C3%25A9%2520de%2520Souza" alt="QR Code PIX"> -->
+              {% if pagamento.qr_code_image %}
+                <img src="{{ pagamento.qr_code_image.url }}" alt="QR Code PIX">
+              {% else %}
+                <p>Carregando QR Code...</p>
+              {% endif %}
           </div>
 
           <div class="pix-instructions">
@@ -58,7 +63,7 @@
           <div class="pix-key">
             <div class="pix-key-info">
               <small>Chave PIX (E-mail)</small>
-              <div class="pix-key-value" id="pix-key">hiaguinhospencer@gmail.com</div>
+              <div class="pix-key-value" id="pix-key">{{ pagamento.chave_pix }}</div>
             </div>
             <button class="btn-copy-pix" id="copy-pix-btn">
               <i class="far fa-copy"></i> Copiar
@@ -68,11 +73,11 @@
           <div class="payment-info">
             <div class="payment-details">
               <span>Beneficiário:</span>
-              <span>Hiago José de Souza</span>
+              <span>{{ pagamento.destinatario }}</span>
             </div>
             <div class="payment-details">
               <span>Valor:</span>
-              <span class="payment-total">R$ 30,00</span>
+              <span class="payment-total">R$ {{ pagamento.valor }}</span>
             </div>
           </div>
 

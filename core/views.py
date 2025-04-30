@@ -8,3 +8,6 @@ def perfil(request):
 
 def regras(request):
     return render(request,"regras.html")
+
+def configuracao(request):
+    return render(request,"outros/configuracoes.html")

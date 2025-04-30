@@ -31,50 +31,26 @@
       <h2><i class="fas fa-medal"></i> Badges e Emblemas Conquistados</h2>
 
       <div class="achievements-grid">
-        <div class="achievement-card unlocked">
-          <div class="achievement-badge">
-            <i class="fas fa-bolt"></i>
-            <div class="badge-level">Ouro</div>
-          </div>
-          <div class="achievement-info">
-            <h3>Palpiteiro Relâmpago</h3>
-            <p>Enviou palpites para 50 jogos consecutivos antes do prazo</p>
-            <div class="achievement-meta">
-              <span><i class="fas fa-calendar-alt"></i> Conquistado em: 15/08/2023</span>
-              <span><i class="fas fa-users"></i> 12% dos usuários têm este badge</span>
+        {% for conquista in conquistas_concluidas %}
+          <div class="achievement-card unlocked">
+            <div class="achievement-badge" style="color: {{ conquista.meta.tipo_trofeu.cor }};">
+              <i class="fas {{ conquista.meta.tipo_trofeu.icone }}"></i>
+              <div class="badge-level">
+                {% if conquista.meta.tipo_trofeu.nivel == 1 %}Bronze
+                {% elif conquista.meta.tipo_trofeu.nivel == 2 %}Prata
+                {% elif conquista.meta.tipo_trofeu.nivel == 3 %}Ouro
+                {% else %}Diamante{% endif %}
+              </div>
+            </div>
+            <div class="achievement-info">
+              <h3>{{ conquista.meta.nome }}</h3>
+              <p>{{ conquista.meta.descricao }}</p>
+              <div class="achievement-meta">
+                <span><i class="fas fa-calendar-alt"></i> Conquistado em: {{ conquista.data_conquista|date:"d/m/Y" }}</span>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div class="achievement-card unlocked">
-          <div class="achievement-badge">
-            <i class="fas fa-crosshairs"></i>
-            <div class="badge-level">Prata</div>
-          </div>
-          <div class="achievement-info">
-            <h3>Precisão Cirúrgica</h3>
-            <p>Acertou o placar exato em 10 jogos</p>
-            <div class="achievement-meta">
-              <span><i class="fas fa-calendar-alt"></i> Conquistado em: 05/07/2023</span>
-              <span><i class="fas fa-users"></i> 25% dos usuários têm este badge</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="achievement-card unlocked">
-          <div class="achievement-badge">
-            <i class="fas fa-chess-queen"></i>
-            <div class="badge-level">Bronze</div>
-          </div>
-          <div class="achievement-info">
-            <h3>Estratégia de Mestre</h3>
-            <p>Acertou o vencedor em 20 jogos consecutivos</p>
-            <div class="achievement-meta">
-              <span><i class="fas fa-calendar-alt"></i> Conquistado em: 22/06/2023</span>
-              <span><i class="fas fa-users"></i> 45% dos usuários têm este badge</span>
-            </div>
-          </div>
-        </div>
+        {% endfor %}
       </div>
 
       <h3 class="history-title"><i class="fas fa-history"></i> Histórico de Conquistas</h3>
@@ -137,120 +113,58 @@
       </div>
 
       <div class="available-grid">
-        <div class="available-card">
-          <div class="available-badge locked">
-            <i class="fas fa-brain"></i>
-            <div class="badge-level">Diamante</div>
-          </div>
-          <div class="available-info">
-            <h3>Gênio da Bola</h3>
-            <p>Acumule 100 palpites exatos</p>
-            <div class="progress-container">
-              <span>Progresso: 32/100</span>
-              <div class="progress-bar">
-                <div class="progress-fill" style="width: 32%"></div>
+        {% for conquista in conquistas_em_progresso %}
+          <div class="available-card">
+            <div class="available-badge locked">
+              <i class="fas {{ conquista.meta.tipo_trofeu.icone }}"></i>
+              <div class="badge-level">
+                {% if conquista.meta.tipo_trofeu.nivel == 1 %}Bronze
+                {% elif conquista.meta.tipo_trofeu.nivel == 2 %}Prata
+                {% else %}Ouro{% endif %}
               </div>
             </div>
-            <div class="reward-details">
-              <span><i class="fas fa-users"></i> Apenas 5% conquistaram</span>
-              <span><i class="fas fa-trophy"></i> +500 pontos</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="available-card">
-          <div class="available-badge locked">
-            <i class="fas fa-calendar-check"></i>
-            <div class="badge-level">Ouro</div>
-          </div>
-          <div class="available-info">
-            <h3>Frequência Máxima</h3>
-            <p>Participe de 10 rodadas consecutivas</p>
-            <div class="progress-container">
-              <span>Progresso: 6/10</span>
-              <div class="progress-bar">
-                <div class="progress-fill" style="width: 60%"></div>
+            <div class="available-info">
+              <h3>{{ conquista.meta.nome }}</h3>
+              <p>{{ conquista.meta.descricao }}</p>
+              <div class="progress-container">
+                <span>Progresso: {{ conquista.progresso_atual }}/{{ conquista.meta.valor_requerido }}</span>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: {% widthratio conquista.progresso_atual conquista.meta.valor_requerido 100 %}%"></div>
+                </div>
+              </div>
+              <div class="reward-details">
+                <span><i class="fas fa-star"></i> +{{ conquista.meta.xp_recompensa }} XP</span>
+                <span><i class="fas fa-coins"></i> +{{ conquista.meta.moedas_recompensa }} moedas</span>
               </div>
             </div>
-            <div class="reward-details">
-              <span><i class="fas fa-users"></i> 18% conquistaram</span>
-              <span><i class="fas fa-coins"></i> +100 moedas</span>
-            </div>
           </div>
-        </div>
-
-        <div class="available-card">
-          <div class="available-badge locked">
-            <i class="fas fa-chess-knight"></i>
-            <div class="badge-level">Prata</div>
-          </div>
-          <div class="available-info">
-            <h3>Estratégia Vencedora</h3>
-            <p>Fique entre os 3 primeiros em qualquer torneio</p>
-            <div class="progress-container">
-              <span>Progresso: 0/1</span>
-              <div class="progress-bar">
-                <div class="progress-fill" style="width: 0%"></div>
-              </div>
-            </div>
-            <div class="reward-details">
-              <span><i class="fas fa-users"></i> 22% conquistaram</span>
-              <span><i class="fas fa-star"></i> Emblema exclusivo</span>
-            </div>
-          </div>
-        </div>
+        {% endfor %}
       </div>
     </div>
-
+    <!-- Fim do ava -->
     <div class="tab-content" id="trofeus">
       <h2><i class="fas fa-trophy"></i> Seus Troféus Virtuais</h2>
       <p class="trophies-description">Colecione troféus por conquistas especiais no Bolão Virtual</p>
 
       <div class="trophies-grid">
-        <div class="trophy-card unlocked">
-          <div class="trophy-icon gold">
-            <i class="fas fa-trophy"></i>
+        {% for trofeu in todos_trofeus %}
+          <div class="trophy-card {% if trofeu.conquistado %}unlocked{% else %}locked{% endif %}">
+            <div class="trophy-icon"
+              style="color: {{ trofeu.cor }};"
+            ><i class="fas {{ trofeu.icone }}"></i>
+            </div>
+            <div class="trophy-info">
+              <h3>{{ trofeu.nome }}</h3>
+              <p>{{ trofeu.descricao }}</p>
+              {% if trofeu.conquistado %}
+                <span class="trophy-date">Conquistado em: {{ trofeu.data_conquista|date:"m/Y" }}</span>
+              {% else %}
+                <span class="trophy-progress">Não conquistado</span>
+              {% endif %}
+            </div>
           </div>
-          <div class="trophy-info">
-            <h3>Campeão do Mês</h3>
-            <p>Termine como 1º colocado no ranking mensal</p>
-            <span class="trophy-date">Conquistado em: Agosto/2023</span>
-          </div>
-        </div>
-
-        <div class="trophy-card locked">
-          <div class="trophy-icon silver">
-            <i class="fas fa-trophy"></i>
-          </div>
-          <div class="trophy-info">
-            <h3>Vice-Campeão</h3>
-            <p>Termine como 2º colocado no ranking mensal</p>
-            <span class="trophy-progress">Seu melhor: 3º lugar</span>
-          </div>
-        </div>
-
-        <div class="trophy-card locked">
-          <div class="trophy-icon bronze">
-            <i class="fas fa-trophy"></i>
-          </div>
-          <div class="trophy-info">
-            <h3>Terceiro Lugar</h3>
-            <p>Termine como 3º colocado no ranking mensal</p>
-            <span class="trophy-progress">Seu melhor: 5º lugar</span>
-          </div>
-        </div>
-
-        <div class="trophy-card unlocked">
-          <div class="trophy-icon special">
-            <i class="fas fa-star"></i>
-          </div>
-          <div class="trophy-info">
-            <h3>Palpiteiro Ouro</h3>
-            <p>Acumule 80% de acertos em um mês com +20 palpites</p>
-            <span class="trophy-date">Conquistado em: Julho/2023</span>
-          </div>
-        </div>
-      </div>
+        {% endfor %}
+    </div>
 
       <div class="trophies-stats">
         <div class="stat-box">

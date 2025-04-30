@@ -28,8 +28,8 @@
             <div class="ranking-header">
                 <h2 class="section-title"><i class="fas fa-medal"></i> Classificação</h2>
                 <div class="ranking-actions">
-                    <a href="premios.html" class="btn btn-trophies"><i class="fas fa-trophy"></i> Ver Troféus</a>
-                    <a href="comunidade.html" class="btn btn-community"><i class="fas fa-users"></i> Comunidade</a>
+                    <a href="{% url 'trofeus' %}" class="btn btn-trophies"><i class="fas fa-trophy"></i> Ver Troféus</a>
+                    <a href="{% url 'comunidade' %}" class="btn btn-community"><i class="fas fa-users"></i> Comunidade</a>
                 </div>
             </div>
 
@@ -51,7 +51,7 @@
                             <td>1 <i class="fas fa-medal gold"></i></td>
                             <td>
                                 <div class="player-info">
-                                    <img src="img/perfil-null.png" alt="HiagoSouza" class="player-avatar">
+                                    <img src="{% static 'img/perfil-null.png' %}" alt="HiagoSouza" class="player-avatar">
                                     <div class="player-details">
                                         <span class="player-name">HiagoSouza</span>
                                         <div class="player-badges">
@@ -77,7 +77,7 @@
                             <td>2 <i class="fas fa-medal silver"></i></td>
                             <td>
                                 <div class="player-info">
-                                    <img src="img/perfil-null.png" alt="Jogador2" class="player-avatar">
+                                    <img src="{% static 'img/perfil-null.png' %}" alt="Jogador2" class="player-avatar">
                                     <div class="player-details">
                                         <span class="player-name">Jogador2</span>
                                         <div class="player-badges">
@@ -100,7 +100,7 @@
                             <td>3 <i class="fas fa-medal bronze"></i></td>
                             <td>
                                 <div class="player-info">
-                                    <img src="img/perfil-null.png" alt="Jogador3" class="player-avatar">
+                                    <img src="{% static 'img/perfil-null.png' %}" alt="Jogador3" class="player-avatar">
                                     <div class="player-details">
                                         <span class="player-name">Jogador3</span>
                                         <div class="player-badges">
@@ -125,7 +125,7 @@
             </div>
 
             <div class="ranking-footer">
-                <a href="perfil.html" class="btn btn-my-position">
+                <a href="{% url 'perfil' %}" class="btn btn-my-position">
                     <i class="fas fa-user"></i> Ver minha posição
                 </a>
             </div>

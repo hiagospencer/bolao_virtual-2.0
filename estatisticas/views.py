@@ -26,9 +26,9 @@ def estatisticas_visitas(request):
     ).count()
 
     # Visitas por página
-    paginas_populares = VisitaSite.objects.values('pagina').annotate(
-        total=models.Count('id')
-    ).order_by('-total')[:10]
+    # paginas_populares = VisitaSite.objects.values('pagina').annotate(
+    #     total=models.Count('id')
+    # ).order_by('-total')[:10]
 
     # Métricas diárias
     metricas = MetricasDiarias.objects.order_by('-data')[:30]
@@ -37,8 +37,8 @@ def estatisticas_visitas(request):
         'visitas_hoje': visitas_hoje,
         'visitas_semana': visitas_semana,
         'visitas_mes': visitas_mes,
-        'paginas_populares': paginas_populares,
+        # 'paginas_populares': paginas_populares,
         'metricas': metricas,
     }
 
-    return render(request, 'estatisticas.html', context)
+    return render(request, 'outros/estatisticas.html', context)

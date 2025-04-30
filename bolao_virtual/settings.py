@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'comunidade',
     'estatisticas',
     'pagamentos',
+    'premios',
 ]
 
 # Configurações de autenticação

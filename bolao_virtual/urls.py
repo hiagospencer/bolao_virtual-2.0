@@ -10,9 +10,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
     path('palpites/', include('palpites.urls')),
-    path('mais/', include('comunidade.urls')),
+    path('interacao/', include('comunidade.urls')),
     path('loja/', include('loja.urls')),
     path('pagamentos/', include('pagamentos.urls')),
+    path('premios/', include('premios.urls')),
+    
     path('estatisticas/', estatisticas_visitas, name='estatisticas'),
 ]
 

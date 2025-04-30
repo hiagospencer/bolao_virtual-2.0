@@ -33,7 +33,7 @@
 
                 {% if request.resolver_match.url_name in "noticias" or request.resolver_match.url_name in "comunidade" or request.resolver_match.url_name in "trofeus" or request.resolver_match.url_name in "regras" %}
                     <li class="dropdown">
-                        <a href="#" class="active"><i class="fas fa-newspaper"></i> Mais <i class="fas fa-caret-down"></i></a>
+                        <a href="#" class="active"><i class="fas fa-newspaper"></i> Interação <i class="fas fa-caret-down"></i></a>
                         <ul class="dropdown-menu">
                             <li><a href="{% url 'noticias' %}" class="active"><i class="fas fa-newspaper"></i> Notícias</a>
                             </li>
@@ -44,7 +44,7 @@
                     </li>
                 {% else %}
                     <li class="dropdown">
-                        <a href="#"><i class="fas fa-newspaper"></i> Mais <i class="fas fa-caret-down"></i></a>
+                        <a href="#"><i class="fas fa-newspaper"></i> Interação <i class="fas fa-caret-down"></i></a>
                         <ul class="dropdown-menu">
                             <li><a href="{% url 'noticias' %}" class="active"><i class="fas fa-newspaper"></i> Notícias</a>
                             </li>
@@ -72,8 +72,10 @@
                 {% else %}
                     <li><a href="{% url 'perfil' %}"><i class="fas fa-user"></i> Perfil</a></li>
                 {% endif %}
-                
-                <!-- <li><a href="configuracoes.html"><i class="fa-solid fa-gear"></i>Configurações</a></li> -->
+
+                {% if user.is_superuser %}
+                    <li><a href="{% url 'configuracao' %}"><i class="fa-solid fa-gear"></i>Configurações</a></li>
+                 {% endif %}
                 <!-- Área do usuário (dinâmica) -->
                 <div class="user-area" id="user-area">
                     <!-- Estado não logado (padrão) -->
@@ -108,7 +110,7 @@
             </ul>
         </li>
         <li class="dropdown active">
-            <a href="#"><i class="fas fa-newspaper"></i> Mais <i class="fas fa-caret-down"></i></a>
+            <a href="#"><i class="fas fa-newspaper"></i> Interação <i class="fas fa-caret-down"></i></a>
             <ul class="dropdown-menu">
                 <li><a href="{% url 'noticias' %}" class="active"><i class="fas fa-newspaper"></i> Notícias</a></li>
                 <li><a href="{% url 'comunidade' %}"><i class="fas fa-users"></i> Comunidade</a></li>
