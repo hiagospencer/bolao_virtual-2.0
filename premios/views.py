@@ -1,7 +1,7 @@
 # apps/premios/views.py
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from premios.models import TipoTrofeu, MetaConquista, ConquistaUsuario
+from premios.models import TipoTrofeu, MetaConquista, ConquistaUsuario, HistoricoConquista
 
 @login_required
 def minhas_conquistas(request):
@@ -40,7 +40,7 @@ def trofeus(request):
 
     # Buscar todas as conquistas do usuário (comcluídas e em progresso)
     conquistas_usuario = ConquistaUsuario.objects.filter(usuario=usuario).select_related('meta__tipo_trofeu')
-
+    historico = HistoricoConquista.objects.filter(usuario=usuario).order_by('-data_conquista')[:10]
     # Separar conquistas concluídas e em progresso
     conquistas_concluidas = conquistas_usuario.filter(concluida=True)
     conquistas_em_progresso = conquistas_usuario.filter(concluida=False)
@@ -51,6 +51,7 @@ def trofeus(request):
     context = {
         'conquistas_concluidas': conquistas_concluidas,
         'conquistas_em_progresso': conquistas_em_progresso,
+        'historico_conquistas': historico,
         'todos_trofeus': todos_trofeus,
         'usuario': usuario,
     }

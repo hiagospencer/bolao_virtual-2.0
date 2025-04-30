@@ -1,6 +1,6 @@
 # apps/premios/admin.py
 from django.contrib import admin
-from .models import TipoTrofeu, MetaConquista, ConquistaUsuario, Premio, PremioUsuario
+from .models import TipoTrofeu, MetaConquista, ConquistaUsuario, Premio, PremioUsuario, HistoricoConquista
 
 @admin.register(TipoTrofeu)
 class TipoTrofeuAdmin(admin.ModelAdmin):
@@ -36,3 +36,9 @@ class PremioUsuarioAdmin(admin.ModelAdmin):
     def marcar_como_pago(self, request, queryset):
         queryset.update(pago=True)
     marcar_como_pago.short_description = "Marcar selecionados como pagos"
+
+
+@admin.register(HistoricoConquista)
+class HistoricoConquistaAdmin(admin.ModelAdmin):
+    list_display = ('usuario', 'meta', 'xp_ganho', 'moedas_ganhas')
+    list_filter = ('usuario',)

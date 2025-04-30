@@ -74,3 +74,14 @@ class PremioUsuario(models.Model):
 
     def __str__(self):
         return f"{self.usuario} - {self.premio} (R${self.valor_recebido})"
+
+# premios/models.py
+class HistoricoConquista(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='historico')
+    meta = models.ForeignKey(MetaConquista, on_delete=models.CASCADE)
+    data_conquista = models.DateTimeField(auto_now_add=True)
+    xp_ganho = models.PositiveIntegerField()
+    moedas_ganhas = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.usuario} conquistou {self.meta} em {self.data_conquista}"

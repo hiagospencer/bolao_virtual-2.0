@@ -55,36 +55,22 @@
 
       <h3 class="history-title"><i class="fas fa-history"></i> Histórico de Conquistas</h3>
       <div class="achievements-history">
-        <div class="history-item">
-          <div class="history-icon">
-            <i class="fas fa-trophy"></i>
+        {% for registro in historico_conquistas %}
+          <div class="history-item">
+            <div class="history-icon" style="color: {{ registro.meta.tipo_trofeu.cor }};">
+              <i class="fas {{ registro.meta.tipo_trofeu.icone }}"></i>
+            </div>
+            <div class="history-details">
+              <h4>Conquista: {{ registro.meta.nome }}</h4>
+              <p>{{ registro.meta.descricao }}</p>
+              <span class="history-date">
+                {{ registro.data_conquista|date:"d/m/Y" }} |
+                +{{ registro.xp_ganho }} XP |
+                +{{ registro.moedas_ganhas }} moedas
+              </span>
+            </div>
           </div>
-          <div class="history-details">
-            <h4>Você alcançou o nível 7!</h4>
-            <p>Por acumular 2150 pontos totais no bolão</p>
-            <span class="history-date">10/09/2023</span>
-          </div>
-        </div>
-        <div class="history-item">
-          <div class="history-icon">
-            <i class="fas fa-medal"></i>
-          </div>
-          <div class="history-details">
-            <h4>Badge "Previsão Perfeita" desbloqueado</h4>
-            <p>Por acertar 5 placares exatos consecutivos</p>
-            <span class="history-date">28/08/2023</span>
-          </div>
-        </div>
-        <div class="history-item">
-          <div class="history-icon">
-            <i class="fas fa-star"></i>
-          </div>
-          <div class="history-details">
-            <h4>Top 3 na semana</h4>
-            <p>Por ficar entre os 3 melhores palpiteiros da semana</p>
-            <span class="history-date">14/08/2023</span>
-          </div>
-        </div>
+        {% endfor %}
       </div>
     </div>
 
