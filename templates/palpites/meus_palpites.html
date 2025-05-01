@@ -5,46 +5,37 @@
 {% block body %}
 <section class="meus-palpites-page">
 
-  <!-- Conteúdo principal com as modificações -->
   <main class="container">
     <section class="page-header">
       <h1><i class="fas fa-user-clock"></i> Meus Palpites</h1>
       <p>Visualize e compare seus palpites com outros participantes</p>
     </section>
 
-    <div class="filters-container">
+    <form class="filters-container" hx-get="{% url 'filtrar_palpites' %}" hx-target="#palpites-container" hx-trigger="change">
       <div class="filter-group">
         <label for="usuario"><i class="fas fa-users"></i> Ver palpites de:</label>
-        <select id="usuario" class="styled-select">
-          <option value="meus">Meus Palpites</option>
-          <option value="usuario1">Renéa</option>
-          <option value="usuario2">Emerson</option>
-          <option value="usuario3">M. Nielsen</option>
-          <option value="usuario4">Deixinho19</option>
-          <option value="usuario5">Antônio Barbosa</option>
+        <select id="usuario" name="usuario" class="styled-select">
+          <option value="" disabled>Palpites</option>
+          {% for usuario in usuarios %}
+            <option value="{{ usuario.id }}" {% if usuario.id == request.user.id %}selected{% endif %}>{{ usuario.username }}</option>
+          {% endfor %}
         </select>
       </div>
 
       <div class="filter-group">
         <label for="rodada"><i class="fas fa-calendar-alt"></i> Rodada:</label>
-        <select id="rodada" class="styled-select">
-          <option value="todas">Todas as Rodadas</option>
-          <option value="1">1ª Rodada</option>
-          <option value="2">2ª Rodada</option>
-          <option value="3">3ª Rodada</option>
-          <option value="4">4ª Rodada</option>
-          <option value="5">5ª Rodada</option>
-          <option value="6">6ª Rodada</option>
-          <option value="7" selected>7ª Rodada</option>
+        <select id="rodada" name="rodada" class="styled-select">
+          <option value="" disabled selected>Todas as Rodadas</option>
+          {% for rodada in rodadas_distintas %}
+            <option value="{{ rodada }}" {% if rodada == 1 %}selected{% endif %}>{{ rodada }}ª rodada</option>
+          {% endfor %}
         </select>
       </div>
+    </form>
 
-      <button class="btn btn-filter"><i class="fas fa-filter"></i> Filtrar</button>
-    </div>
-
-    <div class="bets-results">
+    <div class="bets-results" id="palpites-container">
       <div class="results-header">
-        <h3>7ª Rodada - Palpites de HiagoSouza</h3>
+        <h3>1ª Rodada - Palpites de HiagoSouza</h3>
         <div class="results-summary">
           <span class="badge points">Total: 15 pontos</span>
           <span class="badge exact">5 placares exatos</span>
@@ -53,18 +44,18 @@
       </div>
 
       <div class="bets-list">
-        <!-- Jogo 1 - Placar Exato Correto -->
+        {% for rodada in rodadas %}
         <div class="bet-item exact-correct">
           <div class="match-info">
             <div class="teams">
               <span class="team home-team">
-                <img src="{% static 'img/corinthians.png' %}" alt="Fluminense" class="team-logo">
-                Corinthinas
+                <img src="{{ rodada.imagem_casa }}" alt="{{ rodada.time_casa }}" class="team-logo">
+                {{ rodada.time_casa }}
               </span>
               <span class="vs">X</span>
               <span class="team away-team">
-                <img src="{% static 'img/palmeiras.png' %}" alt="Recife" class="team-logo">
-                Palmeiras
+                <img src="{{ rodada.imagem_fora }}" alt="{{ rodada.time_visitante }}" class="team-logo">
+                {{ rodada.time_visitante }}
               </span>
             </div>
             <div class="match-date">
@@ -78,7 +69,7 @@
           <div class="bet-comparison">
             <div class="user-bet">
               <span>Seu palpite:</span>
-              <strong>2 - 1</strong>
+              <strong>{{ rodada.placar_casa }} - {{ rodada.placar_visitante }}</strong>
             </div>
             <div class="actual-result">
               <span>Resultado:</span>
@@ -90,89 +81,9 @@
             </div>
           </div>
         </div>
-
-        <!-- Jogo 2 - Resultado Correto (mas não placar exato) -->
-        <div class="bet-item result-correct">
-          <div class="match-info">
-            <div class="teams">
-              <span class="team home-team">
-                <img src="{% static 'img/flamengo.png' %}" alt="Corinthians" class="team-logo">
-                Flamengo
-              </span>
-              <span class="vs">X</span>
-              <span class="team away-team">
-                <img src="{% static 'img/fluminense.png' %}" alt="Internacional" class="team-logo">
-                Fluminense
-              </span>
-            </div>
-            <div class="match-date">
-              <i class="far fa-calendar-alt"></i> 26/04 - 19:00h
-            </div>
-          </div>
-
-          <div class="bet-comparison">
-            <div class="user-bet">
-              <span>Seu palpite:</span>
-              <strong>1 - 1</strong>
-            </div>
-            <div class="actual-result">
-              <span>Resultado:</span>
-              <strong>0 - 0</strong>
-            </div>
-            <div class="bet-points">
-              <span>Pontos:</span>
-              <strong class="points">2</strong>
-            </div>
-          </div>
-        </div>
-
-        <!-- Jogo 3 - Resultado Errado -->
-        <div class="bet-item result-wrong">
-          <div class="match-info">
-            <div class="teams">
-              <span class="team home-team">
-                <img src="{% static 'img/fortaleza.png' %}" alt="Santos" class="team-logo">
-                Fortaleza
-              </span>
-              <span class="vs">X</span>
-              <span class="team away-team">
-                <img src="{% static 'img/internacional.png' %}" alt="São Paulo" class="team-logo">
-                Internacional
-              </span>
-            </div>
-            <div class="match-date">
-              <i class="far fa-calendar-alt"></i> 27/04 - 16:00h
-            </div>
-          </div>
-
-          <div class="bet-comparison">
-            <div class="user-bet">
-              <span>Seu palpite:</span>
-              <strong>3 - 0</strong>
-            </div>
-            <div class="actual-result">
-              <span>Resultado:</span>
-              <strong>1 - 2</strong>
-            </div>
-            <div class="bet-points">
-              <span>Pontos:</span>
-              <strong class="points">0</strong>
-            </div>
-          </div>
-        </div>
+        {% endfor %}
       </div>
     </div>
   </main><br/><br />
-
-
-  <script>
-    // Simulação de filtros (substituir por código real)
-    document.querySelector('.btn-filter').addEventListener('click', function() {
-      const usuario = document.getElementById('usuario').value;
-      const rodada = document.getElementById('rodada').value;
-      alert(`Filtrando por: Usuário ${usuario}, Rodada ${rodada}`);
-      // Aqui você faria a requisição para atualizar os palpites exibidos
-    });
-  </script>
 </section>
 {% endblock %}

@@ -1,20 +1,109 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from django.db.models import F
+
+import pandas as pd
+
 from .utils import *
 from .models import *
 
 def criar_palpites(request):
     if request.user.is_authenticated:
         user = request.user
+        time_casa = []
+        time_visitante = []
+        rodada_dict = []
+        placar_casa = []
+        placar_visitante = []
+        img_casa = []
+        img_visitante = []
         verificacao_partida, criado = BloquearPartida.objects.get_or_create(usuario=user)
         rodadas = Rodada.objects.filter(rodada_atual=verificacao_partida.rodada_atual)
+
+        if verificacao_partida.rodada_atual <= verificacao_partida.partida_final:
+            verificacao_partida.rodada_bloqueada = False
+            verificacao_partida.save()
+        else:
+            verificacao_partida.rodada_bloqueada = True
+            verificacao_partida.save()
+
+        for rodada in rodadas:
+            time_casa.append(rodada.time_casa)
+            time_visitante.append(rodada.time_visitante)
+            img_casa.append(rodada.imagem_casa)
+            img_visitante.append(rodada.imagem_fora)
 
         if request.method == "POST":
             dados = request.POST
             resultados = dict(dados)
-            print(resultados)
+
+
+            if Palpite.objects.filter(rodada_atual=verificacao_partida.rodada_atual,usuario=user).exists():
+                return HttpResponse('Rodada já existe')
+
+            if resultados["resultado_casa"] and resultados["resultado_visitante"]:
+
+                for resultado_casa in resultados["resultado_casa"]:
+                    placar_casa.append(resultado_casa)
+
+                for resultado_visitante in resultados["resultado_visitante"]:
+                    placar_visitante.append(resultado_visitante)
+
+            resultado_tabela = {
+                    "time_casa": time_casa,
+                    "img_casa": img_casa,
+                    "placar_casa": placar_casa,
+                    "placar_visitante": placar_visitante,
+                    "time_visitante": time_visitante,
+                    "img_visitante": img_visitante,
+            }
+
+            df_tabela = pd.DataFrame(resultado_tabela)
+            for _, row in df_tabela.iterrows():
+                jogos_rodada_criado  = Palpite.objects.create(
+                    time_casa=row['time_casa'],
+                    imagem_casa=row['img_casa'],
+                    placar_casa=row['placar_casa'],
+                    placar_visitante=row['placar_visitante'],
+                    time_visitante=row['time_visitante'],
+                    imagem_fora=row['img_visitante'],
+                    usuario=user,
+                    rodada_atual=verificacao_partida.rodada_atual,
+                    )
+
+
+            verificacao_partida.rodada_atual += 1
+            verificacao_partida.save()
+            return redirect('criar_palpites')
         context = {"rodadas":rodadas, 'verificacao_partida':verificacao_partida}
     return render(request, "palpites/palpites.html",context)
 
 def meus_palpites(request):
+    user = request.user
+    usuarios = Usuario.objects.filter(is_verified=True)
+    rodadas_distintas = Palpite.objects.values_list('rodada_atual', flat=True).distinct().order_by('rodada_atual')
+    rodadas = Palpite.objects.filter(usuario=user).order_by('rodada_atual')[:10]
 
-    return render(request, "palpites/meus_palpites.html")
+    context = {'rodadas':rodadas, "usuarios":usuarios, "rodadas_distintas":rodadas_distintas}
+    return render(request, "palpites/meus_palpites.html", context)
+
+
+def filtrar_palpites(request):
+    usuario_id = request.GET.get("usuario")
+    rodada = request.GET.get("rodada")
+    usuario = Usuario.objects.get(id=usuario_id)
+    palpites = Palpite.objects.all()
+
+    if usuario_id:
+        palpites = palpites.filter(usuario__id=usuario_id)
+
+    if rodada:
+        palpites = palpites.filter(rodada_atual=rodada)
+    context = {
+        'rodadas': palpites,
+        "usuario":usuario,
+        "rodada_atual": rodada,
+    }
+    html = render_to_string('palpites/partials/palpites_lista.html', context)
+    return HttpResponse(html)

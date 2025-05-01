@@ -1,0 +1,50 @@
+<div class="bets-results" id="palpites-container">
+  <div class="results-header">
+    <h3>{{ rodada_atual }}ª Rodada - Palpites de {{ usuario }}</h3>
+    <div class="results-summary">
+      <span class="badge points">Total: 15 pontos</span>
+      <span class="badge exact">5 placares exatos</span>
+      <span class="badge correct">10 acertos</span>
+    </div>
+  </div>
+
+<div class="bets-list">
+  {% for rodada in rodadas %}
+  <div class="bet-item exact-correct">
+    <div class="match-info">
+      <div class="teams">
+        <span class="team home-team">
+          <img src="{{ rodada.imagem_casa }}" alt="{{ rodada.time_casa }}" class="team-logo">
+          {{ rodada.time_casa }}
+        </span>
+        <span class="vs">X</span>
+        <span class="team away-team">
+          <img src="{{ rodada.imagem_fora }}" alt="{{ rodada.time_visitante }}" class="team-logo">
+          {{ rodada.time_visitante }}
+        </span>
+      </div>
+      <div class="match-date">
+        <i class="far fa-calendar-alt"></i> 26/04 - 16:00h
+      </div>
+      <div class="match-date">
+        <i class="far fa-calendar-alt"></i> Estádio do Maracanã
+      </div>
+    </div>
+
+    <div class="bet-comparison">
+      <div class="user-bet">
+        <span>Seu palpite:</span>
+        <strong>{{ rodada.placar_casa }} - {{ rodada.placar_visitante }}</strong>
+      </div>
+      <div class="actual-result">
+        <span>Resultado:</span>
+        <strong>2 - 1</strong>
+      </div>
+      <div class="bet-points">
+        <span>Pontos:</span>
+        <strong class="points">5</strong>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>

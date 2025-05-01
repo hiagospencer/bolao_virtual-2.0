@@ -6,24 +6,30 @@ from usuarios.models import Usuario
 
 class VerificadorConquistas:
     @classmethod
-    def verificar_meta_usuario(cls, usuario, meta):
-        conquista, created = ConquistaUsuario.objects.get_or_create(
-            usuario=usuario,
-            meta=meta,
-            defaults={'progresso_atual': 0, 'concluida': False}
-        )
+    def verificar_meta_usuario(cls, usuario, filtro_func):
+        print("DEBUG USUARIO:", usuario, type(usuario))
+        metas = MetaConquista.objects.all()
+        for meta in metas:
+            if not filtro_func(meta):
+                continue
 
-        if conquista.concluida:
-            return
+            conquista, created = ConquistaUsuario.objects.get_or_create(
+                usuario=usuario,
+                meta=meta,
+                defaults={'progresso_atual': 0, 'concluida': False}
+            )
 
-        progresso = cls._calcular_progresso(usuario, meta)
+            if conquista.concluida:
+                continue
 
-        conquista.progresso_atual = progresso
-        if progresso >= meta.valor_requerido:
-            conquista.concluida = True
-            conquista.data_conquista = timezone.now()
-            cls._recompensar_usuario(usuario, meta)
-        conquista.save()
+            progresso = cls._calcular_progresso(usuario, meta)
+
+            conquista.progresso_atual = progresso
+            if progresso >= meta.valor_requerido:
+                conquista.concluida = True
+                conquista.data_conquista = timezone.now()
+                cls._recompensar_usuario(usuario, meta)
+            conquista.save()
 
     @classmethod
     def _calcular_progresso(cls, usuario, meta):
@@ -34,7 +40,6 @@ class VerificadorConquistas:
             ).count()
 
         elif meta.tipo == 'pontos_rodada':
-            from palpites.models import Rodada  # Supondo que existe
             return Rodada.objects.filter(
                 palpites__usuario=usuario,
                 palpites__pontos__gte=meta.valor_requerido

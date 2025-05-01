@@ -134,6 +134,9 @@ class BloquearPartida(models.Model):
     bloquear_grafico = models.BooleanField(default=False)
     bloquear_pagamento = models.BooleanField(default=False)
     data_final = models.CharField(max_length=50, null=True, blank=True)
+    partida_atual = models.IntegerField(default=1)
+    partida_final = models.IntegerField(default=39)
+
 
     def __str__(self):
-        return f'Rodadas bloqueadas: {self.rodada_bloqueada}'
+        return f'Rodadas bloqueadas: {self.rodada_bloqueada} - partida atual: {self.partida_atual}ª - partida final: {self.partida_final}ª'
