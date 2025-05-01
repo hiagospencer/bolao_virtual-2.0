@@ -73,9 +73,9 @@
                     <li><a href="{% url 'perfil' %}"><i class="fas fa-user"></i> Perfil</a></li>
                 {% endif %}
 
-                {% if user.is_superuser %}
+                <!-- {% if user.is_superuser %}
                     <li><a href="{% url 'configuracao' %}"><i class="fa-solid fa-gear"></i>Configurações</a></li>
-                 {% endif %}
+                 {% endif %} -->
                 <!-- Área do usuário (dinâmica) -->
                 <div class="user-area" id="user-area">
                     <!-- Estado não logado (padrão) -->
@@ -121,6 +121,7 @@
         <li><a href="{% url 'loja' %}"><i class="fas fa-shopping-cart"></i> Shop</a></li>
         <li><a href="{% url 'pagamento' %}"><i class="fa-solid fa-credit-card"></i> Pagamento</a></li>
         <li><a href="{% url 'perfil' %}"><i class="fas fa-user"></i> Perfil</a></li>
+        <li><a href="{% url 'configuracao' %}"><i class="fa-solid fa-gear"></i>Configurações</a></li>
     </ul>
 
     <div class="mobile-auth-buttons">

@@ -84,8 +84,9 @@ def meus_palpites(request):
     usuarios = Usuario.objects.filter(is_verified=True)
     rodadas_distintas = Palpite.objects.values_list('rodada_atual', flat=True).distinct().order_by('rodada_atual')
     rodadas = Palpite.objects.filter(usuario=user).order_by('rodada_atual')[:10]
-
-    context = {'rodadas':rodadas, "usuarios":usuarios, "rodadas_distintas":rodadas_distintas}
+    rodadas_original = RodadaOriginal.objects.all().order_by('rodada_atual')[:10]
+    calcular_pontuacao_usuario(1)
+    context = {'rodadas':rodadas, "usuarios":usuarios, "rodadas_distintas":rodadas_distintas, "rodadas_original": rodadas_original}
     return render(request, "palpites/meus_palpites.html", context)
 
 
@@ -94,16 +95,19 @@ def filtrar_palpites(request):
     rodada = request.GET.get("rodada")
     usuario = Usuario.objects.get(id=usuario_id)
     palpites = Palpite.objects.all()
+    rodadas_original = RodadaOriginal.objects.all().order_by('rodada_atual')[:10]
 
     if usuario_id:
         palpites = palpites.filter(usuario__id=usuario_id)
 
     if rodada:
         palpites = palpites.filter(rodada_atual=rodada)
+        rodadas_original = RodadaOriginal.objects.filter(rodada_atual=rodada)
     context = {
         'rodadas': palpites,
         "usuario":usuario,
         "rodada_atual": rodada,
+        "rodadas_original": rodadas_original
     }
     html = render_to_string('palpites/partials/palpites_lista.html', context)
     return HttpResponse(html)

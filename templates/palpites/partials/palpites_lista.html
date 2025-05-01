@@ -10,7 +10,7 @@
 
 <div class="bets-list">
   {% for rodada in rodadas %}
-  <div class="bet-item exact-correct">
+  <div class="bet-item {{ rodada.tipo_class }}">
     <div class="match-info">
       <div class="teams">
         <span class="team home-team">
@@ -37,12 +37,22 @@
         <strong>{{ rodada.placar_casa }} - {{ rodada.placar_visitante }}</strong>
       </div>
       <div class="actual-result">
-        <span>Resultado:</span>
-        <strong>2 - 1</strong>
+        <span>Resultado Original:</span>
+          {% for partida in rodadas_original %}
+            {% if partida.rodada_atual == rodada.rodada_atual and partida.time_casa == rodada.time_casa and partida.time_visitante == rodada.time_visitante %}
+              <strong>{{ partida.placar_casa }} - {{ partida.placar_visitante }}</strong>
+            {% endif %}
+          {% endfor %}
       </div>
       <div class="bet-points">
         <span>Pontos:</span>
-        <strong class="points">5</strong>
+          {% if rodada.tipo_class == 'exact-correct' %}
+            <strong class="points">5</strong>
+          {% elif  rodada.tipo_class == 'result-correct' %}
+            <strong class="points">2</strong>
+          {% else %}
+            <strong class="points">0</strong>
+          {% endif %}
       </div>
     </div>
   </div>

@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 class UsuarioAdmin(UserAdmin):
     model = Usuario
     list_display = (
-        'username', 'email', 'first_name', 'last_name',
+        'username', 'email', 'first_name', 'last_name', "xp",
         'is_staff', 'is_verified', 'pontos_totais', 'moedas_virtuais', 'foto_perfil_preview'
     )
     list_filter = ('is_staff', 'is_superuser', 'is_verified', 'is_active')
