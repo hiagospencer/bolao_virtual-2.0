@@ -45,7 +45,7 @@
 
       <div class="bets-list">
         {% for rodada in rodadas %}
-        <div class="bet-item exact-correct">
+        <div class="bet-item {{ rodada.tipo_class }}">
           <div class="match-info">
             <div class="teams">
               <span class="team home-team">

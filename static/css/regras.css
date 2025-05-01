@@ -1,0 +1,240 @@
+/* ===== PÁGINA DE REGRAS ===== */
+.regras-page .rules-hero {
+  text-align: center;
+  margin: 40px 0;
+  padding: 30px 0;
+  border-bottom: 2px solid var(--secondary);
+}
+
+.regras-page .rules-hero h1 {
+  color: var(--primary);
+  font-family: var(--font-title);
+  font-size: 2.8rem;
+  margin-bottom: 15px;
+}
+
+.regras-page .rules-hero p {
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.regras-page .rules-section {
+  margin-bottom: 50px;
+}
+
+.regras-page .rules-section h2 {
+  color: var(--primary);
+  font-family: var(--font-title);
+  font-size: 2rem;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.regras-page .rules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.regras-page .rule-card {
+  background: white;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.regras-page .rule-card.highlight {
+  border-top: 4px solid var(--secondary);
+}
+
+.regras-page .rule-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.regras-page .rule-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  gap: 10px;
+}
+
+.regras-page .rule-header h3 {
+  margin: 0;
+  flex: 1;
+  color: var(--primary);
+}
+
+.regras-page .rule-header i {
+  font-size: 1.5rem;
+  color: var(--secondary);
+}
+
+.regras-page .points-badge {
+  background-color: var(--primary);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.regras-page .rule-example {
+  margin-top: 20px;
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.regras-page .example-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.regras-page .example-item:last-child {
+  margin-bottom: 0;
+}
+
+.regras-page .example-label {
+  font-weight: 600;
+  color: #555;
+}
+
+.regras-page .example-value {
+  font-weight: bold;
+}
+
+.regras-page .example-value.correct {
+  color: var(--success);
+}
+
+.regras-page .example-value.partial {
+  color: var(--warning);
+}
+
+.regras-page .tiebreaker-rules {
+  background: white;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.regras-page .tiebreaker-list {
+  counter-reset: tiebreaker-counter;
+  padding-left: 0;
+}
+
+.regras-page .tiebreaker-list li {
+  position: relative;
+  padding-left: 50px;
+  margin-bottom: 20px;
+  list-style: none;
+}
+
+.regras-page .tiebreaker-list li:before {
+  counter-increment: tiebreaker-counter;
+  content: counter(tiebreaker-counter);
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: var(--primary);
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.regras-page .tiebreaker-list li strong {
+  display: block;
+  color: var(--primary);
+  margin-bottom: 5px;
+}
+
+.regras-page .tiebreaker-list li span {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.regras-page .note-box {
+  background-color: #e3f2fd;
+  border-left: 4px solid var(--info);
+  padding: 15px;
+  border-radius: 0 8px 8px 0;
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.regras-page .note-box i {
+  color: var(--info);
+  font-size: 1.2rem;
+}
+
+.regras-page .participation-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+
+.regras-page .step-card {
+  background: white;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  position: relative;
+  border-top: 4px solid var(--secondary);
+}
+
+.regras-page .step-number {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--primary);
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.regras-page .step-card h3 {
+  color: var(--primary);
+  margin-top: 10px;
+}
+
+.regras-page .rules-list {
+  background: white;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.regras-page .rules-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.regras-page .rules-list li:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}

@@ -11,3 +11,9 @@ def regras(request):
 
 def configuracao(request):
     return render(request,"outros/configuracoes.html")
+
+def termos(request):
+    return render(request,"termos/termos.html")
+
+def privacidade(request):
+    return render(request,"termos/privacidade.html")

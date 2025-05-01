@@ -7,4 +7,6 @@ urlpatterns = [
     path('perfil/', perfil, name='perfil'),
     path('regras/', regras, name='regras'),
     path('configuracao/', configuracao, name='configuracao'),
+    path('termos/', termos, name='termos'),
+    path('privacidade/', privacidade, name='privacidade'),
 ]
