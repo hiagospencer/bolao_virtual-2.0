@@ -1,21 +1,41 @@
 # apps/palpites/admin.py
 from django.contrib import admin
-from .models import Palpite
+from .models import *
 from django.utils.html import format_html
 
+
+class ClassificacaoAdmin(admin.ModelAdmin):
+    model = Classificacao
+    list_display = ["usuario", "pontos","posicao_atual", "posicao_anterior", "posicao_variacao"]
+    list_filter = ["usuario", "pontos",]
+    search_fields = ("usuario",)
+
+    
 class PalpiteAdmin(admin.ModelAdmin):
-    list_display = ('usuario', 'partida', 'placar_casa', 'placar_visitante', 'data_palpite', 'pontos_ganhos', 'calcular_pontos_display')
-    list_filter = ('usuario', 'partida', 'data_palpite')
-    search_fields = ('usuario__username', 'partida__time_casa__nome', 'partida__time_visitante__nome')
-    readonly_fields = ('data_palpite', 'pontos_ganhos')
+    model = Palpite
+    list_display = ["usuario","rodada_atual","time_casa", "placar_casa", "placar_visitante", "time_visitante", "vencedor","placar_exato","vitorias", "finalizado", "tipo_class"]
+    list_filter = ["usuario", "rodada_atual"]
+    list_per_page = 10
+    search_fields = ("usuario", "rodada_atual")
 
-    def calcular_pontos_display(self, obj):
-        return obj.calcular_pontos()
-    calcular_pontos_display.short_description = 'Pontos Ganhos'
+class RodadaOriginalAdmin(admin.ModelAdmin):
+    model = RodadaOriginal
+    list_display = ["rodada_atual","time_casa", "placar_casa", "placar_visitante",  "time_visitante", "vencedor", "finalizado"]
+    list_filter = ["rodada_atual"]
+    list_editable = ("placar_casa", "placar_visitante", "vencedor",)
+    list_per_page = 10
+    search_fields = ("usuario", "rodada_atual")
 
-    def save_model(self, request, obj, form, change):
-        # Calcula os pontos ao salvar o palpite
-        obj.pontos_ganhos = obj.calcular_pontos()
-        super().save_model(request, obj, form, change)
+class RodadaAdmin(admin.ModelAdmin):
+    model = Palpite
+    list_display = ["rodada_atual","time_casa", "placar_casa", "placar_visitante",  "time_visitante"]
+    list_filter = ["rodada_atual"]
+    list_per_page = 10
+    search_fields = ("rodada_atual",)
 
+
+admin.site.register(Classificacao, ClassificacaoAdmin)
+admin.site.register(RodadaOriginal, RodadaOriginalAdmin)
+admin.site.register(Rodada, RodadaAdmin)
 admin.site.register(Palpite, PalpiteAdmin)
+admin.site.register(BloquearPartida)
