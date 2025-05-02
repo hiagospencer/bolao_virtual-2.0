@@ -41,6 +41,8 @@ def trofeus(request):
     participante = Usuario.objects.get(username=usuario)
     conquistas_usuario = ConquistaUsuario.objects.filter(usuario=usuario).select_related('meta__tipo_trofeu')
     historico = HistoricoConquista.objects.filter(usuario=usuario).order_by('-data_conquista')[:10]
+    progresso = int((participante.xp / participante.xp_para_proximo_level) * 100)
+
     # Separar conquistas concluídas e em progresso
     conquistas_concluidas = conquistas_usuario.filter(concluida=True)
     conquistas_em_progresso = conquistas_usuario.filter(concluida=False)
@@ -54,7 +56,13 @@ def trofeus(request):
         'historico_conquistas': historico,
         'todos_trofeus': todos_trofeus,
         'usuario': usuario,
-        "participante":participante
+        "participante":participante,
+        'participante': {
+            'xp': usuario.xp,
+            'level': usuario.level,
+            'xp_necessario': usuario.xp_para_proximo_level,
+            'progresso': min(progresso, 100)  # Limita a 100%
+        },
     }
 
     return render(request, "outros/trofeus.html", context)

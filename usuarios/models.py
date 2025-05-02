@@ -9,9 +9,29 @@ class Usuario(AbstractUser):
     is_verified = models.BooleanField(default=False)
     xp = models.PositiveIntegerField(default=0)
     moedas = models.PositiveIntegerField(default=0)
+    level = models.PositiveSmallIntegerField(default=1)
+    xp_para_proximo_level = models.PositiveIntegerField(default=500)
 
     def __str__(self):
         return self.username
+
+    def adicionar_xp(self, quantidade):
+        nivel_anterior = self.level
+        self.xp += quantidade
+        while self.xp >= self.xp_para_proximo_level:
+            self.xp -= self.xp_para_proximo_level
+            self.level += 1
+            self.xp_para_proximo_level = self.calcular_xp_necessario()
+            # Recompensa ao subir de nível:
+            self.moedas += self.level * 100  # Exemplo: 100 moedas por nível
+        self.save()
+        if self.level > nivel_anterior:
+            return True  # Indica que houve level up
+        return False
+
+    def calcular_xp_necessario(self):
+        # Fórmula de progressão (exemplo: 1000 * level^1.5)
+        return int(1000 * (self.level ** 1.5))
 
 class UserProfile(models.Model):
     user = models.OneToOneField(Usuario, on_delete=models.CASCADE)

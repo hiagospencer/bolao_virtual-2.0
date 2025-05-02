@@ -12,11 +12,11 @@
       <p>Seu progresso e reconhecimento no Bolão Virtual</p>
       <div class="user-level">
         <div class="level-progress">
-          <div class="progress-bar" style="width: 65%"></div>
+          <div class="progress-bar" style="width: {{ participante.progresso }}"></div>
         </div>
         <div class="level-info">
-          <span class="current-level">Nível 7</span>
-          <span class="points-to-next">{{ participante.xp }}/1000 pontos para o próximo nível</span>
+          <span class="current-level">Nível {{ participante.level }}</span>
+          <span class="points-to-next">{{ participante.xp }}/{{ participante.xp_necessario }} pontos para o próximo nível</span>
         </div>
       </div>
     </section>
