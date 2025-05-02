@@ -190,6 +190,7 @@ def calcular_pontuacao_usuario(rodada_atualizada):
   except:
     print('tabela pontuação não encontrada')
 
+
 def resetar_pontuacao_usuarios_normal():
   '''
   Filtrar todos os usuários com o tipo aposta "normal", colocar o pagamento de todos os usuários em "False" e zera todos os pontos da classificação.

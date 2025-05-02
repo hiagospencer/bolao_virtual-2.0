@@ -29,6 +29,8 @@ class MetaConquista(models.Model):
         ('top_ranking', 'Posição no Ranking'),
         ('pontos_totais', 'Pontos Totais Acumulados'),
         ('total_conquistas', 'Total de Conquistas Únicas'),
+        ('rei_palpites', 'Rei dos Palpites'),
+        ('colecionador', 'Colecionadoor de Troféus'),
     ]
 
     tipo_trofeu = models.ForeignKey(TipoTrofeu, on_delete=models.CASCADE)

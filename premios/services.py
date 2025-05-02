@@ -4,10 +4,10 @@ from .models import MetaConquista, ConquistaUsuario
 from palpites.models import Palpite
 from usuarios.models import Usuario
 
+
 class VerificadorConquistas:
     @classmethod
     def verificar_meta_usuario(cls, usuario, filtro_func):
-        print("DEBUG USUARIO:", usuario, type(usuario))
         metas = MetaConquista.objects.all()
         for meta in metas:
             if not filtro_func(meta):
@@ -33,30 +33,53 @@ class VerificadorConquistas:
 
     @classmethod
     def _calcular_progresso(cls, usuario, meta):
-        if meta.tipo == 'placar_exato':
-            return Palpite.objects.filter(
+        classificacao = Classificacao.objects.get(usuario=usuario)
+
+        if meta.tipo == 'total_conquistas':
+            # Verifica se o usuário completou TODAS as metas (exceto esta)
+            total_metas = MetaConquista.objects.exclude(id=meta.id).count()
+            conquistas_completas = ConquistaUsuario.objects.filter(
                 usuario=usuario,
-                placar_exato=True  # Assumindo campo booleano no Palpite
+                concluida=True
             ).count()
+            return 1 if conquistas_completas >= total_metas else 0
 
-        elif meta.tipo == 'pontos_rodada':
-            return Rodada.objects.filter(
-                palpites__usuario=usuario,
-                palpites__pontos__gte=meta.valor_requerido
-            ).distinct().count()
-
-        elif meta.tipo == 'sequencia':
-            # Implementar lógica de sequência (ex: maior streak de acertos)
-            pass
-
-        elif meta.tipo == 'top_ranking':
-            from ranking.models import PosicaoRanking  # Modelo hipotético
-            return PosicaoRanking.objects.filter(
+        elif meta.tipo == 'sequencia_vitorias':
+            # Maior sequência de vitórias em uma rodada (exemplo simplificado)
+            palpites = Palpite.objects.filter(
                 usuario=usuario,
-                posicao__lte=meta.valor_requerido
-            ).count()
+                rodada_atual=Rodada.objects.latest('id'),  # Última rodada
+                vitorias__gt=0  # Palpites corretos
+            ).order_by('id')
+            streak = 0
+            max_streak = 0
+            for palpite in palpites:
+                streak = streak + 1 if palpite.vitorias > 0 else 0
+                max_streak = max(max_streak, streak)
+            return 1 if max_streak >= meta.valor_requerido else 0
+
+        elif meta.tipo == 'melhor_rodada':
+            # Verifica se o usuário já foi 1º em alguma rodada (usar histórico)
+            return 1 if HistoricoRanking.objects.filter(
+                usuario=usuario,
+                posicao=1
+            ).exists() else 0
+
+        elif meta.tipo == 'pontos_totais':
+            return 1 if classificacao.pontos >= meta.valor_requerido else 0
+
+        elif meta.tipo == 'combinada':
+            # 15 vitórias E 10 placares exatos
+            return 1 if (
+                classificacao.vitorias >= 15 and
+                classificacao.placar_exato >= 10
+            ) else 0
+
+        elif meta.tipo == 'vitorias':
+            return classificacao.vitorias
 
         return 0
+
 
     @classmethod
     def _recompensar_usuario(cls, usuario, meta):
