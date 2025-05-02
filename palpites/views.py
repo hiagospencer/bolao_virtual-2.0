@@ -9,6 +9,7 @@ from .utils import *
 from .models import *
 
 def criar_palpites(request):
+    zerar_palpites_usuarios(3)
     if request.user.is_authenticated:
         user = request.user
         time_casa = []
@@ -85,7 +86,7 @@ def meus_palpites(request):
     rodadas_distintas = Palpite.objects.values_list('rodada_atual', flat=True).distinct().order_by('rodada_atual')
     rodadas = Palpite.objects.filter(usuario=user).order_by('rodada_atual')[:10]
     rodadas_original = RodadaOriginal.objects.all().order_by('rodada_atual')[:10]
-    calcular_pontuacao_usuario(2)
+    calcular_pontuacao_usuario(3)
     context = {'rodadas':rodadas, "usuarios":usuarios, "rodadas_distintas":rodadas_distintas, "rodadas_original": rodadas_original}
     return render(request, "palpites/meus_palpites.html", context)
 

@@ -11,14 +11,28 @@
       <h1><i class="fas fa-award"></i> Prêmios e Conquistas</h1>
       <p>Seu progresso e reconhecimento no Bolão Virtual</p>
       <div class="user-level">
-        <div class="level-progress">
-          <div class="progress-bar" style="width: {{ participante.progresso }}"></div>
+    <div class="level-progress">
+        <div class="progress-bar"
+             style="width: {% if participante.nivel_maximo_atingido %}100{% else %}{{ participante.progresso }}{% endif %}%;
+                    background-color: {% if participante.nivel_maximo_atingido %}#FFD700{% else %}#4CAF50{% endif %};">
         </div>
-        <div class="level-info">
-          <span class="current-level">Nível {{ participante.level }}</span>
-          <span class="points-to-next">{{ participante.xp }}/{{ participante.xp_necessario }} pontos para o próximo nível</span>
-        </div>
-      </div>
+    </div>
+    <div class="level-info">
+        <span class="current-level">
+            Nível {{ participante.level }}
+            {% if participante.nivel_maximo_atingido %}
+                <i class="fas fa-crown" style="color: #FFD700;"></i> (Máximo)
+            {% endif %}
+        </span>
+        <span class="points-to-next">
+            {% if participante.nivel_maximo_atingido %}
+                Nível máximo conquistado!
+            {% else %}
+                {{ participante.xp }}/{{ participante.xp_necessario }} pontos
+            {% endif %}
+        </span>
+    </div>
+</div>
     </section>
 
     <div class="rewards-tabs">

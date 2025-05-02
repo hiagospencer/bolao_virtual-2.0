@@ -14,7 +14,7 @@ class UsuarioAdmin(UserAdmin):
     list_filter = ('is_staff', 'is_superuser', 'is_verified', 'is_active')
     search_fields = ('username', 'email', 'first_name', 'last_name')
     readonly_fields = ('last_login', 'date_joined', 'foto_perfil_preview')
-
+    # list_editable = ("xp", "moedas ", "level ","xp_para_proximo_level ","nivel_maximo")
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         (_('Informações pessoais'), {
