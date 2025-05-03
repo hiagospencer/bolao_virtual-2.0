@@ -39,9 +39,10 @@ class UsuarioAdmin(UserAdmin):
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'telefone', 'chave_pix', 'bio_resumida')
+    list_display = ('user', 'telefone', 'chave_pix', 'pagamento', 'xp', 'moedas', 'level', 'xp_para_proximo_level', 'nivel_maximo')
     search_fields = ('user__username', 'telefone', 'chave_pix')
     autocomplete_fields = ('user',)
+    list_editable = ( 'pagamento', 'xp', 'moedas', 'level', 'xp_para_proximo_level', 'nivel_maximo')
 
     def bio_resumida(self, obj):
         return (obj.bio[:50] + '...') if len(obj.bio) > 50 else obj.bio

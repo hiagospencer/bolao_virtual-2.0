@@ -1,153 +1,126 @@
 # apps/premios/conquistas.py
 
 from django.utils import timezone
+from django.db.models import Q
+from django.core.exceptions import ObjectDoesNotExist
+
 from premios.models import MetaConquista, ConquistaUsuario, HistoricoConquista, TipoTrofeu
 from palpites.models import Classificacao
-# from ranking.models import PosicaoRanking
 from usuarios.models import Usuario
 
 
-class GerenciadorConquistas:
-    def __init__(self, usuario):
-        self.usuario = usuario
-        self.classificacao = Classificacao.objects.get(usuario=usuario)
-        self.criar_metas_padrao()
+# Relaciona tipo de meta com o campo da Classificacao (para metas simples)
+TIPOS_META_CAMPO = {
+    'placar_exato': 'placar_exato',
+    'pontos_totais': 'pontos',
+    'vitorias': 'vitorias',
+    'top_ranking': 'posicao_atual',
+}
 
-    def criar_metas_padrao(self):
-        metas = [
-            {
-                "tipo": "placar_exato",
-                "nome": "Mestre do Placar Exato",
-                "descricao": "Acertou 10 placares exatos.",
-                "valor_requerido": 10,
-                "xp": 100,
-                "moedas": 50
-            },
-            {
-                "tipo": "vitorias",
-                "nome": "Senhor das Vitórias",
-                "descricao": "Acertou o vencedor de 20 jogos.",
-                "valor_requerido": 20,
-                "xp": 200,
-                "moedas": 50
-            },
-            {
-                "tipo": "pontos_totais",
-                "nome": "Acumulador de Pontos",
-                "descricao": "Acumulou 100 pontos totais.",
-                "valor_requerido": 100,
-                "xp": 300,
-                "moedas": 70
-            },
-            {
-                "tipo": "participacao",
-                "nome": "Presença Constante",
-                "descricao": "Participou de 10 rodadas.",
-                "valor_requerido": 10,
-                "xp": 150,
-                "moedas": 40
-            },
-            {
-                "tipo": "total_conquistas",
-                "nome": "Colecionador de Conquistas",
-                "descricao": "Conquistou 5 metas diferentes.",
-                "valor_requerido": 5,
-                "xp": 250,
-                "moedas": 60
-            },
-        ]
+# Metas compostas com lógica personalizada
+METAS_COMPOSTAS = {
+    'sequencia': {
+        'condicao': lambda c: (c.vitorias or 0) >= 20 and (c.placar_exato or 0) >= 10,
+        'descricao': 'Troféu para táticos impecáveis com +15 vitórias e +10 placares exatos',
+    },
+    'rei_palpites': {
+        'condicao': lambda c: (c.vitorias or 0) >= 10 and (c.empates or 0) >= 8 and (c.placar_exato or 0) >= 8,
+        'descricao': 'Troféu para táticos impecáveis com +15 vitórias e +10 placares exatos',
+    },
+    # Adicione outras metas compostas aqui
+}
 
-        tipo_trofeu_padrao, _ = TipoTrofeu.objects.get_or_create(
-            nome="Troféu Padrão",
-            defaults={"descricao": "Troféu padrão", "icone": "fa-trophy", "nivel": 1}
-        )
+def verificar_conquistas(participante, request=None):
 
-        for meta in metas:
-            MetaConquista.objects.get_or_create(
-                tipo=meta["tipo"],
-                valor_requerido=meta["valor_requerido"],
-                defaults={
-                    "tipo_trofeu": tipo_trofeu_padrao,
-                    "nome": meta["nome"],
-                    "descricao": meta["descricao"],
-                    "xp_recompensa": meta["xp"],
-                    "moedas_recompensa": meta["moedas"],
-                }
-            )
+    try:
+        classificacao = Classificacao.objects.get(usuario=participante.user)
+    except Classificacao.DoesNotExist:
+        return
 
-    def verificar_conquistas(self):
-        print("Verificar Conquista")
-        metas = MetaConquista.objects.all()
-
-        for meta in metas:
-            progresso = self.calcular_progresso(meta.tipo)
-
+    # Verificar metas simples
+    for tipo, campo in TIPOS_META_CAMPO.items():
+        progresso = getattr(classificacao, campo, 0) or 0
+        meta = MetaConquista.objects.filter(tipo=tipo).first()
+        if not meta:
+            continue
+        if progresso >= meta.valor_requerido:
             conquista, created = ConquistaUsuario.objects.get_or_create(
-                usuario=self.usuario,
+                usuario=participante.user,
                 meta=meta,
-                defaults={
-                    "progresso_atual": progresso,
-                    "concluida": progresso >= meta.valor_requerido
-                }
+                defaults={"progresso_atual": progresso, "concluida": True}
             )
+            if created:
+                level_up, moedas = participante.adicionar_xp(meta.xp_recompensa)
+                participante.moedas += meta.moedas_recompensa
+                participante.save()
 
-            if progresso >= meta.valor_requerido and not conquista.concluida:
-                conquista.progresso_atual = progresso
-                conquista.concluida = True
-                conquista.save()
-
-                # Adiciona ao histórico (somente se ainda não existe)
-                HistoricoConquista.objects.get_or_create(
-                    usuario=self.usuario,
+                HistoricoConquista.objects.create(
+                    usuario=participante.user,
                     meta=meta,
-                    defaults={
-                        "xp_ganho": meta.xp_recompensa,
-                        "moedas_ganhas": meta.moedas_recompensa,
-                        "data_conquista": timezone.now()
-                    }
+                    xp_ganho=meta.xp_recompensa,
+                    moedas_ganhas=meta.moedas_recompensa
                 )
 
-                # Adiciona XP e moedas ao usuário
-                self.usuario.xp += meta.xp_recompensa
-                self.usuario.moedas += meta.moedas_recompensa
-                self.usuario.save()
+                if request and level_up:
+                    messages.success(request, f"Level up! Agora você é nível {participante.level}")
+                if request:
+                    messages.success(request, f"Conquista desbloqueada: {meta.nome}")
 
-            elif not conquista.concluida:
-                conquista.progresso_atual = progresso
-                conquista.save()
+    # Verificar metas compostas
+    for tipo, dados in METAS_COMPOSTAS.items():
+        if dados['condicao'](classificacao):
+            meta = MetaConquista.objects.filter(tipo=tipo).first()
+            if not meta:
+                continue
+            conquista, created = ConquistaUsuario.objects.get_or_create(
+                usuario=participante.user,
+                meta=meta,
+                defaults={"progresso_atual": 100, "concluida": True}
+            )
+            if created:
+                level_up, moedas = participante.adicionar_xp(meta.xp_recompensa)
+                participante.moedas += meta.moedas_recompensa
+                participante.save()
 
-    def calcular_progresso(self, tipo):
-        if tipo == 'placar_exato':
-            return self.classificacao.placar_exato
-        elif tipo == 'vitorias':
-            return self.classificacao.vitorias
-        elif tipo == 'pontos_totais':
-            return self.classificacao.total_pontos
-        elif tipo == 'participacao':
-            return self.classificacao.total_rodadas
-        elif tipo == 'total_conquistas':
-            return ConquistaUsuario.objects.filter(usuario=self.usuario, concluida=True).count()
-        else:
-            return 0  # para metas não implementadas ainda
+                HistoricoConquista.objects.create(
+                    usuario=participante.user,
+                    meta=meta,
+                    xp_ganho=meta.xp_recompensa,
+                    moedas_ganhas=meta.moedas_recompensa
+                )
 
-    def _recompensar_usuario(self, meta):
-        self.usuario.xp += meta.xp_recompensa
-        self.usuario.moedas += meta.moedas_recompensa
-        self.usuario.save()
+                if request and level_up:
+                    messages.success(request, f"Level up! Agora você é nível {participante.level}")
+                if request:
+                    messages.success(request, f"Conquista desbloqueada: {meta.nome}")
 
-        HistoricoConquista.objects.create(
-            usuario=self.usuario,
-            meta=meta,
-            xp_ganho=meta.xp_recompensa,
-            moedas_ganhas=meta.moedas_recompensa
-        )
+    # Verificar meta "colecionador"
+    meta_colecionador = MetaConquista.objects.filter(tipo="colecionador").first()
+    if meta_colecionador:
+        total_metas = MetaConquista.objects.exclude(tipo="colecionador").count()
+        total_conquistadas = ConquistaUsuario.objects.filter(
+            usuario=participante.user, concluida=True
+        ).exclude(meta__tipo="colecionador").count()
 
-        self._verificar_level_up()
+        if total_conquistadas >= total_metas:
+            conquista, created = ConquistaUsuario.objects.get_or_create(
+                usuario=participante.user,
+                meta=meta_colecionador,
+                defaults={"progresso_atual": 1, "concluida": True}
+            )
+            if created:
+                level_up, moedas = participante.adicionar_xp(meta_colecionador.xp_recompensa)
+                participante.moedas += meta_colecionador.moedas_recompensa
+                participante.save()
 
-    def _verificar_level_up(self):
-        niveis = {1: 1000, 2: 2500, 3: 5000}
-        for level, xp_necessario in niveis.items():
-            if self.usuario.xp >= xp_necessario and self.usuario.level < level:
-                self.usuario.level = level
-                self.usuario.save()
-                break
+                HistoricoConquista.objects.create(
+                    usuario=participante.user,
+                    meta=meta_colecionador,
+                    xp_ganho=meta_colecionador.xp_recompensa,
+                    moedas_ganhas=meta_colecionador.moedas_recompensa
+                )
+
+                if request and level_up:
+                    messages.success(request, f"Level up! Agora você é nível {participante.level}")
+                if request:
+                    messages.success(request, f"Conquista desbloqueada: {meta_colecionador.nome}")

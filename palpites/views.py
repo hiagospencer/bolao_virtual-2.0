@@ -7,8 +7,12 @@ import pandas as pd
 
 from .utils import *
 from .models import *
+from usuarios.models import UserProfile
 
 def criar_palpites(request):
+    todos = UserProfile.objects.filter(pagamento=True)
+    for user in todos:
+        print(user.user.level)
     zerar_palpites_usuarios(3)
     if request.user.is_authenticated:
         user = request.user

@@ -2,7 +2,9 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from premios.models import TipoTrofeu, MetaConquista, ConquistaUsuario, HistoricoConquista
-from usuarios.models import Usuario
+from usuarios.models import Usuario, UserProfile
+from premios.conquistas import verificar_conquistas
+
 
 @login_required
 def minhas_conquistas(request):
@@ -38,12 +40,13 @@ def meus_premios(request):
 
 def trofeus(request):
     usuario = request.user
-    participante = Usuario.objects.get(username=usuario)
+    participante = UserProfile.objects.get(user=usuario)
+    verificar_conquistas(participante)
     conquistas_usuario = ConquistaUsuario.objects.filter(usuario=usuario).select_related('meta__tipo_trofeu')
     historico = HistoricoConquista.objects.filter(usuario=usuario).order_by('-data_conquista')[:10]
     progresso = int((participante.xp / participante.xp_para_proximo_level) * 100)
     max_level = participante.nivel_maximo
-    level_up, moedas = participante.adicionar_xp(1000)
+    # level_up, moedas = participante.adicionar_xp(1000)
     # Separar conquistas concluídas e em progresso
     conquistas_concluidas = conquistas_usuario.filter(concluida=True)
     conquistas_em_progresso = conquistas_usuario.filter(concluida=False)

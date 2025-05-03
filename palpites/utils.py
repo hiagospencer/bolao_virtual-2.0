@@ -5,8 +5,9 @@ import pandas as pd
 import time
 from django.core.mail import send_mail
 
-from premios.conquistas import GerenciadorConquistas
+from premios.conquistas import verificar_conquistas
 from .models import *
+from usuarios.models import *
 from .api_brasileirao import *
 
 
@@ -128,13 +129,13 @@ def calcular_pontuacao(user):
     print('tabela pontuação não encontrada')
 
 def calcular_pontuacao_usuario(rodada_atualizada):
-  todos_usuarios = Usuario.objects.all()
+  todos_usuarios = UserProfile.objects.filter(pagamento=True)
+  print(todos_usuarios)
   try:
     for usuario in todos_usuarios:
-      participante = Usuario.objects.get(username=usuario)
-      rodadas = Palpite.objects.filter(finalizado=False, usuario=usuario, rodada_atual=rodada_atualizada)
-      print(rodadas)
-      pontuacao_usuario = Classificacao.objects.get(usuario=usuario)
+      participante = UserProfile.objects.get(user=usuario.user)
+      rodadas = Palpite.objects.filter(finalizado=False, usuario=usuario.user, rodada_atual=rodada_atualizada)
+      pontuacao_usuario = Classificacao.objects.get(usuario=usuario.user)
       print("iniciando")
 
       for rodada in rodadas:
@@ -187,11 +188,11 @@ def calcular_pontuacao_usuario(rodada_atualizada):
           pontuacao_usuario.save()
 
           print("gerenciador")
-          gerenciador = GerenciadorConquistas(participante)
-          gerenciador.verificar_conquistas()
-          print("Finalizado")
+          # gerenciador = GerenciadorConquistas(participante)
+          # gerenciador.verificar_conquistas()
         except :
           continue
+      verificar_conquistas(participante)
   except:
     print('tabela pontuação não encontrada')
 

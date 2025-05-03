@@ -85,5 +85,8 @@ class HistoricoConquista(models.Model):
     xp_ganho = models.PositiveIntegerField()
     moedas_ganhas = models.PositiveIntegerField()
 
+    class Meta:
+        ordering = ['-data_conquista']
+        
     def __str__(self):
         return f"{self.usuario} conquistou {self.meta} em {self.data_conquista}"

@@ -90,13 +90,9 @@ class UserProfile(models.Model):
             self.xp -= self.xp_para_proximo_level
             self.level += 1
             level_up = True
-
-            # Recompensa por level up
             recompensa = self.level * 100
             self.moedas += recompensa
             moedas_ganhas += recompensa
-
-            # Atualiza para o próximo nível
             self.xp_para_proximo_level = self.calcular_xp_necessario()
 
         self.save()
@@ -109,3 +105,9 @@ class UserProfile(models.Model):
         multiplicador = 1.5  # Fator de crescimento
         return int(base_xp * (multiplicador ** (self.level - 1)))
 
+    def corrigir_nivel(self):
+        while self.xp >= self.xp_para_proximo_level and self.level < self.nivel_maximo:
+            self.xp -= self.xp_para_proximo_level
+            self.level += 1
+            self.xp_para_proximo_level = self.calcular_xp_necessario()
+        self.save() 
