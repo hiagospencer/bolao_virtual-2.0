@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Time, Campeonato, Partida
+from .models import Time, Campeonato, Partida, PremiacaoBolao
 
 @admin.register(Time)
 class TimeAdmin(admin.ModelAdmin):
@@ -33,3 +33,7 @@ class PartidaAdmin(admin.ModelAdmin):
     autocomplete_fields = ('time_casa', 'time_visitante', 'campeonato')
     date_hierarchy = 'data'
     ordering = ('-data',)
+
+@admin.register(PremiacaoBolao)
+class PremiacaoBolaoAdmin(admin.ModelAdmin):
+    list_display = ('posicao', 'premiacao', )

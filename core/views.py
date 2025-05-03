@@ -1,7 +1,30 @@
 from django.shortcuts import render
+from palpites.models import Classificacao
+from usuarios.models import UserProfile
+from premios.models import ConquistaUsuario
+from django.db.models import Prefetch
+from core.models import PremiacaoBolao
+
 
 def homepage(request):
-    return render(request, 'index.html')
+    usuarios_pagantes = UserProfile.objects.filter(pagamento=True).values_list('user_id', flat=True)
+    premiacoes = PremiacaoBolao.objects.all()
+    conquistas_concluidas = Prefetch(
+        'usuario__conquistas',
+        queryset=ConquistaUsuario.objects.filter(concluida=True).select_related('meta__tipo_trofeu'),
+        to_attr='conquistas_ativas'
+    )
+
+    classificacao = (
+        Classificacao.objects
+        .filter(usuario__in=usuarios_pagantes)
+        .select_related('usuario')
+        .prefetch_related(conquistas_concluidas)
+        .order_by('-pontos', '-placar_exato', '-vitorias', '-empates')
+    )
+
+    context = {'classificacao': classificacao, "premiacoes":premiacoes}
+    return render(request, 'index.html', context)
 
 def perfil(request):
     return render(request, "perfil.html")

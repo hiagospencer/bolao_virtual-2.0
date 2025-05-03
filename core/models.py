@@ -32,3 +32,11 @@ class Partida(models.Model):
 
     def __str__(self):
         return f"{self.time_casa} x {self.time_visitante} - {self.data.strftime('%d/%m/%Y')}"
+
+
+class PremiacaoBolao(models.Model):
+    posicao = models.CharField(max_length=100,null=True, blank=True)
+    premiacao = models.DecimalField(default=0, max_digits=100, decimal_places=2)
+
+    def __str__(self):
+        return f'Posicao: {self.posicao} - Premiação: {self.premiacao}'
