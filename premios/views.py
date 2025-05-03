@@ -40,19 +40,25 @@ def meus_premios(request):
 
 def trofeus(request):
     usuario = request.user
+    total_trofeus = MetaConquista.objects.count()
+    conquistados = ConquistaUsuario.objects.filter(usuario=usuario, concluida=True).count()
     participante = UserProfile.objects.get(user=usuario)
     verificar_conquistas(participante)
     conquistas_usuario = ConquistaUsuario.objects.filter(usuario=usuario).select_related('meta__tipo_trofeu')
     historico = HistoricoConquista.objects.filter(usuario=usuario).order_by('-data_conquista')[:10]
     progresso = int((participante.xp / participante.xp_para_proximo_level) * 100)
     max_level = participante.nivel_maximo
-    # level_up, moedas = participante.adicionar_xp(1000)
-    # Separar conquistas concluídas e em progresso
+
+    if total_trofeus > 0:
+        porcentagem = round((conquistados / total_trofeus) * 100, 2)
+    else:
+        porcentagem = 0
+
     conquistas_concluidas = conquistas_usuario.filter(concluida=True)
     conquistas_em_progresso = conquistas_usuario.filter(concluida=False)
 
-    # Buscar todos os troféus disponíveis (para a seção "Troféus")
-    todos_trofeus = TipoTrofeu.objects.all()
+
+    todos_trofeus = MetaConquista.objects.all()
 
     context = {
         'conquistas_concluidas': conquistas_concluidas,
@@ -61,6 +67,9 @@ def trofeus(request):
         'todos_trofeus': todos_trofeus,
         'usuario': usuario,
         "participante":participante,
+        'total_trofeus': total_trofeus,
+        'conquistados': conquistados,
+        'porcentagem': porcentagem,
         'participante': {
             'xp': participante.xp,
             'level': participante.level,

@@ -148,19 +148,14 @@
 
       <div class="trophies-grid">
         {% for trofeu in todos_trofeus %}
-          <div class="trophy-card {% if trofeu.conquistado %}unlocked{% else %}locked{% endif %}">
+          <div class="trophy-card unlocked">
             <div class="trophy-icon"
-              style="color: {{ trofeu.cor }};"
-            ><i class="fas {{ trofeu.icone }}"></i>
+              style="color: {{ trofeu.tipo_trofeu.cor }};"
+            ><i class="fas {{ trofeu.tipo_trofeu.icone }}"></i>
             </div>
             <div class="trophy-info">
               <h3>{{ trofeu.nome }}</h3>
               <p>{{ trofeu.descricao }}</p>
-              {% if trofeu.conquistado %}
-                <span class="trophy-date">Conquistado em: {{ trofeu.data_conquista|date:"m/Y" }}</span>
-              {% else %}
-                <span class="trophy-progress">Não conquistado</span>
-              {% endif %}
             </div>
           </div>
         {% endfor %}
@@ -168,15 +163,15 @@
 
       <div class="trophies-stats">
         <div class="stat-box">
-          <div class="stat-value">4</div>
+          <div class="stat-value">{{ conquistados }}</div>
           <div class="stat-label">Troféus Conquistados</div>
         </div>
         <div class="stat-box">
-          <div class="stat-value">12</div>
+          <div class="stat-value">{{ total_trofeus }}</div>
           <div class="stat-label">Troféus Disponíveis</div>
         </div>
         <div class="stat-box">
-          <div class="stat-value">33%</div>
+          <div class="stat-value">{{ porcentagem }}%</div>
           <div class="stat-label">Coleção Completa</div>
         </div>
       </div>

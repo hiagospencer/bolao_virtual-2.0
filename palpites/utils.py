@@ -192,7 +192,7 @@ def calcular_pontuacao_usuario(rodada_atualizada):
           # gerenciador.verificar_conquistas()
         except :
           continue
-      verificar_conquistas(participante)
+
   except:
     print('tabela pontuação não encontrada')
 
