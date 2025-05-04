@@ -642,6 +642,112 @@ main {
     color: #666;
 }
 
+.user-welcome-bar {
+    background: linear-gradient(135deg, var(--primary), #1e4611);
+    color: white;
+    padding: 20px 0;
+    margin-bottom: 30px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-welcome-bar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.welcome-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.welcome-text h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 500;
+}
+
+.welcome-text h2 strong {
+    font-weight: 700;
+    color: var(--secondary);
+}
+
+.user-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 8px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.95rem;
+}
+
+.stat-item i {
+    color: var(--secondary);
+    width: 16px;
+    text-align: center;
+}
+
+.stat-item strong {
+    font-weight: 600;
+}
+
+.user-badges {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+
+.quick-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* .btn-action {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-action i {
+    font-size: 0.9rem;
+} */
+
+.btn-action.primary {
+    background-color: var(--secondary);
+    color: var(--dark);
+}
+
+.btn-action.secondary {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-action.primary:hover {
+    background-color: #ffc107;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-action.secondary:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+
 /* ===== RESPONSIVIDADE ===== */
 @media (max-width: 768px) {
   .main-header .container {
@@ -825,6 +931,29 @@ main {
       .step-number {
         margin: 0;
       }
+      .user-welcome-bar .container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .quick-actions {
+        margin-top: 10px;
+    }
+
+    /* .btn-action {
+        flex: 1;
+        justify-content: center;
+        padding: 10px;
+    } */
+
+    .user-stats {
+        gap: 10px 15px;
+    }
+
+    .welcome-text h2 {
+        font-size: 1.3rem;
+    }
 }
 
 @media (max-width: 600px) {

@@ -1,4 +1,4 @@
-/* ===== PÁGINAS DE AUTENTICAÇÃO ===== */
+
 .auth-page {
   background: linear-gradient(135deg, #2c5e1a, #1b3d0f);
   min-height: 100vh;
@@ -7,6 +7,22 @@
   align-items: center;
   padding: 20px;
 }
+
+.erro {
+  background-color: #E51608d !important;
+  color: white !important;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+input.is-invalid {
+    border-color: red;
+}
+
 
 .auth-container {
   background: white;

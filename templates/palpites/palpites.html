@@ -25,18 +25,23 @@
         {% csrf_token%}
         {% for rodada in rodadas %}
           <div class="bet-card">
+              <div class="match-date">
+                <i class="far fa-calendar-alt"></i> {{ rodada.data_jogo }}
+              </div><br/>
             <div class="match-teams">
               <div class="team">
                 <img src="{{ rodada.imagem_casa }}" alt="{{ rodada.time_casa}}" class="team-logo">
                 <input type="hidden" name="{{ rodada.time_casa }}" value="{{ rodada.time_casa }}" />
                 <span>{{ rodada.time_casa }}</span>
               </div>
+
               <div class="vs">X</div>
               <div class="team">
                 <img src="{{ rodada.imagem_fora }}" alt="{{ rodada.time_visitante}}" class="team-logo">
                 <input type="hidden" name="{{ rodada.time_visitante }}" value="{{ rodada.time_visitante }}" />
                 <span>{{ rodada.time_visitante }}</span>
               </div>
+
             </div>
             <div class="bet-inputs">
               <input type="number" name="resultado_casa" placeholder="0" id="placar" value="0"

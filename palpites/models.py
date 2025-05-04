@@ -55,6 +55,7 @@ class Palpite(models.Model):
     placar_casa = models.IntegerField(default=0)
     time_visitante = models.CharField(max_length=50)
     placar_visitante = models.IntegerField(default=0)
+    data_jogo = models.CharField(max_length=50, null=True, blank=True)
     imagem_casa = models.ImageField(upload_to='emblemas_times', null=True, blank=True)
     imagem_fora = models.ImageField(upload_to='emblemas_times', null=True, blank=True)
     vencedor = models.CharField(max_length=50)
@@ -84,6 +85,7 @@ class RodadaOriginal(models.Model):
     placar_visitante = models.IntegerField(default=0)
     vencedor = models.CharField(max_length=50)
     finalizado = models.BooleanField(default=False)
+    data_jogo = models.CharField(max_length=50, null=True, blank=True)
 
     def save(self, *args, **kwargs):
 
@@ -111,7 +113,8 @@ class Rodada(models.Model):
     imagem_casa = models.ImageField(upload_to='emblemas_times')
     imagem_fora = models.ImageField(upload_to='emblemas_times')
     preenchido = models.BooleanField(default=False)
-
+    data_jogo = models.CharField(max_length=50, null=True, blank=True)
+    
     def __str__(self):
         return f"{self.time_casa} x {self.time_visitante}"
 

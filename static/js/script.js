@@ -45,13 +45,13 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Função de logout
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", function (e) {
-      e.preventDefault();
-      logoutUser(); // Implemente esta função conforme seu backend
-      window.location.href = "/"; // Redireciona para home após logout
-    });
-  }
+  // if (logoutBtn) {
+  //   logoutBtn.addEventListener("click", function (e) {
+  //     e.preventDefault();
+  //     logoutUser(); // Implemente esta função conforme seu backend
+  //     window.location.href = "accounts/logout/"; // Redireciona para home após logout
+  //   });
+  // }
 
   // Funções simuladas - substitua pelas suas implementações reais
   function checkAuthStatus() {
@@ -69,11 +69,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  function logoutUser() {
-    // Implemente a lógica real de logout
-    localStorage.removeItem("isAuthenticated");
-    localStorage.removeItem("userData");
-  }
+  // function logoutUser() {
+  //   // Implemente a lógica real de logout
+  //   localStorage.removeItem("isAuthenticated");
+  //   localStorage.removeItem("userData");
+  // }
 
   // Inicializa a UI
   updateAuthUI();
@@ -95,126 +95,7 @@ document.querySelectorAll(".toggle-password").forEach((button) => {
   });
 });
 
-// Máscara para WhatsApp
-// document
-//   .getElementById("register-whatsapp")
-//   .addEventListener("input", function (e) {
-//     let value = e.target.value.replace(/\D/g, "");
-//     if (value.length > 11) value = value.substring(0, 11);
 
-//     if (value.length > 0) {
-//       value = value.replace(/^(\d{0,2})(\d{0,5})(\d{0,4})/, "($1) $2-$3");
-//     }
-
-//     e.target.value = value;
-//   });
-
-// Verificador de força da senha
-// document
-//   .getElementById("register-whatsapp")
-//   .addEventListener("input", function (e) {
-//     const password = e.target.value;
-//     const strengthBars = document.querySelectorAll(".strength-bar");
-//     const strengthText = document.querySelector(".strength-text");
-
-//     // Reset
-//     strengthBars.forEach((bar) => (bar.style.backgroundColor = "#ddd"));
-//     strengthText.textContent = "Força da senha";
-//     strengthText.style.color = "#666";
-
-//     if (password.length === 0) return;
-
-//     let strength = 0;
-
-//     // Verifica comprimento
-//     if (password.length >= 8) strength++;
-//     if (password.length >= 12) strength++;
-
-//     // Verifica complexidade
-//     if (/[A-Z]/.test(password)) strength++;
-//     if (/[0-9]/.test(password)) strength++;
-//     if (/[^A-Za-z0-9]/.test(password)) strength++;
-
-//     // Atualiza visualização
-//     if (strength > 0) {
-//       strengthBars[0].style.backgroundColor = "#ff4d4d";
-//       strengthText.textContent = "Fraca";
-//       strengthText.style.color = "#ff4d4d";
-//     }
-
-//     if (strength >= 3) {
-//       strengthBars[0].style.backgroundColor = "#ffa500";
-//       strengthBars[1].style.backgroundColor = "#ffa500";
-//       strengthText.textContent = "Média";
-//       strengthText.style.color = "#ffa500";
-//     }
-
-//     if (strength >= 5) {
-//       strengthBars[0].style.backgroundColor = "#4CAF50";
-//       strengthBars[1].style.backgroundColor = "#4CAF50";
-//       strengthBars[2].style.backgroundColor = "#4CAF50";
-//       strengthText.textContent = "Forte";
-//       strengthText.style.color = "#4CAF50";
-//     }
-//   });
-
-
-  // Cria a visualização mobile da tabela
-// function createMobileView() {
-//   const table = document.querySelector('.ranking-table');
-//   const mobileView = document.querySelector('.table-mobile-view');
-
-//   if (!table || !mobileView) return;
-
-//   const rows = table.querySelectorAll('tbody tr');
-//   let mobileHTML = '';
-
-//   rows.forEach((row, index) => {
-//     const position = row.cells[0].textContent.trim();
-//     const avatar = row.querySelector('.player-avatar')?.outerHTML || '';
-//     const name = row.cells[1].textContent.trim();
-//     const points = row.cells[3].textContent;
-//     const exactScores = row.cells[4]?.textContent || '0';
-//     const victories = row.cells[5]?.textContent || '0';
-
-//     mobileHTML += `
-//       <div class="mobile-player-card">
-//         <div class="mobile-player-header">
-//           <span class="mobile-player-position">${position}</span>
-//           ${avatar}
-//           <span>${name}</span>
-//         </div>
-//         <div class="mobile-player-stats">
-//           <div class="mobile-stat-item">
-//             <span class="mobile-stat-label">Pontos:</span>
-//             <span>${points}</span>
-//           </div>
-//           <div class="mobile-stat-item">
-//             <span class="mobile-stat-label">Placar Exato:</span>
-//             <span>${exactScores}</span>
-//           </div>
-//           <div class="mobile-stat-item">
-//             <span class="mobile-stat-label">Vitórias:</span>
-//             <span>${victories}</span>
-//           </div>
-//           <div class="mobile-stat-item">
-//             <span class="mobile-stat-label">Posição:</span>
-//             <span>${index + 1}º</span>
-//           </div>
-//         </div>
-//       </div>
-//     `;
-//   });
-
-//   mobileView.innerHTML = mobileHTML;
-//   console.log(table)
-//   console.log(mobileView)
-// }
-
-// // Executa quando o DOM estiver carregado
-// document.addEventListener('DOMContentLoaded', createMobileView);
-
-// Controle do menu mobile
 // Menu Mobile
 document.addEventListener('DOMContentLoaded', function() {
   const toggleBtn = document.getElementById("mobileMenuToggle");

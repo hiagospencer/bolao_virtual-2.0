@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.db.models import F
+from django.contrib.auth.decorators import login_required
+import datetime
+import pytz
 
 import pandas as pd
 
@@ -9,11 +12,10 @@ from .utils import *
 from .models import *
 from usuarios.models import UserProfile
 
+@login_required
 def criar_palpites(request):
     todos = UserProfile.objects.filter(pagamento=True)
-    for user in todos:
-        print(user.user.level)
-    zerar_palpites_usuarios(3)
+    zerar_palpites_usuarios(1)
     if request.user.is_authenticated:
         user = request.user
         time_casa = []
@@ -82,11 +84,16 @@ def criar_palpites(request):
             verificacao_partida.save()
             return redirect('criar_palpites')
         context = {"rodadas":rodadas, 'verificacao_partida':verificacao_partida}
-    return render(request, "palpites/palpites.html",context)
+        return render(request, "palpites/palpites.html",context)
 
+
+@login_required
 def meus_palpites(request):
+    # criar_rodadas_campeonato()
     user = request.user
-    usuarios = Usuario.objects.filter(is_verified=True)
+
+    # calcular_pontuacao_usuario(1)
+    usuarios = UserProfile.objects.filter(pagamento=True)
     rodadas_distintas = Palpite.objects.values_list('rodada_atual', flat=True).distinct().order_by('rodada_atual')
     rodadas = Palpite.objects.filter(usuario=user).order_by('rodada_atual')[:10]
     rodadas_original = RodadaOriginal.objects.all().order_by('rodada_atual')[:10]
@@ -98,7 +105,7 @@ def meus_palpites(request):
 def filtrar_palpites(request):
     usuario_id = request.GET.get("usuario")
     rodada = request.GET.get("rodada")
-    usuario = Usuario.objects.get(id=usuario_id)
+    usuario = UserProfile.objects.get(id=usuario_id)
     palpites = Palpite.objects.all()
     rodadas_original = RodadaOriginal.objects.all().order_by('rodada_atual')[:10]
 

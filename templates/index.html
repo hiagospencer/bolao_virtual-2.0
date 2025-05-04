@@ -1,8 +1,26 @@
 {% extends 'auxiliar/base.html' %}
 {% load static %}
-{% block title %} Bolão virtual | Home {% endblock %} {% load l10n %} {% load humanize %}
+{% block title %} Bolão virtual | Home {% endblock %} {% load l10n %} {% load humanize %} {% load custom_filters %}
 
 {% block body %}
+<!-- Nova seção de informações do usuário -->
+    {% if user.is_authenticated %}
+    <section class="user-welcome-bar">
+        <div class="container">
+            <div class="welcome-content">
+                <div class="welcome-text">
+                    <h2>Bem vindo, <strong>{{ usuario.user.username }}</strong>!</h2>
+                    <div class="user-stats">
+                        <!-- <span class="stat-item"><i class="fas fa-medal"></i> Posição atual: <strong>{{ usuario.posicao_atual|default:"-" }}</strong></span> --> 
+                        <span class="stat-item"><i class="fas fa-level-up-alt"></i> Nível: <strong>{{ usuario.level|default:"1" }}</strong></span>
+                        <span class="stat-item"><i class="fas fa-coins"></i> Moedas: <strong>{{ usuario.moedas|default:"0" }}</strong></span>
+                    </div>
+                </div>
+        </div>
+    </section>
+    {% endif %}
+
+
     <main class="container">
         <section class="rules-container">
             <div class="rule-card">
@@ -48,46 +66,52 @@
                         </tr>
                     </thead>
                     <tbody>
-
                         {% for usuario in classificacao %}
-                            <tr class="first-place">
-                                <td>1 <i class="fas fa-medal gold"></i></td>
+                            <tr class="{% if forloop.counter == 1 %}gold{% elif forloop.counter == 2 %}silver{% elif forloop.counter == 3 %}bronze{% endif %}">
+                                <td>
+                                    {{ forloop.counter }}
+                                    {% if forloop.counter == 1 %}
+                                        <i class="fas fa-medal gold"></i>
+                                    {% elif forloop.counter == 2 %}
+                                        <i class="fas fa-medal silver"></i>
+                                    {% elif forloop.counter == 3 %}
+                                        <i class="fas fa-medal bronze"></i>
+                                    {% endif %}
+                                </td>
                                 <td>
                                     <div class="player-info">
                                         <img src="{% static 'img/perfil-null.png' %}" alt="HiagoSouza" class="player-avatar">
                                         <div class="player-details">
                                             <span class="player-name">{{ usuario.usuario.username }}</span>
-                                            <div class="player-badges">
-                                                <span class="badge gold" title="Top 1"><i class="fas fa-crown"></i></span>
-                                                <span class="badge streak" title="Sequência de 5 acertos"><i
-                                                        class="fas fa-bolt"></i> 5</span>
-                                            </div>
                                         </div>
                                     </div>
                                 </td>
-                                {% if usuario.posicao_variacao == None %}
-                                    <td><span class="no-change">-</span></td>
-                                {% else %}
-                                    <td><span class="no-change">{{ usuario.posicao_variacao }}</span></td>
-                                {% endif %}
+                                <td>
+                                    {% if usuario.posicao_variacao > 0 %}
+                                        <i class="fa-solid fa-up-long" style="color: #12c161;"></i> {{ usuario.posicao_variacao }}
+                                    {% elif usuario.posicao_variacao < 0 %}
+                                        <i class="fa-solid fa-down-long" style="color: rgb(228, 43, 43);"></i> {{ usuario.posicao_variacao|absolute }}
+                                    {% else %}
+                                        <i class="fa-solid fa-minus"></i>
+                                    {% endif %}
+                                </td>
                                 <td>{{ usuario.pontos }}</td>
                                 <td>{{ usuario.placar_exato }}</td>
                                 <td>{{ usuario.vitorias }}</td>
                                 <td>{{ usuario.empates }}</td>
                                 <td>
-                                     <div class="achievement-icons">
+                                    <div class="achievement-icons">
                                         {% for conquista in usuario.usuario.conquistas_ativas %}
                                             <i class="fas {{ conquista.meta.tipo_trofeu.icone }}"
                                             title="{{ conquista.meta.nome }}"
                                             style="color: {{ conquista.meta.tipo_trofeu.cor }};"></i>
                                         {% empty %}
-                                            <span style="color: #999;">—</span>
+                                            <span><i class="fa-solid fa-minus"></i></span>
                                         {% endfor %}
                                     </div>
                                 </td>
                             </tr>
                         {% endfor %}
-
                     </tbody>
                 </table>
             </div>
@@ -110,7 +134,7 @@
                     <div class="prize-value">R$ {{ premiacao.premiacao|intcomma }}</div>
                     <p>+ Troféu virtual</p>
                     <div class="prize-badges">
-                        <span class="pix-badge"><i class="fas fa-qrcode"></i> PIX</span>
+                        <span class="pix-badge"><i class="fa-brands fa-pix"></i> PIX</span>
                     </div>
                 </div>
                 {% endfor %}

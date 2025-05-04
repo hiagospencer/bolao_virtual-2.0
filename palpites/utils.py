@@ -40,6 +40,9 @@ def criar_rodadas_campeonato():
     time_visitante = []
     img_visitante = []
     rodada = []
+    datas_api = []
+    datas_jogos = []
+    fuso_brasil = pytz.timezone('America/Sao_Paulo')
 
     for jogo in data["matches"]:
       time_casa.append(jogo['homeTeam']['shortName'])
@@ -47,13 +50,20 @@ def criar_rodadas_campeonato():
       time_visitante.append(jogo['awayTeam']['shortName'])
       img_visitante.append(jogo['awayTeam']['crest'])
       rodada.append(jogo['matchday'])
+      datas_api.append(jogo["utcDate"])
+
+    for data_str in datas_api:
+        dt_utc = datetime.datetime.strptime(data_str, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=pytz.UTC)
+        dt_brasil = dt_utc.astimezone(fuso_brasil)
+        datas_jogos.append(dt_brasil.strftime("%d/%m/%Y %H:%M"))
 
     resultado_tabela = {
       "time_casa": time_casa,
       "img_casa": img_casa,
       "img_visitante": img_visitante,
       "time_visitante": time_visitante,
-      "rodada": rodada
+      "datas_jogos": datas_jogos,
+      "rodada": rodada,
       }
 
     df_tabela = pd.DataFrame(resultado_tabela)
@@ -63,6 +73,7 @@ def criar_rodadas_campeonato():
         imagem_casa=row['img_casa'],
         time_visitante=row['time_visitante'],
         imagem_fora=row['img_visitante'],
+        data_jogo= row['datas_jogos'],
         rodada_atual= row['rodada'],
           )
     print(f'Rodada {contador} criada!')
@@ -193,6 +204,24 @@ def calcular_pontuacao_usuario(rodada_atualizada):
         except :
           continue
 
+    usuarios_pagantes = UserProfile.objects.filter(pagamento=True).values_list('user_id', flat=True)
+    classificacao = (
+        Classificacao.objects
+        .filter(usuario__in=usuarios_pagantes)
+        .select_related('usuario')
+        .order_by('-pontos', '-placar_exato', '-vitorias', '-empates')
+    )
+    for index, item in enumerate(classificacao, start=1):
+      # Salva a posição anterior
+      item.posicao_anterior = item.posicao_atual
+      # Atualiza a posição atual
+      item.posicao_atual = index
+      # Calcula a variação de posição (subiu ou desceu)
+      if item.posicao_anterior is not None:
+        item.posicao_variacao = item.posicao_anterior - item.posicao_atual
+      else:
+        item.posicao_variacao = 0  # Nenhuma variação se não há posição anterior
+      item.save()
   except:
     print('tabela pontuação não encontrada')
 

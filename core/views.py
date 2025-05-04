@@ -8,6 +8,13 @@ from core.models import PremiacaoBolao
 
 def homepage(request):
     usuarios_pagantes = UserProfile.objects.filter(pagamento=True).values_list('user_id', flat=True)
+
+    usuario = None
+    if request.user.is_authenticated:
+        try:
+            usuario = UserProfile.objects.get(user=request.user)
+        except UserProfile.DoesNotExist:
+            usuario = None  # Caso não tenha um perfil ainda
     premiacoes = PremiacaoBolao.objects.all()
     conquistas_concluidas = Prefetch(
         'usuario__conquistas',
@@ -23,7 +30,7 @@ def homepage(request):
         .order_by('-pontos', '-placar_exato', '-vitorias', '-empates')
     )
 
-    context = {'classificacao': classificacao, "premiacoes":premiacoes}
+    context = {'classificacao': classificacao, "premiacoes":premiacoes, "usuario": usuario}
     return render(request, 'index.html', context)
 
 def perfil(request):

@@ -37,7 +37,7 @@ def meus_premios(request):
         'premios': premios,
     })
 
-
+@login_required
 def trofeus(request):
     usuario = request.user
     total_trofeus = MetaConquista.objects.count()
