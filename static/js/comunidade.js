@@ -135,6 +135,52 @@ function setupDynamicElements() {
     });
   });
 
+  // Sistema de respostas para posts principais
+  document.querySelectorAll('.btn-comment').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const formId = this.dataset.target;
+      const form = document.getElementById(formId);
+
+      // Esconde todos os outros formulários primeiro
+      document.querySelectorAll('.reply-form').forEach(f => {
+        if (f.id !== formId) f.style.display = 'none';
+      });
+
+      // Alterna o formulário atual
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    });
+  });
+
+  // Sistema de respostas para comentários
+  document.querySelectorAll('.btn-reply-comment').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const formId = this.dataset.target;
+      const form = document.getElementById(formId);
+
+      // Esconde todos os outros formulários de comentários
+      document.querySelectorAll('.reply-comment-form').forEach(f => {
+        if (f.id !== formId) f.style.display = 'none';
+      });
+
+      // Alterna o formulário atual
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    });
+  });
+
+  // Cancelar resposta a post principal
+  document.querySelectorAll('.btn-cancel-reply').forEach(btn => {
+    btn.addEventListener('click', function() {
+      this.closest('.reply-form').style.display = 'none';
+    });
+  });
+
+  // Cancelar resposta a comentário
+  document.querySelectorAll('.btn-cancel-reply-comment').forEach(btn => {
+    btn.addEventListener('click', function() {
+      this.closest('.reply-comment-form').style.display = 'none';
+    });
+  });
+
   // Configura eventos de votação
   document.querySelectorAll('.poll-option:not(.view-only)').forEach(option => {
     option.addEventListener('click', function() {
@@ -144,6 +190,99 @@ function setupDynamicElements() {
       }
     });
   });
+  // Botões de editar/excluir post
+  document.querySelectorAll('.btn-edit-post').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const postId = this.dataset.postId;
+      editPost(postId);
+    });
+  });
+
+  document.querySelectorAll('.btn-delete-post').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const postId = this.dataset.postId;
+      if (confirm('Tem certeza que deseja excluir este post?')) {
+        deletePost(postId);
+      }
+    });
+  });
+
+  // Botões de editar/excluir comentário
+  document.querySelectorAll('.btn-edit-comment').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const commentId = this.dataset.commentId;
+      editComment(commentId);
+    });
+  });
+
+  document.querySelectorAll('.btn-delete-comment').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const commentId = this.dataset.commentId;
+      if (confirm('Tem certeza que deseja excluir este comentário?')) {
+        deleteComment(commentId);
+      }
+    });
+  });
+}
+
+// Funções para manipulação de posts e comentários
+function editPost(postId) {
+  const postElement = document.querySelector(`.mural-post[data-topic-id="${postId}"]`);
+  const postTitle = postElement.querySelector('.post-content h3').textContent;
+  const postContent = postElement.querySelector('.post-content p').textContent;
+
+  // Preenche o modal de edição (você precisará criar este modal)
+  document.getElementById('editPostTitle').value = postTitle;
+  document.getElementById('editPostContent').value = postContent;
+  document.getElementById('editPostId').value = postId;
+
+  openModal('editPostModal');
+}
+
+function deletePost(postId) {
+  fetch(`/interacao/excluir-post/${postId}/`, {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+      'Content-Type': 'application/json',
+    },
+    credentials: 'same-origin'
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      document.querySelector(`.mural-post[data-topic-id="${postId}"]`).remove();
+    } else {
+      alert(data.message || 'Erro ao excluir post');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Erro de conexão');
+  });
+}
+
+function deleteComment(commentId) {
+  fetch(`/interacao/excluir-comentario/${commentId}/`, {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+      'Content-Type': 'application/json',
+    },
+    credentials: 'same-origin'
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      document.querySelector(`.comment[data-comment-id="${commentId}"]`).remove();
+    } else {
+      alert(data.message || 'Erro ao excluir comentário');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Erro de conexão');
+  });
 }
 
 function votePoll(optionElement) {
@@ -151,48 +290,36 @@ function votePoll(optionElement) {
   const pollId = pollCard.dataset.pollId;
   const optionId = optionElement.dataset.optionId;
 
-  // Debug: verifique os IDs antes de enviar
-  console.log('Enviando voto para enquete:', pollId, 'opção:', optionId);
+  // Desativa temporariamente todos os botões
+  pollCard.querySelectorAll('.poll-option').forEach(opt => {
+    opt.style.pointerEvents = 'none';
+  });
+
+  // Mostra indicador de carregamento
+  optionElement.classList.add('voting-in-progress');
 
   fetch(`/interacao/votar-enquete/${pollId}/${optionId}/`, {
     method: 'POST',
     headers: {
       'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-      'Accept': 'application/json',
+      'Content-Type': 'application/json',
     },
-    credentials: 'include'  // Importante para cookies de sessão
+    credentials: 'same-origin'
   })
   .then(response => {
-    console.log('Resposta recebida, status:', response.status); // Debug
-    if (!response.ok) {
-      // Captura detalhes do erro HTTP
-      return response.json().then(err => {
-        throw new Error(err.message || `HTTP error! status: ${response.status}`);
-      });
-    }
+    if (!response.ok) throw new Error('Erro na requisição');
     return response.json();
   })
   .then(data => {
-    console.log('Dados recebidos:', data); // Debug
     if (data.success) {
       updatePollAfterVote(pollCard, data.results, optionId, data.total_votos);
     } else {
-      throw new Error(data.message || 'Erro no servidor');
+      showPollError(pollCard, data.message || 'Erro ao registrar voto');
     }
   })
   .catch(error => {
-    console.error('Erro completo:', error); // Debug detalhado
-    let errorMsg = 'Erro de conexão';
-
-    if (error.message.includes('Failed to fetch')) {
-      errorMsg = 'Sem conexão com o servidor';
-    } else if (error.message.includes('404')) {
-      errorMsg = 'Enquete não encontrada';
-    } else if (error.message) {
-      errorMsg = error.message;
-    }
-
-    showPollError(pollCard, errorMsg);
+    console.error('Error:', error);
+    showPollError(pollCard, 'Erro de conexão com o servidor');
   })
   .finally(() => {
     optionElement.classList.remove('voting-in-progress');

@@ -41,21 +41,75 @@ def criar_topico(request):
 def criar_comentario(request):
     if request.method == 'POST':
         topico_id = request.POST.get('topico_id')
+        parent_id = request.POST.get('parent_id')
         conteudo = request.POST.get('conteudo')
 
         try:
             topico = TopicoForum.objects.get(id=topico_id)
+            parent = ComentarioForum.objects.get(id=parent_id) if parent_id else None
+
             ComentarioForum.objects.create(
                 topico=topico,
+                autor=request.user,
                 conteudo=conteudo,
-                autor=request.user
+                parent=parent
             )
             messages.success(request, 'Resposta publicada com sucesso!')
         except TopicoForum.DoesNotExist:
-            messages.error(request, 'Tópico não encontrado!')
+            messages.error(request, 'Post não encontrado!')
+        except ComentarioForum.DoesNotExist:
+            messages.error(request, 'Comentário pai não encontrado!')
 
         return redirect('comunidade')
     return redirect('comunidade')
+
+@login_required
+@require_POST
+def excluir_post(request, post_id):
+    try:
+        post = TopicoForum.objects.get(id=post_id, autor=request.user)
+        post.delete()
+        return JsonResponse({'success': True})
+    except TopicoForum.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Post não encontrado'}, status=404)
+
+@login_required
+@require_POST
+def editar_post(request):
+    post_id = request.POST.get('post_id')
+    titulo = request.POST.get('titulo')
+    conteudo = request.POST.get('conteudo')
+
+    try:
+        post = TopicoForum.objects.get(id=post_id, autor=request.user)
+        post.titulo = titulo
+        post.conteudo = conteudo
+        post.save()
+        return JsonResponse({'success': True})
+    except TopicoForum.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Post não encontrado'}, status=404)
+
+@login_required
+@require_POST
+def excluir_comentario(request, comment_id):
+    try:
+        comment = ComentarioForum.objects.get(id=comment_id, autor=request.user)
+        comment.delete()
+        return JsonResponse({'success': True})
+    except ComentarioForum.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Comentário não encontrado'}, status=404)
+
+
+@login_required
+@require_POST
+def editar_comentario(request, comment_id):
+    try:
+        comment = ComentarioForum.objects.get(id=comment_id, autor=request.user)
+        comment.conteudo = request.POST.get('conteudo')
+        comment.save()
+        return JsonResponse({'success': True})
+    except ComentarioForum.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Comentário não encontrado'}, status=404)
 
 @login_required
 def criar_enquete(request):

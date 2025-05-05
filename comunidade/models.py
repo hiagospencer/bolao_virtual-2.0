@@ -23,10 +23,10 @@ class ComentarioForum(models.Model):
     autor = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     conteudo = models.TextField()
     data_criacao = models.DateTimeField(auto_now_add=True)
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
 
     def __str__(self):
-        return f"Comentário de {self.autor} em {self.topico}"
-
+        return f"Resposta de {self.autor} em {self.topico}"
 
 class Enquete(models.Model):
     pergunta = models.CharField(max_length=200)

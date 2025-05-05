@@ -5,7 +5,6 @@
 
 {% block body %}
 <section class="community-page">
-
   <main class="container">
     <section class="community-hero">
       <h1><i class="fas fa-users"></i> Comunidade do Bolão</h1>
@@ -41,39 +40,99 @@
             <p>{{ topico.conteudo }}</p>
             <div class="post-actions">
               <button class="btn-like"><i class="far fa-thumbs-up"></i> 0</button>
-              <button class="btn-comment"><i class="far fa-comment"></i> Responder</button>
+              <button class="btn-comment" data-target="reply-form-{{ topico.id }}">
+                <i class="far fa-comment"></i> Responder
+              </button>
+            </div>
+            {% if topico.autor == request.user %}
+              <div class="post-actions-admin">
+                <button class="btn-delete-post" data-post-id="{{ topico.id }}">
+                  <i class="fas fa-trash"></i> Excluir
+                </button>
+              </div>
+            {% endif %}
+            <!-- Formulário de resposta ao post (inicialmente oculto) -->
+            <div class="reply-form" id="reply-form-{{ topico.id }}" style="display: none;">
+              <form method="post" action="{% url 'criar_comentario' %}">
+                {% csrf_token %}
+                <input type="hidden" name="topico_id" value="{{ topico.id }}">
+                <textarea class="" name="conteudo" placeholder="Escreva sua resposta..." required></textarea>
+                <div class="form-actions">
+                  <button type="button" class="btn-cancel-reply">Cancelar</button>
+                  <button type="submit" class="btn-reply-comment">Enviar</button>
+                </div>
+              </form>
             </div>
 
-            <!-- Comentários -->
+            <!-- Lista de comentários -->
             <div class="post-comments">
               {% for comentario in topico.comentarios.all|slice:":3" %}
-                  <div class="comment">
-                    <div class="comment-author">
-                      {% if comentario.autor.usuario.foto_perfil.url %}
-                        <img src="{{ comentario.autor.usuario.foto_perfil.url }}" alt="Usuário" class="comment-avatar">
-                      {% else %}
-                        <img src="{% static 'img/perfil-null.png' %}" alt="Usuário" class="comment-avatar">
-                      {% endif %}
-                      <span>{{ comentario.autor.username }}</span>
-                      <span class="comment-time">{{ comentario.data_criacao|timesince }} atrás</span>
-                    </div>
-                    <p>{{ comentario.conteudo }}</p>
-                  </div>
-                  {% endfor %}
-
-                  {% if topico.comentarios.count > 3 %}
-                  <button class="btn-view-more">Ver mais respostas ({{ topico.comentarios.count }})</button>
+              <div class="comment" data-comment-id="{{ comentario.id }}">
+                <div class="comment-author">
+                  {% if comentario.autor.usuario.foto_perfil.url %}
+                    <img src="{{ comentario.autor.usuario.foto_perfil.url }}" alt="Usuário" class="comment-avatar">
+                  {% else %}
+                    <img src="{% static 'img/perfil-null.png' %}" alt="Usuário" class="comment-avatar">
                   {% endif %}
+                  <span>{{ comentario.autor.username }}</span>
+                  <span class="comment-time">{{ comentario.data_criacao|timesince }} atrás</span>
                 </div>
+                <p>{{ comentario.conteudo }}</p>
+
+                <button class="btn-reply-comment" data-target="reply-comment-{{ comentario.id }}">
+                  <i class="fas fa-reply"></i> Responder
+                </button>
+                {% if comentario.autor == request.user %}
+                  <div class="comment-actions-admin">
+                    <button class="btn-delete-comment" data-comment-id="{{ comentario.id }}">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                {% endif %}
+                <!-- Formulário de resposta ao comentário (inicialmente oculto) -->
+                <div class="reply-comment-form" id="reply-comment-{{ comentario.id }}" style="display: none;">
+                  <form method="post" action="{% url 'criar_comentario' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="topico_id" value="{{ topico.id }}">
+                    <input type="hidden" name="parent_id" value="{{ comentario.id }}">
+                    <textarea name="conteudo" placeholder="Escreva sua resposta..." required></textarea>
+                    <div class="form-actions">
+                      <button type="button" class="btn-cancel-reply-comment">Cancelar</button>
+                      <button type="submit">Enviar</button>
+                    </div>
+                  </form>
+                </div>
+
+                <!-- Respostas aninhadas -->
+                {% for resposta in comentario.replies.all %}
+                <div class="comment-reply">
+                  <div class="comment-author">
+                    {% if resposta.autor.usuario.foto_perfil.url %}
+                      <img src="{{ resposta.autor.usuario.foto_perfil.url }}" alt="Usuário" class="comment-avatar">
+                    {% else %}
+                      <img src="{% static 'img/perfil-null.png' %}" alt="Usuário" class="comment-avatar">
+                    {% endif %}
+                    <span>{{ resposta.autor.username }}</span>
+                    <span class="comment-time">{{ resposta.data_criacao|timesince }} atrás</span>
+                  </div>
+                  <p>{{ resposta.conteudo }}</p>
+                </div>
+                {% endfor %}
               </div>
+              {% endfor %}
+
+              {% if topico.comentarios.count > 3 %}
+              <button class="btn-view-more">Ver mais respostas ({{ topico.comentarios.count }})</button>
+              {% endif %}
             </div>
-            {% empty %}
-            <div class="no-posts">
-              <p>Nenhuma mensagem ainda. Seja o primeiro a postar!</p>
-            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="no-posts">
+          <p>Nenhuma mensagem ainda. Seja o primeiro a postar!</p>
+        </div>
         {% endfor %}
       </div>
-
     </div>
 
     <div class="tab-content" id="enquetes">
@@ -178,7 +237,7 @@
           {% csrf_token %}
           <div class="form-group">
             <label for="postTitle">Título:</label>
-            <input type="text" id="postTitle" name="titulo" required>
+            <input class="input-title" type="text" id="postTitle" name="titulo" required>
           </div>
           <div class="form-group">
             <label for="postContent">Mensagem:</label>
@@ -235,7 +294,7 @@
   </div>
 
   <!-- Modal Responder Mensagem -->
-  <div class="modal-overlay" id="replyModal" style="display: none;">
+  <!-- <div class="modal-overlay" id="replyModal" style="display: none;">
     <div class="modal-content">
       <div class="modal-header">
         <h3><i class="fas fa-reply"></i> Responder Mensagem</h3>
@@ -256,16 +315,48 @@
         </form>
       </div>
     </div>
+  </div> -->
+
+  <!-- Formulário de resposta -->
+  <div class="reply-form" id="reply-form-{{ topico.id }}" style="display: none;">
+    <form method="post" action="{% url 'criar_comentario' %}">
+      {% csrf_token %}
+      <input type="hidden" name="topico_id" value="{{ topico.id }}">
+      <textarea name="conteudo" required></textarea>
+      <div class="form-actions">
+        <button type="button" class="btn-cancel-reply">Cancelar</button>
+        <button type="submit">Enviar</button>
+      </div>
+    </form>
   </div>
 
+  <!-- Modal Editar Post -->
+<div class="modal-overlay" id="editPostModal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3><i class="fas fa-edit"></i> Editar Post</h3>
+      <button class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="editPostForm" method="post" action="{% url 'editar_post' %}">
+        {% csrf_token %}
+        <input type="hidden" id="editPostId" name="post_id">
+        <div class="form-group">
+          <label for="editPostTitle">Título:</label>
+          <input type="text" id="editPostTitle" name="titulo" required>
+        </div>
+        <div class="form-group">
+          <label for="editPostContent">Conteúdo:</label>
+          <textarea id="editPostContent" name="conteudo" rows="5" required></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-cancel">Cancelar</button>
+          <button type="submit" class="btn btn-submit">Salvar Alterações</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 </section>
-
-<script>
-console.log("CSRF Token:", "{{ csrf_token }}");
-console.log("User:", "{{ request.user }}");
-console.log("URLs:", {
-  votar: "{% url 'votar_enquete' 0 0 %}".replace('/0/0/', '/ID_ENQUETE/ID_OPCAO/')
-});
-</script>
-
 {% endblock %}

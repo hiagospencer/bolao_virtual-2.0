@@ -1,4 +1,3 @@
-/* ===== RESET & VARIÁVEIS ===== */
 :root {
   --primary: #2c5e1a;
   --secondary: #f9a825;
@@ -46,9 +45,9 @@ ul {
 
 /* ===== HEADER ===== */
 main {
-  padding-top: 20px; /* Espaço para o header */
+  padding-top: 20px;
   position: relative;
-  z-index: 1; /* Garante que o conteúdo fique acima do menu mobile */
+  z-index: 1;
 }
 
 .main-header {
@@ -155,7 +154,6 @@ main {
 }
 
 /* ===== MENU MOBILE ===== */
-/* Menu Mobile */
 .mobile-menu-toggle {
   display: none;
   position: fixed;
@@ -242,8 +240,8 @@ main {
 }
 
 .mobile-nav-list a:hover {
-  background-color: rgba(44, 94, 26, 0.1);
-  color: var(--primary);
+  background-color: rgba(44, 94, 26, 0.1) !important;
+  color: var(--primary) !important;
 }
 
 .mobile-nav-list i {
@@ -252,38 +250,48 @@ main {
   text-align: center;
 }
 
-/* Dropdown mobile */
-.mobile-dropdown-menu {
-  list-style: none;
-  padding-left: 35px;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
+/* Dropdown no menu mobile - CORREÇÃO PRINCIPAL */
+.mobile-menu .brasileirao-dropdown {
+    position: relative;
 }
 
-.mobile-dropdown-menu li {
-  margin-bottom: 10px;
+.mobile-menu .brasileirao-dropdown-menu {
+    max-height: 0;
+    overflow: hidden;
+    padding-left: 35px;
+    background-color: rgba(0,0,0,0.03);
+    transition: max-height 0.4s ease;
 }
 
-.mobile-dropdown-menu a {
-  padding: 10px 15px;
-  font-size: 0.9rem;
+.mobile-menu .brasileirao-dropdown.active .brasileirao-dropdown-menu {
+    max-height: 500px;
 }
 
-.mobile-dropdown.active .mobile-dropdown-menu {
-  max-height: 500px;
+.mobile-menu .brasileirao-dropdown-arrow {
+    transition: transform 0.3s ease;
 }
 
-.mobile-dropdown-toggle {
-  justify-content: space-between !important;
+.mobile-menu .brasileirao-dropdown.active .brasileirao-dropdown-arrow {
+    transform: rotate(180deg);
+}
+/* .mobile-menu .dropdown:hover .dropdown-menu,
+.mobile-menu .dropdown.active .dropdown-menu {
+    max-height: 500px; /* Altura suficiente para mostrar todos os itens
+} */
+
+.mobile-menu .brasileirao-dropdown > a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.mobile-dropdown-toggle .fa-chevron-down {
-  transition: transform 0.3s ease;
+.mobile-menu .dropdown .fa-caret-down {
+    transition: transform 0.3s ease;
 }
 
-.mobile-dropdown.active .mobile-dropdown-toggle .fa-chevron-down {
-  transform: rotate(180deg);
+.mobile-menu .dropdown:hover .fa-caret-down,
+.mobile-menu .dropdown.active .fa-caret-down {
+    transform: rotate(180deg);
 }
 
 .mobile-menu-open .mobile-menu-overlay {
@@ -294,6 +302,7 @@ main {
 .mobile-menu-open .mobile-menu {
   right: 0;
 }
+
 /* Botões de autenticação mobile */
 .mobile-auth-buttons {
   display: flex;
@@ -706,7 +715,6 @@ main {
     flex-wrap: wrap;
 }
 
-
 .quick-actions {
     display: flex;
     gap: 10px;
@@ -747,7 +755,6 @@ main {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
-
 /* ===== RESPONSIVIDADE ===== */
 @media (max-width: 768px) {
   .main-header .container {
@@ -775,10 +782,19 @@ main {
     grid-template-columns: 1fr;
   }
 
-  .dropdown-menu {
+  /* .dropdown-menu {
     left: 50%;
     transform: translateX(-50%);
+  } */
+
+  .brasileirao-dropdown-menu {
+    display: none !important;
   }
+
+  .brasileirao-dropdown.active .brasileirao-dropdown-menu {
+    display: block !important;
+  }
+
   .header h1 {
     font-size: 2rem;
     flex-direction: column;
@@ -815,13 +831,13 @@ main {
   }
 
   .bet-item.exact-correct::before,
-      .bet-item.result-correct::before,
-      .bet-item.result-wrong::before {
-        position: static;
-        display: block;
-        margin-bottom: 5px;
-        text-align: center;
-      }
+  .bet-item.result-correct::before,
+  .bet-item.result-wrong::before {
+    position: static;
+    display: block;
+    margin-bottom: 5px;
+    text-align: center;
+  }
 
   .btn {
     width: 100%;
@@ -905,55 +921,49 @@ main {
   }
 
   .cart-sidebar {
-    width: 90%;
+    width: 90px;
     max-width: none;
   }
 
   .shop-filters {
     flex-direction: column;
   }
-   .payment-steps {
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-      }
+  .payment-steps {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
 
-      .payment-steps::before {
-        display: none;
-      }
+  .payment-steps::before {
+    display: none;
+  }
 
-      .step {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-      }
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
 
-      .step-number {
-        margin: 0;
-      }
-      .user-welcome-bar .container {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 15px;
-    }
+  .step-number {
+    margin: 0;
+  }
+  .user-welcome-bar .container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
 
-    .quick-actions {
-        margin-top: 10px;
-    }
+  .quick-actions {
+    margin-top: 10px;
+  }
 
-    /* .btn-action {
-        flex: 1;
-        justify-content: center;
-        padding: 10px;
-    } */
+  .user-stats {
+    gap: 10px 15px;
+  }
 
-    .user-stats {
-        gap: 10px 15px;
-    }
-
-    .welcome-text h2 {
-        font-size: 1.3rem;
-    }
+  .welcome-text h2 {
+    font-size: 1.3rem;
+  }
 }
 
 @media (max-width: 600px) {
@@ -1014,9 +1024,17 @@ main {
 
   .main-nav {
     display: block !important;
-    /* Aumente se necessário */
   }
 
+
+  .brasileirao-dropdown:hover .brasileirao-dropdown-menu {
+    max-height: 500px;
+    display: block;
+  }
+
+  .brasileirao-dropdown:hover .brasileirao-dropdown-arrow {
+    transform: rotate(180deg);
+  }
   /* Garantir que o menu mobile não interfira em desktop */
   .mobile-menu {
     display: none;

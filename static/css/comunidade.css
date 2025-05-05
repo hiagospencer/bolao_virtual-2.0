@@ -1,4 +1,3 @@
-/* ===== PÁGINA DE COMUNIDADE ===== */
 .community-page main {
   padding-bottom: 50px;
 }
@@ -59,15 +58,15 @@
   display: block;
 }
 
-/* Estilos do Fórum */
-.forum-header, .mural-header, .polls-header {
+/* Estilos do Mural */
+.mural-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
 
-.forum-header h2, .mural-header h2, .polls-header h2 {
+.mural-header h2 {
   margin: 0;
   color: var(--primary);
   display: flex;
@@ -75,7 +74,7 @@
   gap: 10px;
 }
 
-.btn-new-topic, .btn-new-post, .btn-new-poll {
+.btn-new-post {
   background-color: var(--primary);
   color: white;
   border: none;
@@ -89,83 +88,10 @@
   gap: 8px;
 }
 
-.btn-new-topic:hover, .btn-new-post:hover, .btn-new-poll:hover {
+.btn-new-post:hover {
   background-color: #1a5276;
 }
 
-.forum-categories {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-.forum-category h3 {
-  color: var(--primary);
-  margin-bottom: 15px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding-bottom: 5px;
-  border-bottom: 1px solid #eee;
-}
-
-.forum-topics {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.forum-topic {
-  background-color: white;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: all 0.3s;
-}
-
-.forum-topic:hover {
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  transform: translateY(-2px);
-}
-
-.topic-info h4 {
-  margin: 0 0 5px 0;
-  font-size: 1.1rem;
-}
-
-.topic-info h4 a {
-  color: #333;
-  text-decoration: none;
-}
-
-.topic-info h4 a:hover {
-  color: var(--primary);
-  text-decoration: underline;
-}
-
-.topic-meta {
-  color: #666;
-  font-size: 0.8rem;
-  margin: 0;
-}
-
-.topic-stats {
-  display: flex;
-  gap: 15px;
-}
-
-.topic-views, .topic-replies {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  color: #666;
-  font-size: 0.9rem;
-}
-
-/* Estilos do Mural */
 .mural-posts {
   display: flex;
   flex-direction: column;
@@ -233,6 +159,39 @@
 }
 
 /* Estilos das Enquetes */
+.polls-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.polls-header h2 {
+  margin: 0;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-new-poll {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-new-poll:hover {
+  background-color: #1a5276;
+}
+
 .polls-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -264,6 +223,22 @@
   align-items: center;
   gap: 10px;
   position: relative;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.poll-option:hover:not(.view-only) {
+  background-color: #f5f5f5;
+}
+
+.poll-option.view-only {
+  cursor: default;
+}
+
+.poll-option.user-vote {
+  background-color: #e8f4fd;
+  border-left: 3px solid #3498db;
 }
 
 .option-result {
@@ -274,12 +249,12 @@
   background-color: rgba(52, 152, 219, 0.2);
   border-radius: 5px;
   z-index: 1;
+  transition: width 0.5s ease;
 }
 
 .option-text {
   position: relative;
   z-index: 2;
-  padding: 5px 0;
 }
 
 .option-percent {
@@ -292,9 +267,24 @@
 
 .poll-meta {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   font-size: 0.8rem;
   color: #666;
+  gap: 3px;
+}
+
+.your-vote-badge {
+  background: #3498db;
+  color: white;
+  font-size: 0.7em;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: 10px;
+}
+
+.already-voted {
+  color: #27ae60;
+  font-size: 0.9em;
 }
 
 /* Estilos dos Destaques */
@@ -360,7 +350,6 @@
 }
 
 .user-tips {
-  flex: 1;
   background-color: #f9f9f9;
   padding: 15px;
   border-radius: 8px;
@@ -406,6 +395,7 @@
   font-weight: bold;
 }
 
+/* Modais */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -481,16 +471,33 @@
   margin-top: 20px;
 }
 
+.input-title input {
+  flex: 1;
+  padding: 8px;
+  margin-right: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
 .btn-cancel {
   background-color: #f1f1f1;
   color: #333;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .btn-submit {
   background-color: #2c3e50;
   color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
+/* Formulários de enquete */
 .poll-option-input {
   display: flex;
   margin-bottom: 8px;
@@ -500,6 +507,8 @@
   flex: 1;
   padding: 8px;
   margin-right: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
 .btn-remove-option {
@@ -521,24 +530,7 @@
   margin-top: 5px;
 }
 
-/* Melhorias para os formulários */
-.form-group input[type="text"],
-.form-group input[type="datetime-local"] {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-/* Estilos para posts dinâmicos */
-.mural-post {
-  margin-bottom: 20px;
-  border: 1px solid #eee;
-  border-radius: 8px;
-  padding: 15px;
-  background: white;
-}
-
+/* Comentários e respostas */
 .post-comments {
   margin-top: 15px;
   padding-top: 15px;
@@ -556,7 +548,6 @@
   display: flex;
   align-items: center;
   margin-bottom: 5px;
-  font-size: 0.9em;
 }
 
 .comment-avatar {
@@ -580,7 +571,7 @@
   font-size: 0.9em;
 }
 
-.no-posts, .no-polls {
+.no-posts {
   text-align: center;
   padding: 40px;
   background: white;
@@ -588,110 +579,104 @@
   margin-top: 20px;
 }
 
-/* Melhorias para enquetes */
-.poll-card {
-  background: white;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  margin-bottom: 20px;
+/* Botões de administração */
+.post-actions-admin, .comment-actions-admin {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
 }
 
-.option-result {
-  height: 8px;
-  background: #3498db;
+.btn-edit-post, .btn-delete-post,
+.btn-edit-comment, .btn-delete-comment {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9em;
+  padding: 5px 10px;
   border-radius: 4px;
-  margin: 5px 0;
 }
 
-/* Estilos para enquetes */
-.poll-option {
-    position: relative;
-    cursor: pointer;
-    margin-bottom: 8px;
-    padding: 8px;
-    border-radius: 4px;
-    transition: background-color 0.2s;
+.btn-edit-post, .btn-edit-comment {
+  color: #3498db;
+  border: 1px solid #3498db;
 }
 
-.poll-option:hover:not(.view-only) {
-    background-color: #f5f5f5;
+.btn-delete-post, .btn-delete-comment {
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
 }
 
-.poll-option.view-only {
-    cursor: default;
+.comment-actions-admin {
+  margin-left: 10px;
 }
 
-.poll-option.user-vote {
-    background-color: #e8f4fd;
-    border-left: 3px solid #3498db;
+.comment-actions-admin button {
+  padding: 3px 6px;
+  font-size: 0.8em;
 }
 
-.option-result {
-    height: 8px;
-    background: #3498db;
-    border-radius: 4px;
-    margin: 5px 0;
-    transition: width 0.5s ease;
+/* Formulários de resposta */
+.reply-form, .reply-comment-form {
+  margin: 15px 0;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #eee;
 }
 
-.option-text {
-    display: inline-block;
-    margin-right: 10px;
+.reply-form textarea, .reply-comment-form textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
-.option-percent {
-    float: right;
-    color: #666;
+.btn-reply-comment {
+  background: none;
+  border: none;
+  color: #3498db;
+  cursor: pointer;
+  padding: 5px 10px;
+  font-size: 0.9em;
+  transition: 0.3s ease;
 }
 
-.your-vote-badge {
-    background: #3498db;
-    color: white;
-    font-size: 0.7em;
-    padding: 2px 6px;
-    border-radius: 10px;
-    margin-left: 10px;
+.btn-reply-comment:hover {
+  background-color: #3498db;
+  color:rgb(236, 239, 241);
 }
 
-.already-voted {
-    display: block;
-    margin-top: 5px;
-    color: #27ae60;
-    font-size: 0.9em;
-}
-
-.poll-meta {
-    margin-top: 15px;
-    font-size: 0.9em;
-    color: #666;
-}
-
-.poll-meta span {
-    display: block;
-    margin-bottom: 3px;
+.btn-cancel-reply, .btn-cancel-reply-comment {
+  background: #f1f1f1;
+  color: #333;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 /* Estilo durante votação */
 .poll-option.voting-in-progress {
-    position: relative;
-    opacity: 0.7;
+  position: relative;
+  opacity: 0.7;
 }
 
 .poll-option.voting-in-progress::after {
-    content: "Votando...";
-    position: absolute;
-    right: 10px;
-    color: #3498db;
-    font-size: 0.8em;
+  content: "Votando...";
+  position: absolute;
+  right: 10px;
+  color: #3498db;
+  font-size: 0.8em;
 }
 
 /* Mensagens de erro */
 .poll-error {
-    color: #e74c3c;
-    padding: 8px;
-    margin-top: 10px;
-    border: 1px solid #e74c3c;
-    border-radius: 4px;
-    background-color: #fde8e8;
+  color: #e74c3c;
+  padding: 8px;
+  margin-top: 10px;
+  border: 1px solid #e74c3c;
+  border-radius: 4px;
+  background-color: #fde8e8;
 }

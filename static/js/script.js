@@ -15,43 +15,53 @@ document.addEventListener("DOMContentLoaded", function () {
   // Atualiza o header conforme o estado de autenticação
   function updateAuthUI() {
     if (isAuthenticated) {
-      // Usuário logado - mostra menu do usuário
-      loginBtn.style.display = "none";
-      registerBtn.style.display = "none";
-      loggedUser.style.display = "block";
+        loginBtn.style.display = "none";
+        registerBtn.style.display = "none";
+        loggedUser.style.display = "block";
 
-      // Carrega dados do usuário (substitua pelos dados reais)
-      const userData = getUserData(); // Implemente conforme seu backend
-      if (userData) {
-        userAvatar.src = userData.avatar || "https://via.placeholder.com/30";
-        usernameDisplay.textContent = userData.username || "Usuário";
-      }
-
-      // Mostra dropdown completo para palpites
-      if (palpitesDropdown) {
-        palpitesDropdown.style.display = "block";
-      }
+        const userData = getUserData();
+        if (userData) {
+            userAvatar.src = userData.avatar || "https://via.placeholder.com/30";
+            usernameDisplay.textContent = userData.username || "Usuário";
+        }
+        // Remove a manipulação do palpites-dropdown
     } else {
-      // Usuário não logado - mostra botões de login/cadastro
-      loginBtn.style.display = "block";
-      registerBtn.style.display = "block";
-      loggedUser.style.display = "none";
-
-      // Esconde dropdown de palpites
-      if (palpitesDropdown) {
-        palpitesDropdown.style.display = "none";
-      }
+        loginBtn.style.display = "block";
+        registerBtn.style.display = "block";
+        loggedUser.style.display = "none";
+        // Remove a manipulação do palpites-dropdown
     }
   }
 
-  // Função de logout
-  // if (logoutBtn) {
-  //   logoutBtn.addEventListener("click", function (e) {
-  //     e.preventDefault();
-  //     logoutUser(); // Implemente esta função conforme seu backend
-  //     window.location.href = "accounts/logout/"; // Redireciona para home após logout
-  //   });
-  // }
+  const dropdowns = document.querySelectorAll('.brasileirao-dropdown');
+
+    dropdowns.forEach(dropdown => {
+        const toggle = dropdown.querySelector('a:first-child');
+        const menu = dropdown.querySelector('.brasileirao-dropdown-menu');
+
+        if (toggle && menu) {
+            toggle.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768) {
+                    e.preventDefault();
+                    dropdown.classList.toggle('active');
+
+                    // Fecha outros dropdowns
+                    document.addEventListener('click', function(e) {
+                        if (window.innerWidth <= 768 && !e.target.closest('.brasileirao-dropdown')) {
+                            dropdowns.forEach(d => d.classList.remove('active'));
+                        }
+                    });
+                }
+            });
+        }
+    });
+
+  // Fecha dropdowns ao clicar fora (mobile)
+  document.addEventListener('click', function(e) {
+    if (window.innerWidth <= 768 && !e.target.closest('.brasileirao-dropdown')) {
+      dropdowns.forEach(d => d.classList.remove('active'));
+    }
+  });
 
   // Funções simuladas - substitua pelas suas implementações reais
   function checkAuthStatus() {
@@ -68,12 +78,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return null;
     }
   }
-
-  // function logoutUser() {
-  //   // Implemente a lógica real de logout
-  //   localStorage.removeItem("isAuthenticated");
-  //   localStorage.removeItem("userData");
-  // }
 
   // Inicializa a UI
   updateAuthUI();
@@ -93,7 +97,7 @@ document.querySelectorAll(".toggle-password").forEach((button) => {
       icon.classList.replace("fa-eye-slash", "fa-eye");
     }
   });
-  
+
 });
 
 
