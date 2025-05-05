@@ -27,8 +27,8 @@
         {% for topico in topicos %}
         <div class="mural-post" data-topic-id="{{ topico.id }}">
           <div class="post-author">
-            {% if topico.autor.usuario.foto_perfil.url %}
-              <img src="{{ topico.autor.usuario.foto_perfil.url }}" alt="Usuário" class="comment-avatar">
+            {% if topico.autor.foto_perfil %}
+              <img src="{{ topico.autor.foto_perfil.url }}" alt="Usuário" class="comment-avatar">
             {% else %}
               <img src="{% static 'img/perfil-null.png' %}" alt="Usuário" class="comment-avatar">
             {% endif %}
@@ -69,8 +69,8 @@
               {% for comentario in topico.comentarios.all|slice:":3" %}
               <div class="comment" data-comment-id="{{ comentario.id }}">
                 <div class="comment-author">
-                  {% if comentario.autor.usuario.foto_perfil.url %}
-                    <img src="{{ comentario.autor.usuario.foto_perfil.url }}" alt="Usuário" class="comment-avatar">
+                  {% if comentario.autor.foto_perfil %}
+                    <img src="{{ comentario.autor.foto_perfil.url }}" alt="Usuário" class="comment-avatar">
                   {% else %}
                     <img src="{% static 'img/perfil-null.png' %}" alt="Usuário" class="comment-avatar">
                   {% endif %}
@@ -237,7 +237,7 @@
           {% csrf_token %}
           <div class="form-group">
             <label for="postTitle">Título:</label>
-            <input class="input-title" type="text" id="postTitle" name="titulo" required>
+            <input type="text" id="postTitle" name="titulo" required>
           </div>
           <div class="form-group">
             <label for="postContent">Mensagem:</label>
