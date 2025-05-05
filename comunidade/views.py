@@ -5,12 +5,16 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from datetime import datetime
 
-from .models import TopicoForum, ComentarioForum, Enquete, OpcaoEnquete
+from .models import TopicoForum, ComentarioForum, Enquete, OpcaoEnquete, VotoEnquete
 
 
 def comunidades(request):
     topicos = TopicoForum.objects.all().order_by('-data_criacao')
     enquetes = Enquete.objects.all().order_by('-data_criacao')
+
+    # Adiciona o usuário a cada enquete para os métodos
+    for enquete in enquetes:
+        enquete._request_user = request.user
 
     context = {
         'topicos': topicos,
@@ -81,19 +85,62 @@ def criar_enquete(request):
         return redirect('comunidade')
     return redirect('comunidade')
 
+import logging
+logger = logging.getLogger(__name__)
+
+@login_required
 @require_POST
 def votar_enquete(request, enquete_id, opcao_id):
+    logger.info(f"Tentativa de voto - Enquete: {enquete_id}, Opção: {opcao_id}, Usuário: {request.user.id}")
     try:
-        opcao = OpcaoEnquete.objects.get(id=opcao_id, enquete_id=enquete_id)
+        enquete = Enquete.objects.get(id=enquete_id)
+        opcao = OpcaoEnquete.objects.get(id=opcao_id, enquete=enquete)
+
+        # Verifica se usuário já votou
+        if VotoEnquete.objects.filter(enquete=enquete, usuario=request.user).exists():
+            return JsonResponse({'success': False, 'message': 'Você já votou nesta enquete'}, status=400)
+
+        # Registra o voto
+        VotoEnquete.objects.create(
+            usuario=request.user,
+            enquete=enquete,
+            opcao=opcao
+        )
+
+        # Atualiza a contagem de votos
         opcao.votos += 1
         opcao.save()
 
+        # Prepara os resultados para retorno
+        opcoes = enquete.opcoes.all()
+        total_votos = sum(op.votos for op in opcoes)
+        resultados = [{
+            'id': op.id,
+            'percent': round((op.votos / total_votos) * 100) if total_votos > 0 else 0
+        } for op in opcoes]
+
         return JsonResponse({
             'success': True,
-            'percent': enquete.porcentagem_votos(opcao)
+            'results': resultados,
+            'total_votos': total_votos
         })
+
+    except (Enquete.DoesNotExist, OpcaoEnquete.DoesNotExist):
+        return JsonResponse({'success': False, 'message': 'Enquete ou opção não encontrada'}, status=404)
+
     except OpcaoEnquete.DoesNotExist:
-        return JsonResponse({'success': False}, status=404)
-    
+        logger.error(f"Opção {opcao_id} não encontrada para enquete {enquete_id}")
+        return JsonResponse({
+            'success': False,
+            'message': 'Opção inválida'
+        }, status=400)
+
+    except Exception as e:
+        logger.error(f"Erro inesperado: {str(e)}")
+        return JsonResponse({
+            'success': False,
+            'message': 'Erro interno no servidor'
+        }, status=500)
+
 def noticias(request):
     return render(request,"outros/noticias.html")

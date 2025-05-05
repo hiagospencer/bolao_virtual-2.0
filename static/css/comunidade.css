@@ -603,3 +603,95 @@
   border-radius: 4px;
   margin: 5px 0;
 }
+
+/* Estilos para enquetes */
+.poll-option {
+    position: relative;
+    cursor: pointer;
+    margin-bottom: 8px;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.poll-option:hover:not(.view-only) {
+    background-color: #f5f5f5;
+}
+
+.poll-option.view-only {
+    cursor: default;
+}
+
+.poll-option.user-vote {
+    background-color: #e8f4fd;
+    border-left: 3px solid #3498db;
+}
+
+.option-result {
+    height: 8px;
+    background: #3498db;
+    border-radius: 4px;
+    margin: 5px 0;
+    transition: width 0.5s ease;
+}
+
+.option-text {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.option-percent {
+    float: right;
+    color: #666;
+}
+
+.your-vote-badge {
+    background: #3498db;
+    color: white;
+    font-size: 0.7em;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 10px;
+}
+
+.already-voted {
+    display: block;
+    margin-top: 5px;
+    color: #27ae60;
+    font-size: 0.9em;
+}
+
+.poll-meta {
+    margin-top: 15px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.poll-meta span {
+    display: block;
+    margin-bottom: 3px;
+}
+
+/* Estilo durante votação */
+.poll-option.voting-in-progress {
+    position: relative;
+    opacity: 0.7;
+}
+
+.poll-option.voting-in-progress::after {
+    content: "Votando...";
+    position: absolute;
+    right: 10px;
+    color: #3498db;
+    font-size: 0.8em;
+}
+
+/* Mensagens de erro */
+.poll-error {
+    color: #e74c3c;
+    padding: 8px;
+    margin-top: 10px;
+    border: 1px solid #e74c3c;
+    border-radius: 4px;
+    background-color: #fde8e8;
+}

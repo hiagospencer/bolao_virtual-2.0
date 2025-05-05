@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById(modalId).style.display = "none";
   }
 
-  // Configuração dos modais
+  // Configuração dos modals
   const modals = {
     newPost: {
       openBtn: ".btn-new-post",
@@ -118,9 +118,11 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+
+  // Configura elementos dinâmicos
+  setupDynamicElements();
 });
 
-// Adicione esta função no seu JavaScript existente
 function setupDynamicElements() {
   // Botão "Ver mais" comentários
   document.querySelectorAll('.btn-view-more').forEach(btn => {
@@ -133,38 +135,123 @@ function setupDynamicElements() {
     });
   });
 
-  // Votar em enquete
-  document.querySelectorAll('.poll-option').forEach(option => {
+  // Configura eventos de votação
+  document.querySelectorAll('.poll-option:not(.view-only)').forEach(option => {
     option.addEventListener('click', function() {
-      if (this.classList.contains('voted')) return;
-
-      const pollId = this.closest('.poll-card').dataset.pollId;
-      const optionId = this.dataset.optionId;
-
-      // Aqui você faria uma requisição AJAX para registrar o voto
-      fetch(`/votar-enquete/${pollId}/${optionId}/`, {
-        method: 'POST',
-        headers: {
-          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          // Atualiza a interface
-          this.classList.add('voted');
-          const percent = data.percent;
-          this.querySelector('.option-result').style.width = `${percent}%`;
-          this.querySelector('.option-percent').textContent = `${percent}%`;
-        }
-      });
+      if (!this.classList.contains('voting-in-progress') &&
+          !this.classList.contains('view-only')) {
+        votePoll(this);
+      }
     });
   });
 }
 
-// Chame esta função após carregar conteúdo dinâmico
-document.addEventListener("DOMContentLoaded", function() {
-  // ... seu código existente ...
+function votePoll(optionElement) {
+  const pollCard = optionElement.closest('.poll-card');
+  const pollId = pollCard.dataset.pollId;
+  const optionId = optionElement.dataset.optionId;
 
-  setupDynamicElements();
-});
+  // Debug: verifique os IDs antes de enviar
+  console.log('Enviando voto para enquete:', pollId, 'opção:', optionId);
+
+  fetch(`/interacao/votar-enquete/${pollId}/${optionId}/`, {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+      'Accept': 'application/json',
+    },
+    credentials: 'include'  // Importante para cookies de sessão
+  })
+  .then(response => {
+    console.log('Resposta recebida, status:', response.status); // Debug
+    if (!response.ok) {
+      // Captura detalhes do erro HTTP
+      return response.json().then(err => {
+        throw new Error(err.message || `HTTP error! status: ${response.status}`);
+      });
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Dados recebidos:', data); // Debug
+    if (data.success) {
+      updatePollAfterVote(pollCard, data.results, optionId, data.total_votos);
+    } else {
+      throw new Error(data.message || 'Erro no servidor');
+    }
+  })
+  .catch(error => {
+    console.error('Erro completo:', error); // Debug detalhado
+    let errorMsg = 'Erro de conexão';
+
+    if (error.message.includes('Failed to fetch')) {
+      errorMsg = 'Sem conexão com o servidor';
+    } else if (error.message.includes('404')) {
+      errorMsg = 'Enquete não encontrada';
+    } else if (error.message) {
+      errorMsg = error.message;
+    }
+
+    showPollError(pollCard, errorMsg);
+  })
+  .finally(() => {
+    optionElement.classList.remove('voting-in-progress');
+  });
+}
+
+function updatePollAfterVote(pollCard, results, votedOptionId, totalVotos) {
+  // Atualiza todas as opções com as porcentagens
+  results.forEach(result => {
+    const option = pollCard.querySelector(`.poll-option[data-option-id="${result.id}"]`);
+    const percentElement = option.querySelector('.option-percent');
+    const resultBar = option.querySelector('.option-result');
+
+    percentElement.textContent = `${result.percent}%`;
+    percentElement.style.display = 'inline';
+    resultBar.style.width = `${result.percent}%`;
+
+    // Transforma todas as opções em modo visualização
+    option.classList.add('view-only');
+    option.style.pointerEvents = 'none';
+
+    // Destaca a opção votada pelo usuário
+    if (result.id == votedOptionId) {
+      option.classList.add('user-vote');
+      const badge = document.createElement('span');
+      badge.className = 'your-vote-badge';
+      badge.textContent = 'Seu voto';
+      option.appendChild(badge);
+    }
+  });
+
+  // Atualiza o total de votos
+  const totalElement = pollCard.querySelector('.poll-meta span:first-child');
+  if (totalElement) {
+    totalElement.textContent = `Total de votos: ${totalVotos}`;
+  }
+
+  // Adiciona mensagem "Você já votou"
+  const alreadyVoted = document.createElement('span');
+  alreadyVoted.className = 'already-voted';
+  alreadyVoted.textContent = 'Você já votou nesta enquete';
+  pollCard.querySelector('.poll-meta').appendChild(alreadyVoted);
+}
+
+function showPollError(pollCard, message) {
+  const errorElement = document.createElement('div');
+  errorElement.className = 'poll-error';
+  errorElement.textContent = message;
+
+  // Insere antes das opções
+  const optionsContainer = pollCard.querySelector('.poll-options');
+  if (optionsContainer.firstChild) {
+    optionsContainer.insertBefore(errorElement, optionsContainer.firstChild);
+  } else {
+    optionsContainer.appendChild(errorElement);
+  }
+
+  // Remove a mensagem após 5 segundos
+  setTimeout(() => {
+    errorElement.remove();
+  }, 5000);
+}

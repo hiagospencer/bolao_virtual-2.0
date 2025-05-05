@@ -1,6 +1,7 @@
 {% extends 'auxiliar/base.html' %}
 {% load static %}
 {% block title %} Bolão virtual | Comunidade {% endblock %}
+{% load comunidade_tags %}
 
 {% block body %}
 <section class="community-page">
@@ -27,8 +28,8 @@
         {% for topico in topicos %}
         <div class="mural-post" data-topic-id="{{ topico.id }}">
           <div class="post-author">
-            {% if comentario.autor.foto_perfil.url %}
-              <img src="{{ comentario.autor.foto_perfil.url }}" alt="Usuário" class="comment-avatar">
+            {% if topico.autor.usuario.foto_perfil.url %}
+              <img src="{{ topico.autor.usuario.foto_perfil.url }}" alt="Usuário" class="comment-avatar">
             {% else %}
               <img src="{% static 'img/perfil-null.png' %}" alt="Usuário" class="comment-avatar">
             {% endif %}
@@ -48,8 +49,8 @@
               {% for comentario in topico.comentarios.all|slice:":3" %}
                   <div class="comment">
                     <div class="comment-author">
-                      {% if comentario.autor.foto_perfil.url %}
-                        <img src="{{ comentario.autor.foto_perfil.url }}" alt="Usuário" class="comment-avatar">
+                      {% if comentario.autor.usuario.foto_perfil.url %}
+                        <img src="{{ comentario.autor.usuario.foto_perfil.url }}" alt="Usuário" class="comment-avatar">
                       {% else %}
                         <img src="{% static 'img/perfil-null.png' %}" alt="Usuário" class="comment-avatar">
                       {% endif %}
@@ -84,29 +85,37 @@
       <div class="polls-grid">
 
         {% for enquete in enquetes %}
-        <div class="poll-card">
-          <h3>{{ enquete.pergunta }}</h3>
+          <div class="poll-card" data-poll-id="{{ enquete.id }}">
+            <h3>{{ enquete.pergunta }}</h3>
           <div class="poll-options">
-            {% for opcao in enquete.opcoes.all %}
-            <div class="poll-option">
-              {% widthratio opcao.votos enquete.total_votos 100 as width %}
-              <div class="option-result" style="width: {{ width }}%"></div>
-              <span class="option-text">{{ opcao.texto }}</span>
-              <span class="option-percent">{{ width }}%</span>
-            </div>
-            {% endfor %}
+        {% for opcao in enquete.opcoes.all %}
+          <div class="poll-option {% if enquete|ja_votou:request.user %}view-only{% endif %} {% if enquete|voto_usuario:request.user == opcao %}user-vote{% endif %}" data-option-id="{{ opcao.id }}" {% if not enquete|ja_votou:request.user %} onclick="votePoll(this)" {% endif %}>
+
+            {% widthratio opcao.votos enquete.total_votos 100 as width %}
+            <div class="option-result" style="width:  {% if enquete|ja_votou:request.user %}{{ width }}{% else %}0{% endif %}%"></div>
+            <span class="option-text">{{ opcao.texto }}</span>
+
+            {% if enquete|ja_votou:request.user %}
+            <span class="option-percent">{{ width }}%</span>
+            {% else %}
+            <span class="option-percent" style="display: none;">0%</span>
+            {% endif %}
+
+            {% if enquete|voto_usuario:request.user == opcao %}
+            <span class="your-vote-badge">Seu voto</span>
+            {% endif %}
           </div>
+          {% endfor %}
+      </div>
           <div class="poll-meta">
             <span>Total de votos: {{ enquete.total_votos }}</span>
             <span>Encerra em: {{ enquete.data_encerramento|timeuntil }}</span>
+             {% if enquete|ja_votou:request.user %}
+            <span class="already-voted">Você já votou nesta enquete</span>
+            {% endif %}
           </div>
         </div>
-        {% empty %}
-        <div class="no-polls">
-          <p>Nenhuma enquete disponível no momento.</p>
-        </div>
-        {% endfor %}
-
+    {% endfor %}
       </div>
     </div>
 
@@ -250,4 +259,13 @@
   </div>
 
 </section>
+
+<script>
+console.log("CSRF Token:", "{{ csrf_token }}");
+console.log("User:", "{{ request.user }}");
+console.log("URLs:", {
+  votar: "{% url 'votar_enquete' 0 0 %}".replace('/0/0/', '/ID_ENQUETE/ID_OPCAO/')
+});
+</script>
+
 {% endblock %}
