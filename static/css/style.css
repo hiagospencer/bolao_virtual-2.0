@@ -712,7 +712,7 @@ main {
     gap: 10px;
 }
 
-/* .btn-action {
+.btn-action {
     padding: 8px 16px;
     border-radius: 20px;
     font-size: 0.9rem;
@@ -725,7 +725,7 @@ main {
 
 .btn-action i {
     font-size: 0.9rem;
-} */
+}
 
 .btn-action.primary {
     background-color: var(--secondary);

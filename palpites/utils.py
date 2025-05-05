@@ -156,7 +156,7 @@ def calcular_pontuacao_usuario(rodada_atualizada):
           if rodada.vencedor == "empate" and resultado_original.vencedor == 'empate':
             pontuacao_usuario.empates += 1
             pontuacao_usuario.vitorias -= 1
-            participante.xp += 10
+            participante.xp += 100
             participante.save()
             pontuacao_usuario.save()
 
@@ -167,7 +167,7 @@ def calcular_pontuacao_usuario(rodada_atualizada):
             rodada.vitorias = 2
             rodada.tipo_class = "result-correct"
             rodada.finalizado = True
-            participante.xp += 10
+            participante.xp += 100
             participante.save()
             pontuacao_usuario.save()
           else:
@@ -182,7 +182,7 @@ def calcular_pontuacao_usuario(rodada_atualizada):
             rodada.placar_exato = 3
             rodada.tipo_class = "exact-correct"
             rodada.finalizado = True
-            participante.xp += 40
+            participante.xp += 400
             participante.save()
             pontuacao_usuario.save()
           else:
@@ -193,14 +193,10 @@ def calcular_pontuacao_usuario(rodada_atualizada):
             rodada.finalizado = False
             rodada.tipo_class = "none"
             rodada.save()
-            print(f'Jogo para ser realizado: {rodada.time_casa} x {rodada.time_visitante}')
+
 
           rodada.save()
           pontuacao_usuario.save()
-
-          print("gerenciador")
-          # gerenciador = GerenciadorConquistas(participante)
-          # gerenciador.verificar_conquistas()
         except :
           continue
 

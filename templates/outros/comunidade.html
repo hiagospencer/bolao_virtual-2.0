@@ -12,101 +12,67 @@
     </section>
 
     <div class="community-tabs">
-      <button class="tab-btn active" data-tab="forum">Fórum</button>
       <button class="tab-btn" data-tab="mural">Mural</button>
       <button class="tab-btn" data-tab="enquetes">Enquetes</button>
       <button class="tab-btn" data-tab="destaques">Destaques</button>
     </div>
 
-    <div class="tab-content active" id="forum">
-      <div class="forum-header">
-        <h2><i class="fas fa-comments"></i> Fórum de Discussão</h2>
-        <button class="btn btn-new-topic"><i class="fas fa-plus"></i> Novo Tópico</button>
-      </div>
-
-      <div class="forum-categories">
-        <div class="forum-category">
-          <h3><i class="fas fa-trophy"></i> Campeonato Brasileiro</h3>
-          <div class="forum-topics">
-            <div class="forum-topic">
-              <div class="topic-info">
-                <h4><a href="#">Quem será rebaixado esse ano?</a></h4>
-                <p class="topic-meta">Por: Zé Palpite • 15 comentários • 2 horas atrás</p>
-              </div>
-              <div class="topic-stats">
-                <span class="topic-views"><i class="fas fa-eye"></i> 245</span>
-                <span class="topic-replies"><i class="fas fa-comment"></i> 15</span>
-              </div>
-            </div>
-
-            <div class="forum-topic">
-              <div class="topic-info">
-                <h4><a href="#">Análise: Flamengo x Palmeiras - próxima rodada</a></h4>
-                <p class="topic-meta">Por: Análise Tática • 32 comentários • 1 dia atrás</p>
-              </div>
-              <div class="topic-stats">
-                <span class="topic-views"><i class="fas fa-eye"></i> 512</span>
-                <span class="topic-replies"><i class="fas fa-comment"></i> 32</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="forum-category">
-          <h3><i class="fas fa-globe-americas"></i> Libertadores</h3>
-          <div class="forum-topics">
-            <div class="forum-topic">
-              <div class="topic-info">
-                <h4><a href="#">Times brasileiros na fase de grupos</a></h4>
-                <p class="topic-meta">Por: Continental • 8 comentários • 3 dias atrás</p>
-              </div>
-              <div class="topic-stats">
-                <span class="topic-views"><i class="fas fa-eye"></i> 187</span>
-                <span class="topic-replies"><i class="fas fa-comment"></i> 8</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="tab-content" id="mural">
+    <div class="tab-content active" id="mural">
       <div class="mural-header">
         <h2><i class="fas fa-clipboard"></i> Mural de Mensagens</h2>
         <button class="btn btn-new-post"><i class="fas fa-plus"></i> Nova Mensagem</button>
       </div>
 
       <div class="mural-posts">
-        <div class="mural-post">
+        {% for topico in topicos %}
+        <div class="mural-post" data-topic-id="{{ topico.id }}">
           <div class="post-author">
-            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Usuário" class="author-avatar">
-            <span class="author-name">Carlos Alberto</span>
-            <span class="post-time">2 horas atrás</span>
+            {% if comentario.autor.foto_perfil.url %}
+              <img src="{{ comentario.autor.foto_perfil.url }}" alt="Usuário" class="comment-avatar">
+            {% else %}
+              <img src="{% static 'img/perfil-null.png' %}" alt="Usuário" class="comment-avatar">
+            {% endif %}
+            <span class="author-name">{{ topico.autor.username }}</span>
+            <span class="post-time">{{ topico.data_criacao|timesince }} atrás</span>
           </div>
           <div class="post-content">
-            <p>Alguém mais achou o critério de pontuação da última rodada meio estranho? Acho que deveríamos rever como são calculados os pontos para jogos decididos nos acréscimos.</p>
+            <h3>{{ topico.titulo }}</h3>
+            <p>{{ topico.conteudo }}</p>
             <div class="post-actions">
-              <button class="btn-like"><i class="far fa-thumbs-up"></i> 12</button>
+              <button class="btn-like"><i class="far fa-thumbs-up"></i> 0</button>
               <button class="btn-comment"><i class="far fa-comment"></i> Responder</button>
             </div>
-          </div>
-        </div>
 
-        <div class="mural-post">
-          <div class="post-author">
-            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Usuário" class="author-avatar">
-            <span class="author-name">Ana Santos</span>
-            <span class="post-time">5 horas atrás</span>
-          </div>
-          <div class="post-content">
-            <p>Estou organizando um bolão especial para a Copa do Mundo feminina! Quem tiver interesse em participar pode me chamar no privado. Vamos fazer um grupo no WhatsApp!</p>
-            <div class="post-actions">
-              <button class="btn-like"><i class="far fa-thumbs-up"></i> 28</button>
-              <button class="btn-comment"><i class="far fa-comment"></i> Responder</button>
+            <!-- Comentários -->
+            <div class="post-comments">
+              {% for comentario in topico.comentarios.all|slice:":3" %}
+                  <div class="comment">
+                    <div class="comment-author">
+                      {% if comentario.autor.foto_perfil.url %}
+                        <img src="{{ comentario.autor.foto_perfil.url }}" alt="Usuário" class="comment-avatar">
+                      {% else %}
+                        <img src="{% static 'img/perfil-null.png' %}" alt="Usuário" class="comment-avatar">
+                      {% endif %}
+                      <span>{{ comentario.autor.username }}</span>
+                      <span class="comment-time">{{ comentario.data_criacao|timesince }} atrás</span>
+                    </div>
+                    <p>{{ comentario.conteudo }}</p>
+                  </div>
+                  {% endfor %}
+
+                  {% if topico.comentarios.count > 3 %}
+                  <button class="btn-view-more">Ver mais respostas ({{ topico.comentarios.count }})</button>
+                  {% endif %}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+            {% empty %}
+            <div class="no-posts">
+              <p>Nenhuma mensagem ainda. Seja o primeiro a postar!</p>
+            </div>
+        {% endfor %}
       </div>
+
     </div>
 
     <div class="tab-content" id="enquetes">
@@ -116,65 +82,31 @@
       </div>
 
       <div class="polls-grid">
-        <div class="poll-card">
-          <h3>Quem será o artilheiro do Brasileirão 2023?</h3>
-          <div class="poll-options">
-            <div class="poll-option">
-              <div class="option-result" style="width: 45%"></div>
-              <span class="option-text">Germán Cano</span>
-              <span class="option-percent">45%</span>
-            </div>
-            <div class="poll-option">
-              <div class="option-result" style="width: 30%"></div>
-              <span class="option-text">Tiquinho Soares</span>
-              <span class="option-percent">30%</span>
-            </div>
-            <div class="poll-option">
-              <div class="option-result" style="width: 15%"></div>
-              <span class="option-text">Pedro Raul</span>
-              <span class="option-percent">15%</span>
-            </div>
-            <div class="poll-option">
-              <div class="option-result" style="width: 10%"></div>
-              <span class="option-text">Outro</span>
-              <span class="option-percent">10%</span>
-            </div>
-          </div>
-          <div class="poll-meta">
-            <span>Total de votos: 1.245</span>
-            <span>Encerra em: 3 dias</span>
-          </div>
-        </div>
 
+        {% for enquete in enquetes %}
         <div class="poll-card">
-          <h3>Qual time surpreenderá positivamente nesta temporada?</h3>
+          <h3>{{ enquete.pergunta }}</h3>
           <div class="poll-options">
+            {% for opcao in enquete.opcoes.all %}
             <div class="poll-option">
-              <div class="option-result" style="width: 35%"></div>
-              <span class="option-text">Fortaleza</span>
-              <span class="option-percent">35%</span>
+              {% widthratio opcao.votos enquete.total_votos 100 as width %}
+              <div class="option-result" style="width: {{ width }}%"></div>
+              <span class="option-text">{{ opcao.texto }}</span>
+              <span class="option-percent">{{ width }}%</span>
             </div>
-            <div class="poll-option">
-              <div class="option-result" style="width: 28%"></div>
-              <span class="option-text">Bragantino</span>
-              <span class="option-percent">28%</span>
-            </div>
-            <div class="poll-option">
-              <div class="option-result" style="width: 22%"></div>
-              <span class="option-text">América-MG</span>
-              <span class="option-percent">22%</span>
-            </div>
-            <div class="poll-option">
-              <div class="option-result" style="width: 15%"></div>
-              <span class="option-text">Cuiabá</span>
-              <span class="option-percent">15%</span>
-            </div>
+            {% endfor %}
           </div>
           <div class="poll-meta">
-            <span>Total de votos: 892</span>
-            <span>Encerra em: 1 dia</span>
+            <span>Total de votos: {{ enquete.total_votos }}</span>
+            <span>Encerra em: {{ enquete.data_encerramento|timeuntil }}</span>
           </div>
         </div>
+        {% empty %}
+        <div class="no-polls">
+          <p>Nenhuma enquete disponível no momento.</p>
+        </div>
+        {% endfor %}
+
       </div>
     </div>
 
@@ -224,6 +156,98 @@
       </div>
     </div>
   </main>
+
+  <!-- Modal Nova Mensagem -->
+  <div class="modal-overlay" id="newPostModal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-edit"></i> Criar Nova Mensagem</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="newPostForm" method="post" action="{% url 'criar_topico' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="postTitle">Título:</label>
+            <input type="text" id="postTitle" name="titulo" required>
+          </div>
+          <div class="form-group">
+            <label for="postContent">Mensagem:</label>
+            <textarea id="postContent" name="conteudo" rows="5" required></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-cancel">Cancelar</button>
+            <button type="submit" class="btn btn-submit">Publicar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Nova Enquete -->
+  <div class="modal-overlay" id="newPollModal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-poll"></i> Criar Nova Enquete</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="newPollForm" method="post" action="{% url 'criar_enquete' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="pollQuestion">Pergunta:</label>
+            <input type="text" id="pollQuestion" name="pergunta" required>
+          </div>
+          <div class="form-group">
+            <label for="pollEndDate">Data de encerramento:</label>
+            <input type="datetime-local" id="pollEndDate" name="data_encerramento" required>
+          </div>
+          <div class="form-group">
+            <label>Opções:</label>
+            <div id="pollOptionsContainer">
+              <div class="poll-option-input">
+                <input type="text" name="opcoes[]" placeholder="Opção 1" required>
+                <button type="button" class="btn-remove-option" style="display: none;">&times;</button>
+              </div>
+              <div class="poll-option-input">
+                <input type="text" name="opcoes[]" placeholder="Opção 2" required>
+                <button type="button" class="btn-remove-option" style="display: none;">&times;</button>
+              </div>
+            </div>
+            <button type="button" id="btnAddOption" class="btn-add-option">+ Adicionar Opção</button>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-cancel">Cancelar</button>
+            <button type="submit" class="btn btn-submit">Criar Enquete</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Responder Mensagem -->
+  <div class="modal-overlay" id="replyModal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-reply"></i> Responder Mensagem</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="replyForm" method="post" action="{% url 'criar_comentario' %}">
+          {% csrf_token %}
+          <input type="hidden" id="replyTopicId" name="topico_id">
+          <div class="form-group">
+            <label for="replyContent">Sua Resposta:</label>
+            <textarea id="replyContent" name="conteudo" rows="5" required></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-cancel">Cancelar</button>
+            <button type="submit" class="btn btn-submit">Enviar Resposta</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
 </section>
 {% endblock %}

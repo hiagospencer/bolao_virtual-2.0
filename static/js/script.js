@@ -93,6 +93,7 @@ document.querySelectorAll(".toggle-password").forEach((button) => {
       icon.classList.replace("fa-eye-slash", "fa-eye");
     }
   });
+  
 });
 
 

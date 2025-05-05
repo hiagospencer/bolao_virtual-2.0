@@ -34,7 +34,10 @@ def homepage(request):
     return render(request, 'index.html', context)
 
 def perfil(request):
-    return render(request, "perfil.html")
+    user = request.user
+    usuario = UserProfile.objects.get(user=user)
+    context = {"usuario":usuario}
+    return render(request, "perfil.html", context)
 
 def regras(request):
     return render(request,"regras.html")

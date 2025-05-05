@@ -1,5 +1,6 @@
 # apps/comunidade/models.py
 from django.db import models
+from django.db.models import Sum
 from usuarios.models import Usuario
 
 class TopicoForum(models.Model):
@@ -12,6 +13,10 @@ class TopicoForum(models.Model):
 
     def __str__(self):
         return self.titulo
+
+    @property
+    def total_comentarios(self):
+        return self.comentarios.count()
 
 class ComentarioForum(models.Model):
     topico = models.ForeignKey(TopicoForum, related_name='comentarios', on_delete=models.CASCADE)
@@ -30,6 +35,15 @@ class Enquete(models.Model):
 
     def __str__(self):
         return self.pergunta
+
+    @property
+    def total_votos(self):
+        return self.opcoes.aggregate(total=Sum('votos'))['total'] or 0
+
+    def porcentagem_votos(self, opcao):
+        if self.total_votos == 0:
+            return 0
+        return round((opcao.votos / self.total_votos) * 100)
 
 class OpcaoEnquete(models.Model):
     enquete = models.ForeignKey(Enquete, related_name='opcoes', on_delete=models.CASCADE)

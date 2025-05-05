@@ -82,7 +82,7 @@
                         <li><a href="{% url 'perfil' %}"><i class="fas fa-user"></i> Perfil</a></li>
                     {% endif %}
                 {% endif %}
-                
+
                 <div class="user-area" id="user-area">
                     {% if request.user.is_authenticated %}
                         <li><a href="{% url 'fazer_logout' %}" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
@@ -101,7 +101,7 @@
 
 <nav class="mobile-menu" id="mobileMenu">
     <div class="mobile-menu-header">
-        <img src="img/logo-brasileirao.png" alt="Bolão Virtual" class="mobile-logo">
+        <img src="{% static 'img/logo-brasileirao.png' %}" alt="Bolão Virtual" class="mobile-logo">
         <button class="mobile-menu-close" id="mobileMenuClose">
             <i class="fas fa-times"></i>
         </button>
