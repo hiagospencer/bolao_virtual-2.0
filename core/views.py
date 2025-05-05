@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from palpites.models import Classificacao
-from usuarios.models import UserProfile
+from usuarios.models import Usuario, UserProfile
 from premios.models import ConquistaUsuario
 from django.db.models import Prefetch
 from core.models import PremiacaoBolao
@@ -38,6 +40,41 @@ def perfil(request):
     usuario = UserProfile.objects.get(user=user)
     context = {"usuario":usuario}
     return render(request, "perfil.html", context)
+
+
+@login_required
+def atualizar_perfil(request):
+    if request.method == 'POST':
+        try:
+            # Obtém os objetos relacionados
+            usuario = request.user
+            perfil = usuario.userprofile
+
+            # Obtém os dados do formulário
+            whatsapp = request.POST.get('whatsapp')
+            pix = request.POST.get('pix')
+            imagem = request.FILES.get('img')
+
+            # Atualiza os campos do perfil
+            if whatsapp is not None:
+                perfil.telefone = whatsapp
+            if pix is not None:
+                perfil.chave_pix = pix
+
+            # Atualiza a foto do usuário (não do perfil)
+            if imagem is not None:
+                usuario.foto_perfil = imagem
+
+            # Salva as alterações
+            perfil.save()
+            usuario.save()
+
+            messages.success(request, 'Perfil atualizado com sucesso!')
+        except Exception as e:
+            messages.error(request, f'Erro ao atualizar perfil: {str(e)}')
+
+        return redirect('perfil')
+    return redirect('perfil')
 
 def regras(request):
     return render(request,"regras.html")

@@ -79,7 +79,7 @@
                                 </td>
                                 <td>
                                     <div class="player-info">
-                                        <img src="{% static 'img/perfil-null.png' %}" alt="HiagoSouza" class="player-avatar">
+                                        <img src="{% if usuario.usuario.foto_perfil %}{{ usuario.usuario.foto_perfil.url }}{% else %}{% static 'img/perfil-null.png' %}{% endif %}" alt="{{ usuario.usuario.username }}" class="player-avatar">
                                         <div class="player-details">
                                             <span class="player-name">{{ usuario.usuario.username }}</span>
                                         </div>

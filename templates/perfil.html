@@ -4,30 +4,29 @@
 
 {% block body %}
 <section class="perfil-page">
-
   <main class="container">
     <section class="profile-section">
       <div class="profile-header">
         <h1><i class="fas fa-user-circle"></i> Meu Perfil</h1>
         <p>Gerencie suas informações e foto de perfil</p>
       </div>
-
       <div class="profile-content">
         <div class="profile-picture">
           <div class="avatar-upload">
-            <div class="avatar-preview">
-              <div id="imagePreview" style="background-image: url('https://via.placeholder.com/150');">
+            <form class="profile-form" method="POST" action="{% url 'atualizar_perfil' %}" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="avatar-preview">
+              <div id="imagePreview" style="background-image: url('{% if usuario.user.foto_perfil %}{{ usuario.user.foto_perfil.url }}{% else %}{% static 'img/perfil-null.png' %}{% endif %}');">
               </div>
             </div>
             <div class="avatar-edit">
-              <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" />
-              <label for="imageUpload"><i class="fas fa-camera"></i> Alterar Foto</label>
+              <input type='file' name="img" id="inputGroupFile02" accept=".png, .jpg, .jpeg" />
+              <label for="inputGroupFile02"><i class="fas fa-camera"></i> Alterar Foto</label>
             </div>
           </div>
         </div>
 
         <div class="profile-info">
-          <form class="profile-form">
             <div class="form-group">
               <label for="username"><i class="fas fa-user-tag"></i> Nome de Usuário</label>
               <input type="text" id="username" value="{{ usuario.user.username }}" readonly>
@@ -40,12 +39,12 @@
 
             <div class="form-group">
               <label for="whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</label>
-              <input type="tel" id="whatsapp" value="{{ usuario.telefone }}" readonly>
+              <input type="tel" id="whatsapp" name="whatsapp" value="{{ usuario.telefone }}" >
             </div>
 
             <div class="form-group">
               <label for="pix"><i class="fa-brands fa-pix"></i> Chave Pix</label>
-              <input type="text" id="pix" value="{{ usuario.chave_pix }}" readonly>
+              <input type="text" id="pix" name="pix" value="{{ usuario.chave_pix }}" >
             </div>
 
             <div class="form-actions">
@@ -109,17 +108,22 @@
   </main>
 
   <script>
-    // Simulação de upload de imagem
-    document.getElementById("imageUpload").addEventListener('change', function () {
-      const file = this.files[ 0 ];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          document.getElementById('imagePreview').style.backgroundImage = `url(${e.target.result})`;
+
+    const imageInput = document.getElementById('inputGroupFile02');
+    const imagePreview = document.getElementById('imagePreview');
+
+    imageInput.addEventListener('change', function() {
+        const file = this.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagePreview.style.backgroundImage = `url('${e.target.result}')`;
+            };
+            reader.readAsDataURL(file);
         }
-        reader.readAsDataURL(file);
-      }
     });
-  </script>
+
+</script>
 </section>
 {% endblock %}
