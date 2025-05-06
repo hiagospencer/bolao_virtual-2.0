@@ -37,12 +37,14 @@ def meus_premios(request):
         'premios': premios,
     })
 
+
 @login_required
 def trofeus(request):
     usuario = request.user
     total_trofeus = MetaConquista.objects.count()
     conquistados = ConquistaUsuario.objects.filter(usuario=usuario, concluida=True).count()
     participante = UserProfile.objects.get(user=usuario)
+    participante.corrigir_nivel()
     verificar_conquistas(participante)
     conquistas_usuario = ConquistaUsuario.objects.filter(usuario=usuario).select_related('meta__tipo_trofeu')
     historico = HistoricoConquista.objects.filter(usuario=usuario).order_by('-data_conquista')[:10]

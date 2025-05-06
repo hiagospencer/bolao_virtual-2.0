@@ -16,44 +16,6 @@ class Usuario(AbstractUser):
     def __str__(self):
         return self.username
 
-    def adicionar_xp(self, quantidade):
-        """
-        Adiciona XP e atualiza nível quando necessário
-        Retorna: (level_up, moedas_ganhas)
-        """
-        if self.level >= self.nivel_maximo:
-            moedas_ganhas = quantidade * 10
-            self.moedas += moedas_ganhas
-            self.save()
-            return (False, moedas_ganhas)
-
-        nivel_anterior = self.level
-        self.xp += quantidade
-        level_up = False
-        moedas_ganhas = 0
-
-        while self.xp >= self.xp_para_proximo_level and self.level < self.nivel_maximo:
-            self.xp -= self.xp_para_proximo_level
-            self.level += 1
-            level_up = True
-
-            # Recompensa por level up
-            recompensa = self.level * 100
-            self.moedas += recompensa
-            moedas_ganhas += recompensa
-
-            # Atualiza para o próximo nível
-            self.xp_para_proximo_level = self.calcular_xp_necessario()
-
-        self.save()
-        return (level_up, moedas_ganhas)
-
-    def calcular_xp_necessario(self):
-
-        """Calcula o XP necessário para o próximo nível com progressão exponencial"""
-        base_xp = 500  # Valor base
-        multiplicador = 1.5  # Fator de crescimento
-        return int(base_xp * (multiplicador ** (self.level - 1)))
 
 class UserProfile(models.Model):
     user = models.OneToOneField(Usuario, on_delete=models.CASCADE)
