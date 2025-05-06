@@ -6,11 +6,12 @@ from django.utils.html import format_html
 
 class ClassificacaoAdmin(admin.ModelAdmin):
     model = Classificacao
-    list_display = ["usuario", "pontos","posicao_atual", "posicao_anterior", "posicao_variacao"]
+    list_display = ["usuario", "pontos", "placar_exato", "vitorias","empates","posicao_atual", "posicao_anterior", "posicao_variacao"]
+    list_editable = ("pontos", "placar_exato", "vitorias","empates","posicao_atual", "posicao_anterior", "posicao_variacao")
     list_filter = ["usuario", "pontos",]
     search_fields = ("usuario",)
 
-    
+
 class PalpiteAdmin(admin.ModelAdmin):
     model = Palpite
     list_display = ["usuario","rodada_atual","time_casa", "placar_casa", "placar_visitante", "time_visitante", "vencedor","placar_exato","vitorias", "finalizado", "tipo_class"]
@@ -39,3 +40,4 @@ admin.site.register(RodadaOriginal, RodadaOriginalAdmin)
 admin.site.register(Rodada, RodadaAdmin)
 admin.site.register(Palpite, PalpiteAdmin)
 admin.site.register(BloquearPartida)
+admin.site.register(PontuacaoRodada)

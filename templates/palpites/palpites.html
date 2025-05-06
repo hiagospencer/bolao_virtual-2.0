@@ -13,13 +13,7 @@
         <span class="round-status">Envie até: {{ verificacao_partida.data_final }}</span>
       </div>
     </section>
-    <!-- <div class="match-teams">
-              <div class="match-date">
-              <i class="far fa-calendar-alt"></i> 26/04 - 16:00h
-            </div>
-            <div class="match-date">
-              <i class="far fa-calendar-alt"></i> Estádio do Maracanã
-            </div> -->
+
     <div class="bets-grid">
       <form class="bets-grid" action="{% url 'criar_palpites' %}" method="POST">
         {% csrf_token%}

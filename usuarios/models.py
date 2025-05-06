@@ -115,8 +115,8 @@ class UserProfile(models.Model):
 
 class Rodada(models.Model):
     numero = models.PositiveIntegerField(unique=True)
-    data_inicio = models.DateField()
-    data_fim = models.DateField()
+    data_inicio = models.DateField(null=True, blank=True)
+    data_fim = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return f"Rodada {self.numero}"

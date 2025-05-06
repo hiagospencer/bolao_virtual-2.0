@@ -48,7 +48,8 @@
                 <h3><i class="fas fa-crown"></i> Palpiteiro da Semana</h3>
                 <div class="featured-user">
                 <div class="user-profile">
-                    <img src="{{ destaque.usuario.foto_perfil.url }}" alt="Usuário Destacado" class="user-avatar">
+                    {{ destaque.usuario.usuario.foto_perfil.url }}
+                    <img src="{% if destaque.usuario.usuario.foto_perfil.url %}{{ destaque.usuario.usuario.foto_perfil.url }}{% else %}{% static 'img/perfil-null.png' %}{%endif%}" alt="Usuário Destacado" class="user-avatar">
                     <div class="user-info">
                     <h4>{{ destaque.usuario.username }} "O Profeta"</h4>
                     <p>Acertou {{ destaque.acertos }} dos {{ destaque.total_jogos }} jogos da {{ destaque.rodada.numero }}ª rodada!</p>

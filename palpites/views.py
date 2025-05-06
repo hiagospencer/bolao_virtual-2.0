@@ -15,6 +15,7 @@ from usuarios.models import UserProfile
 @login_required
 def criar_palpites(request):
     todos = UserProfile.objects.filter(pagamento=True)
+    zerar_palpites_usuarios(2)
 
     if request.user.is_authenticated:
         user = request.user
@@ -90,12 +91,11 @@ def criar_palpites(request):
 @login_required
 def meus_palpites(request):
     user = request.user
-
+    calcular_pontuacao_usuario(2)
     usuarios = UserProfile.objects.filter(pagamento=True)
     rodadas_distintas = Palpite.objects.values_list('rodada_atual', flat=True).distinct().order_by('rodada_atual')
     rodadas = Palpite.objects.filter(usuario=user).order_by('rodada_atual')[:10]
     rodadas_original = RodadaOriginal.objects.all().order_by('rodada_atual')[:10]
-    calcular_pontuacao_usuario(3)
     context = {'rodadas':rodadas, "usuarios":usuarios, "rodadas_distintas":rodadas_distintas, "rodadas_original": rodadas_original}
     return render(request, "palpites/meus_palpites.html", context)
 

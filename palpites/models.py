@@ -114,7 +114,7 @@ class Rodada(models.Model):
     imagem_fora = models.ImageField(upload_to='emblemas_times')
     preenchido = models.BooleanField(default=False)
     data_jogo = models.CharField(max_length=50, null=True, blank=True)
-    
+
     def __str__(self):
         return f"{self.time_casa} x {self.time_visitante}"
 
@@ -128,6 +128,18 @@ class Classificacao(models.Model):
     posicao_atual = models.IntegerField(null=True, blank=True)
     posicao_anterior = models.IntegerField(null=True, blank=True)
     posicao_variacao = models.IntegerField(null=True, blank=True)
+
+
+class PontuacaoRodada(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    rodada = models.IntegerField()
+    pontos = models.IntegerField(default=0)
+
+    class Meta:
+        unique_together = ('usuario', 'rodada')
+
+    def __str__(self):
+        return f"Usuario: {self.usuario} - Pontos: {self.pontos}"
 
 
 class BloquearPartida(models.Model):

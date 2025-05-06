@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from palpites.models import Classificacao
-from usuarios.models import Usuario, UserProfile, DestaqueDaSemana
-from premios.models import ConquistaUsuario
+from django.db.models import Max
 from django.db.models import Prefetch
+
+from usuarios.models import Usuario, UserProfile, DestaqueDaSemana,Rodada
+from premios.models import ConquistaUsuario
 from core.models import PremiacaoBolao
+from palpites.models import Classificacao,PontuacaoRodada, Palpite
 
 
 def homepage(request):
