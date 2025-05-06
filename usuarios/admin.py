@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Usuario, UserProfile
+from .models import Usuario, UserProfile, Rodada, DestaqueDaSemana
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
@@ -47,3 +47,26 @@ class UserProfileAdmin(admin.ModelAdmin):
     def bio_resumida(self, obj):
         return (obj.bio[:50] + '...') if len(obj.bio) > 50 else obj.bio
     bio_resumida.short_description = 'Bio'
+
+@admin.register(Rodada)
+class RodadaAdmin(admin.ModelAdmin):
+    list_display = ('numero', 'data_inicio', 'data_fim')
+    search_fields = ('numero',)
+    ordering = ('-numero',)
+    list_per_page = 20
+
+
+@admin.register(DestaqueDaSemana)
+class DestaqueDaSemanaAdmin(admin.ModelAdmin):
+    list_display = ('usuario', 'rodada', 'acertos', 'total_jogos', 'porcentagem_acertos', 'criado_em')
+    list_filter = ('rodada', 'usuario')
+    search_fields = ('usuario__username', 'rodada__numero')
+    readonly_fields = ('porcentagem_acertos', 'criado_em')
+    ordering = ('-rodada__numero',)
+    list_per_page = 20
+
+    # @admin.display(description="Acertos (%)")
+    # def porcentagem_acertos(self, obj):
+    #     if not obj.total_jogos:
+    #         return "0%"
+    #     return f"{(obj.acertos / obj.total_jogos) * 100:.1f}%"

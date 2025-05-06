@@ -110,4 +110,35 @@ class UserProfile(models.Model):
             self.xp -= self.xp_para_proximo_level
             self.level += 1
             self.xp_para_proximo_level = self.calcular_xp_necessario()
-        self.save() 
+        self.save()
+
+
+class Rodada(models.Model):
+    numero = models.PositiveIntegerField(unique=True)
+    data_inicio = models.DateField()
+    data_fim = models.DateField()
+
+    def __str__(self):
+        return f"Rodada {self.numero}"
+
+
+class DestaqueDaSemana(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    rodada = models.ForeignKey(Rodada, on_delete=models.CASCADE)
+    acertos = models.PositiveIntegerField(default=0)
+    total_jogos = models.PositiveIntegerField(default=0)
+    dica_do_mestre = models.TextField()
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('rodada', 'usuario')
+        ordering = ['-rodada']
+
+    def __str__(self):
+        return f"{self.usuario.username} - Rodada {self.rodada.numero}"
+
+    @property
+    def porcentagem_acertos(self):
+        if not self.total_jogos or self.total_jogos == 0:
+            return 0
+        return round((self.acertos / self.total_jogos) * 100, 2)

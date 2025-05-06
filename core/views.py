@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from palpites.models import Classificacao
-from usuarios.models import Usuario, UserProfile
+from usuarios.models import Usuario, UserProfile, DestaqueDaSemana
 from premios.models import ConquistaUsuario
 from django.db.models import Prefetch
 from core.models import PremiacaoBolao
@@ -10,6 +10,7 @@ from core.models import PremiacaoBolao
 
 def homepage(request):
     usuarios_pagantes = UserProfile.objects.filter(pagamento=True).values_list('user_id', flat=True)
+    destaque = DestaqueDaSemana.objects.order_by('-rodada__numero').first()
 
     usuario = None
     if request.user.is_authenticated:
@@ -32,7 +33,7 @@ def homepage(request):
         .order_by('-pontos', '-placar_exato', '-vitorias', '-empates')
     )
 
-    context = {'classificacao': classificacao, "premiacoes":premiacoes, "usuario": usuario}
+    context = {'classificacao': classificacao, "premiacoes":premiacoes, "usuario": usuario, 'destaque': destaque}
     return render(request, 'index.html', context)
 
 def perfil(request):
