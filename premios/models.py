@@ -2,6 +2,7 @@
 from django.db import models
 from usuarios.models import Usuario
 
+
 class TipoTrofeu(models.Model):
     nome = models.CharField(max_length=100)
     descricao = models.TextField()
@@ -44,6 +45,7 @@ class MetaConquista(models.Model):
     def __str__(self):
         return self.nome
 
+
 class ConquistaUsuario(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='conquistas')
     meta = models.ForeignKey(MetaConquista, on_delete=models.CASCADE)
@@ -56,6 +58,7 @@ class ConquistaUsuario(models.Model):
 
     def __str__(self):
         return f"{self.usuario} - {self.meta} ({'Concluída' if self.concluida else 'Em progresso'})"
+
 
 class Premio(models.Model):
     nome = models.CharField(max_length=100)
@@ -77,7 +80,7 @@ class PremioUsuario(models.Model):
     def __str__(self):
         return f"{self.usuario} - {self.premio} (R${self.valor_recebido})"
 
-# premios/models.py
+
 class HistoricoConquista(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='historico')
     meta = models.ForeignKey(MetaConquista, on_delete=models.CASCADE)
@@ -87,6 +90,6 @@ class HistoricoConquista(models.Model):
 
     class Meta:
         ordering = ['-data_conquista']
-        
+
     def __str__(self):
         return f"{self.usuario} conquistou {self.meta} em {self.data_conquista}"
