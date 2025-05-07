@@ -1,4 +1,3 @@
-// auth-control.js
 document.addEventListener("DOMContentLoaded", function () {
   // Verifica o estado de autenticação (simulado - substitua pela sua lógica real)
   const isAuthenticated = checkAuthStatus(); // Esta função deve ser implementada conforme seu backend
@@ -178,4 +177,13 @@ document.addEventListener('DOMContentLoaded', function() {
       generateMobileTable();
     }
   });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        let alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            alert.style.display = 'none';
+        });
+    }, 5000);
 });

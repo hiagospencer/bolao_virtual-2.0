@@ -1,8 +1,10 @@
 # apps/premios/views.py
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from premios.models import TipoTrofeu, MetaConquista, ConquistaUsuario, HistoricoConquista
+from django.shortcuts import render, redirect, get_object_or_404
+from .utils import MessageSystem
+
 from usuarios.models import Usuario, UserProfile
+from premios.models import *
 from premios.conquistas import verificar_conquistas
 
 
@@ -27,15 +29,111 @@ def minhas_conquistas(request):
         'metas_nao_iniciadas': metas_nao_iniciadas,
     })
 
+
+@login_required
+def lista_premios(request):
+    usuario = UserProfile.objects.get(user=request.user)
+    # Filtra prêmios disponíveis (estoque > 0 ou ilimitado)
+    premios_disponiveis = Premio.objects.filter(
+        disponivel=True
+    ).exclude(
+        estoque=0
+    ).exclude(
+        id__in=PedidoPremio.objects.filter(usuario=request.user).values_list('premio_id', flat=True)
+    )
+
+    # Prêmios já adquiridos pelo usuário
+    premios_adquiridos = Premio.objects.filter(
+        pedidopremio__usuario=request.user
+    ).distinct()
+
+    context = {
+        'premios_disponiveis': premios_disponiveis,
+        'premios_adquiridos': premios_adquiridos,
+        'usuario': usuario,
+    }
+    return render(request, 'premios/conquistas_premios.html', context)
+
+
 @login_required
 def meus_premios(request):
-    premios = PremioUsuario.objects.filter(
-        usuario=request.user
-    ).select_related('premio').order_by('-data_premiacao')
+    titulos_adquiridos = PedidoPremio.objects.filter(
+        usuario=request.user,
+    ).select_related('premio')
 
-    return render(request, 'premios/premios.html', {
-        'premios': premios,
-    })
+    # Título ativo atual
+    titulo_ativo = None
+    if TituloAtivo.objects.filter(usuario=request.user).exists():
+        titulo_ativo = TituloAtivo.objects.get(usuario=request.user).titulo.premio
+
+    context = {
+        'titulos_adquiridos': titulos_adquiridos,
+        'titulo_ativo': titulo_ativo,
+    }
+    return render(request, 'premios/meus_premios.html', context)
+
+@login_required
+def comprar_premio(request, premio_id):
+    premio = get_object_or_404(Premio, id=premio_id, disponivel=True)
+    usuario = request.user
+
+    # Verifica se o usuário já possui o prêmio (exceto para itens sem estoque)
+    if PedidoPremio.objects.filter(usuario=usuario, premio=premio).exists() and premio.estoque != -1:
+        MessageSystem.add_message(request, "error", "Você já adquiriu este prêmio!")
+        return redirect('lista_premios')
+
+    # Verifica moedas e estoque
+    if usuario.moedas < premio.preco_moedas:
+        MessageSystem.add_message(request, "error" "Moedas insuficientes!")
+        print( "Moedas insuficientes!")
+        return redirect('lista_premios')
+
+    if premio.estoque == 0:
+        MessageSystem.add_message(request, "error", "Prêmio esgotado!")
+        return redirect('lista_premios')
+
+    # Realiza a compra
+    PedidoPremio.objects.create(usuario=usuario, premio=premio)
+    usuario.moedas -= premio.preco_moedas
+    usuario.save()
+
+    # Atualiza estoque (se não for ilimitado)
+    if premio.estoque > 0:
+        premio.estoque -= 1
+        premio.save()
+
+    messages.success(request, "success", f"Prêmio '{premio.nome}' adquirido com sucesso!")
+    return redirect('meus_premios')
+
+@login_required
+def ativar_titulo(request, pedido_id):
+    pedido = get_object_or_404(PedidoPremio, id=pedido_id, usuario=request.user)
+
+    # Remove título ativo anterior (se existir)
+    TituloAtivo.objects.filter(usuario=request.user).delete()
+
+    # Ativa o novo título
+    TituloAtivo.objects.create(usuario=request.user, titulo=pedido)
+
+    MessageSystem.add_message(request, "success", f"Título '{pedido.premio.nome}' ativado!")
+    return redirect('meus_premios')
+
+@login_required
+def resgatar_voucher(request, pedido_id):
+    pedido = get_object_or_404(PedidoPremio, id=pedido_id, usuario=request.user, premio__tipo='voucher')
+
+    if pedido.utilizado:
+        MessageSystem.add_message(request, "error", "Este voucher já foi resgatado!")
+        return redirect('meus_premios')
+
+    # Lógica de resgate (ex.: gerar código único)
+    codigo = f"BOLAO{pedido.id:04d}"
+
+    context = {
+        'pedido': pedido,
+        'codigo': codigo,
+    }
+    return render(request, 'premios/resgate_voucher.html', context)
 
 
 @login_required

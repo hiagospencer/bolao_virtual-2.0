@@ -1,0 +1,28 @@
+{% extends 'auxiliar/base.html' %}
+{% load static %}
+{% block title %} Bolão virtual | Resgater Voucher {% endblock %}{% load l10n %}{% load humanize %} {% load custom_filters %}
+
+{% block body %}
+
+<div class="voucher-detail-container">
+  <div class="voucher-header">
+    <h2>Seu Voucher</h2>
+    <span class="voucher-parceiro">Parceiro: Loja de Camisas Esportivas</span>
+  </div>
+
+  <div class="voucher-body">
+    <div class="voucher-value">15% OFF</div>
+    <p class="voucher-desc">Desconto em qualquer camisa de time.</p>
+    <div class="voucher-code-box">
+      <span>Código:</span>
+      <input type="text" value="BOLAO15" readonly class="voucher-code">
+      <button class="btn-copiar">Copiar</button>
+    </div>
+  </div>
+
+  <div class="voucher-footer">
+    <p>Validade: 30/06/2025</p>
+    <a href="#" class="btn-ir-loja">Ir para a loja</a>
+  </div>
+</div>
+{% endblock %}

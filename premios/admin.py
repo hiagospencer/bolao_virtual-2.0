@@ -1,6 +1,6 @@
 # apps/premios/admin.py
 from django.contrib import admin
-from .models import TipoTrofeu, MetaConquista, ConquistaUsuario, Premio, PremioUsuario, HistoricoConquista
+from .models import *
 
 @admin.register(TipoTrofeu)
 class TipoTrofeuAdmin(admin.ModelAdmin):
@@ -22,8 +22,10 @@ class ConquistaUsuarioAdmin(admin.ModelAdmin):
 
 @admin.register(Premio)
 class PremioAdmin(admin.ModelAdmin):
-    list_display = ('nome', 'valor_minimo', 'valor_maximo', 'disponivel')
-    list_editable = ('disponivel',)
+    list_display = ('nome', 'tipo', 'preco_moedas', 'estoque', 'disponivel')
+    list_filter = ('tipo', 'categoria', 'disponivel')
+
+
 
 @admin.register(PremioUsuario)
 class PremioUsuarioAdmin(admin.ModelAdmin):
@@ -42,3 +44,5 @@ class PremioUsuarioAdmin(admin.ModelAdmin):
 class HistoricoConquistaAdmin(admin.ModelAdmin):
     list_display = ('usuario', 'meta', 'xp_ganho', 'moedas_ganhas')
     list_filter = ('usuario',)
+
+admin.site.register([CategoriaPremio, PedidoPremio, TituloAtivo])

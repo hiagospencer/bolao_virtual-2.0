@@ -13,7 +13,7 @@
                     <div class="user-stats">
                         <span class="stat-item"><i class="fas fa-medal"></i> Posição atual: <strong>{{ usuario.user.classificacao.posicao_atual|default:"-" }}</strong></span>
                         <span class="stat-item"><i class="fas fa-level-up-alt"></i> Nível: <strong>{{ usuario.level|default:"1" }}</strong></span>
-                        <span class="stat-item"><i class="fas fa-coins"></i> Moedas: <strong>{{ usuario.moedas|default:"0" }}</strong></span>
+                        <span class="stat-item"><i class="fas fa-coins"></i> Moedas: <strong>{{ usuario.moedas|intcomma }}</strong></span>
                     </div>
                 </div>
         </div>

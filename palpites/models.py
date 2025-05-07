@@ -155,3 +155,10 @@ class BloquearPartida(models.Model):
 
     def __str__(self):
         return f'Rodadas bloqueadas: {self.rodada_bloqueada} - partida atual: {self.partida_atual}ª - partida final: {self.partida_final}ª'
+
+
+class DataBolao(models.Model):
+    data_final = models.CharField(max_length=50, null=True, blank=True)
+
+    def __str__(self):
+        return f"Data Final para preencher os palpites: {self.data_final}"

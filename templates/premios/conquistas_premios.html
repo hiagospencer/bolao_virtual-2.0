@@ -1,0 +1,87 @@
+{% extends 'auxiliar/base.html' %}
+{% load static %}
+{% block title %} Bolão virtual | Prêmios {% endblock %} {% load l10n %} {% load humanize %} {% load custom_filters %}
+{% get_custom_messages as messages %}
+{% block body %}
+  <div class="container">
+
+    <section class="rewards-hero">
+      <h1><i class="fas fa-award"></i> Prêmios</h1>
+      <p>Compre Prêmios e torne sua experiência mais atrativa.</p>
+    </section>
+
+    {% if messages %}
+    <div id="message-container">
+        {% for message in messages %}
+        <div class="alert {{ message.type|message_class }}">
+            {{ message.content }}
+            <span class="close-message" onclick="this.parentElement.remove()">&times;</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <!-- Header (Mesmo estilo da página inicial) -->
+    <section class="user-welcome-bar" style="padding: 20px;">
+      <div class="welcome-content">
+        <div class="welcome-text">
+            <h2><strong>{{ usuario.user.username }}</strong></h2>
+              <div class="user-stats">
+                <span class="stat-item"><i class="fas fa-level-up-alt"></i> Nível: <strong>{{ usuario.level|default:"1" }}</strong></span>
+                <span class="stat-item"><i class="fas fa-coins"></i> Moedas: <strong>{{ usuario.moedas|intcomma }}</strong></span>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Abas -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="disponiveis">Disponíveis</button>
+      <!-- <button class="tab-btn" data-tab="adquiridos">Adquiridos</button> -->
+    </div>
+
+    <!-- Lista de Prêmios -->
+    <div class="titulos-grid">
+        {% for premio in premios_disponiveis %}
+        <div class="titulo-card">
+            <h3>{{ premio.nome }}</h3>
+            <p class="descricao">{{ premio.descricao }}</p>
+            <div class="preco-estoque">
+                <span class="preco">{{ premio.preco_moedas|intcomma }} moedas</span>
+                {% if premio.estoque > 0 or premio.estoque == -1 %}
+                    <span class="estoque">
+                        {% if premio.estoque == -1 %}Ilimitado{% else %}{{ premio.estoque }} restantes{% endif %}
+                    </span>
+                {% else %}
+                    <span class="estoque esgotado">ESGOTADO</span>
+                {% endif %}
+            </div>
+            <a href="{% url 'comprar_premio' premio.id %}" class="btn-comprar">Comprar</a>
+        </div>
+        {% empty %}
+        <p class="sem-titulos">Nenhum título disponível no momento.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Títulos Adquiridos (Link para Meus Títulos) -->
+    <div class="link-meus-titulos">
+        <a href="{% url 'meus_premios' %}" class="btn-ver-meus">Ver Meus Prêmios</a>
+    </div>
+  </div>
+
+  <script>
+    // Lógica para filtrar por abas
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const tab = btn.dataset.tab;
+        document.querySelectorAll('.premio-card').forEach(card => {
+          card.style.display = (tab === 'disponiveis' && card.dataset.status !== 'adquirido') ||
+                              (tab === 'adquiridos' && card.dataset.status === 'adquirido') ?
+                              'block' : 'none';
+        });
+      });
+    });
+  </script>
+{% endblock %}

@@ -15,6 +15,7 @@ from usuarios.models import UserProfile
 @login_required
 def criar_palpites(request):
     todos = UserProfile.objects.filter(pagamento=True)
+    data_preencher_palpites = DataBolao.objects.all().order_by('data_final').first()
     zerar_palpites_usuarios(2)
 
     if request.user.is_authenticated:
@@ -84,7 +85,7 @@ def criar_palpites(request):
             verificacao_partida.rodada_atual += 1
             verificacao_partida.save()
             return redirect('criar_palpites')
-        context = {"rodadas":rodadas, 'verificacao_partida':verificacao_partida}
+        context = {"rodadas":rodadas, 'verificacao_partida':verificacao_partida,"data_preencher_palpites":data_preencher_palpites}
         return render(request, "palpites/palpites.html",context)
 
 

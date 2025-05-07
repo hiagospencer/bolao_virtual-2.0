@@ -60,15 +60,53 @@ class ConquistaUsuario(models.Model):
         return f"{self.usuario} - {self.meta} ({'Concluída' if self.concluida else 'Em progresso'})"
 
 
-class Premio(models.Model):
-    nome = models.CharField(max_length=100)
-    descricao = models.TextField()
-    valor_minimo = models.DecimalField(max_digits=10, decimal_places=2)
-    valor_maximo = models.DecimalField(max_digits=10, decimal_places=2)
-    disponivel = models.BooleanField(default=True)
+class CategoriaPremio(models.Model):
+    nome = models.CharField(max_length=50)  # Ex.: "Títulos", "Vouchers", "Produtos"
+    icone = models.CharField(max_length=30, blank=True)  # Opcional: para exibir ícones (ex.: "fa-trophy")
 
     def __str__(self):
         return self.nome
+
+
+class Premio(models.Model):
+    TIPO_CHOICES = [
+        ('titulo', 'Título/Apelido'),
+        ('voucher', 'Voucher de Desconto'),
+        ('produto', 'Produto Físico'),
+        ('moeda', 'Moedas Extras'),
+    ]
+
+    nome = models.CharField(max_length=100)  # Ex.: "O Profeta"
+    tipo = models.CharField(max_length=20, choices=TIPO_CHOICES, default='titulo')
+    categoria = models.ForeignKey(CategoriaPremio, on_delete=models.SET_NULL, null=True)
+    descricao = models.TextField()  # Ex.: "Estudo estatísticas como um oráculo..."
+    preco_moedas = models.PositiveIntegerField(default=100)
+    imagem = models.ImageField(upload_to='premios/', blank=True)  # Opcional
+    estoque = models.PositiveIntegerField(default=1)  # -1 = ilimitado
+    disponivel = models.BooleanField(default=True)
+    data_criacao = models.DateTimeField(auto_now_add=True,null=True,blank=True)
+
+    def __str__(self):
+        return f"{self.nome} ({self.get_tipo_display()})"
+
+
+class PedidoPremio(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    premio = models.ForeignKey(Premio, on_delete=models.CASCADE)
+    data_compra = models.DateTimeField(auto_now_add=True)
+    utilizado = models.BooleanField(default=False)  # Para vouchers/produtos resgatados
+
+    def __str__(self):
+        return f"{self.usuario.username} - {self.premio.nome}"
+
+class TituloAtivo(models.Model):
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
+    titulo = models.ForeignKey(PedidoPremio, on_delete=models.CASCADE, limit_choices_to={'premio__tipo': 'titulo'})
+
+    def __str__(self):
+        return f"Título ativo de {self.usuario.username}: {self.titulo.premio.nome}"
+
+
 
 class PremioUsuario(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='premios')

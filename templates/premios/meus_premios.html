@@ -1,0 +1,38 @@
+{% extends 'auxiliar/base.html' %}
+{% load static %}
+{% block title %} Bolão virtual | Meus Prêmios {% endblock %} {% load l10n %} {% load humanize %} {% load custom_filters %}
+
+{% block body %}
+
+<div class="container">
+    <section class="rewards-hero">
+      <h1><i class="fas fa-award"></i> Meus Prêmios</h1>
+      <p>Os prêmios "Títulos" serão exibidos nos destaques da semana.</p>
+    </section>
+    <!-- Título Ativo -->
+
+
+    <!-- Outros Títulos Adquiridos -->
+    <div class="titulos-grid">
+        {% for pedido in titulos_adquiridos %}
+        <div class="titulo-card {% if titulo_ativo and pedido.premio.id == titulo_ativo.id %}ativo{% endif %}">
+            <h3>{{ pedido.premio.nome }}</h3>
+            <p class="descricao">{{ pedido.premio.descricao }}</p>
+            <p class="data-compra">Adquirido em: {{ pedido.data_compra|date:"d/m/Y" }}</p>
+
+            {% if not titulo_ativo or pedido.premio.id != titulo_ativo.id %}
+                <a href="{% url 'ativar_titulo' pedido.id %}" class="btn-ativar">Ativar</a>
+            {% else %}
+                <span class="badge-ativo">ATIVO</span>
+            {% endif %}
+        </div>
+        {% empty %}
+        <p class="sem-titulos">Você ainda não adquiriu nenhum Prêmio.</p>
+        {% endfor %}
+    </div>
+
+    <div class="link-meus-titulos">
+        <a href="{% url 'lista_premios' %}" class="btn-ver-meus">Adquirir Prêmio</a>
+    </div>
+</div>
+{% endblock %}
