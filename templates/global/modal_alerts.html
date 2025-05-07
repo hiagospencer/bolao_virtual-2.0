@@ -1,0 +1,146 @@
+<div id="globalAlertModal" class="modal-alert">
+  <div class="modal-content">
+    <span class="close-modal">&times;</span>
+    <div class="alert-icon">
+      <i id="alertModalIcon" class="fas"></i>
+    </div>
+    <h3 id="alertModalTitle"></h3>
+    <p id="alertModalMessage"></p>
+    <div class="modal-actions">
+      <button id="alertModalButton" class="btn-confirm">OK</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.modal-alert {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  animation: fadeIn 0.3s;
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 15% auto;
+  padding: 25px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 400px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  text-align: center;
+  position: relative;
+}
+
+.alert-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.close-modal {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.modal-actions {
+  margin-top: 20px;
+}
+
+.btn-confirm {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Tipos de alerta */
+.alert-success .modal-content {
+  border-top: 4px solid #4CAF50;
+}
+
+.alert-error .modal-content {
+  border-top: 4px solid #F44336;
+}
+
+.alert-warning .modal-content {
+  border-top: 4px solid #FF9800;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+</style>
+
+<script>
+// Função global para mostrar alertas
+function showGlobalAlert(type, title, message) {
+  const modal = document.getElementById('globalAlertModal');
+  const icon = document.getElementById('alertModalIcon');
+
+  // Configuração baseada no tipo
+  switch(type) {
+    case 'success':
+      icon.className = 'fas fa-check-circle';
+      icon.style.color = '#4CAF50';
+      break;
+    case 'error':
+      icon.className = 'fas fa-times-circle';
+      icon.style.color = '#F44336';
+      break;
+    case 'warning':
+      icon.className = 'fas fa-exclamation-triangle';
+      icon.style.color = '#FF9800';
+      break;
+  }
+
+  // Adiciona classe de tipo ao modal
+  modal.className = `modal-alert alert-${type}`;
+
+  // Preenche conteúdo
+  document.getElementById('alertModalTitle').textContent = title;
+  document.getElementById('alertModalMessage').textContent = message;
+
+  // Mostra modal
+  modal.style.display = 'block';
+
+  // Fechar modal
+  const closeModal = () => {
+    modal.style.display = 'none';
+    modal.className = 'modal-alert'; // Reseta classe
+  };
+
+  document.querySelector('.close-modal').onclick = closeModal;
+  document.getElementById('alertModalButton').onclick = closeModal;
+  window.onclick = (event) => {
+    if (event.target == modal) closeModal();
+  };
+}
+
+// Função para mostrar alertas do Django (se estiver usando messages)
+function showDjangoMessages() {
+  {% if messages %}
+    {% for message in messages %}
+      showGlobalAlert('{{ message.tags }}',
+        '{% if "success" in message.tags %}Sucesso{% elif "error" in message.tags %}Erro{% else %}Aviso{% endif %}',
+        '{{ message }}');
+    {% endfor %}
+  {% endif %}
+}
+
+
+
+
+// Inicializa quando o DOM estiver pronto
+document.addEventListener('DOMContentLoaded', showDjangoMessages);
+</script>

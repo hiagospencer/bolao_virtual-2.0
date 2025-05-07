@@ -1,12 +1,12 @@
 # apps/premios/views.py
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from .utils import MessageSystem
 
 from usuarios.models import Usuario, UserProfile
 from premios.models import *
 from premios.conquistas import verificar_conquistas
 
+from .utils import show_alert, json_alert
 
 @login_required
 def minhas_conquistas(request):
@@ -79,17 +79,17 @@ def comprar_premio(request, premio_id):
 
     # Verifica se o usuário já possui o prêmio (exceto para itens sem estoque)
     if PedidoPremio.objects.filter(usuario=usuario, premio=premio).exists() and premio.estoque != -1:
-        MessageSystem.add_message(request, "error", "Você já adquiriu este prêmio!")
+        show_alert(request, "error", "Erro!", "Você já adquiriu este prêmio!")
         return redirect('lista_premios')
 
     # Verifica moedas e estoque
     if usuario.moedas < premio.preco_moedas:
-        MessageSystem.add_message(request, "error" "Moedas insuficientes!")
+        show_alert(request, "error", "Erro!", "Moedas insuficientes!")
         print( "Moedas insuficientes!")
         return redirect('lista_premios')
 
     if premio.estoque == 0:
-        MessageSystem.add_message(request, "error", "Prêmio esgotado!")
+        show_alert(request, "error", "Erro!", "Prêmio esgotado!")
         return redirect('lista_premios')
 
     # Realiza a compra
@@ -102,7 +102,7 @@ def comprar_premio(request, premio_id):
         premio.estoque -= 1
         premio.save()
 
-    messages.success(request, "success", f"Prêmio '{premio.nome}' adquirido com sucesso!")
+    show_alert(request, "success", "Success", f"Prêmio '{premio.nome}' adquirido com sucesso!")
     return redirect('meus_premios')
 
 @login_required
@@ -115,7 +115,7 @@ def ativar_titulo(request, pedido_id):
     # Ativa o novo título
     TituloAtivo.objects.create(usuario=request.user, titulo=pedido)
 
-    MessageSystem.add_message(request, "success", f"Título '{pedido.premio.nome}' ativado!")
+    show_alert(request, "success", "Success", f"Título '{pedido.premio.nome}' ativado!")
     return redirect('meus_premios')
 
 @login_required
@@ -123,7 +123,7 @@ def resgatar_voucher(request, pedido_id):
     pedido = get_object_or_404(PedidoPremio, id=pedido_id, usuario=request.user, premio__tipo='voucher')
 
     if pedido.utilizado:
-        MessageSystem.add_message(request, "error", "Este voucher já foi resgatado!")
+        show_alert(request, "error", "Error!", "Este voucher já foi resgatado!")
         return redirect('meus_premios')
 
     # Lógica de resgate (ex.: gerar código único)

@@ -11,26 +11,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const logoutBtn = document.getElementById("logout-btn");
   const palpitesDropdown = document.getElementById("palpites-dropdown");
 
-  // Atualiza o header conforme o estado de autenticação
-  function updateAuthUI() {
-    if (isAuthenticated) {
-        loginBtn.style.display = "none";
-        registerBtn.style.display = "none";
-        loggedUser.style.display = "block";
-
-        const userData = getUserData();
-        if (userData) {
-            userAvatar.src = userData.avatar || "https://via.placeholder.com/30";
-            usernameDisplay.textContent = userData.username || "Usuário";
-        }
-        // Remove a manipulação do palpites-dropdown
-    } else {
-        loginBtn.style.display = "block";
-        registerBtn.style.display = "block";
-        loggedUser.style.display = "none";
-        // Remove a manipulação do palpites-dropdown
-    }
-  }
 
   const dropdowns = document.querySelectorAll('.brasileirao-dropdown');
 
@@ -77,9 +57,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return null;
     }
   }
-
-  // Inicializa a UI
-  updateAuthUI();
 });
 
 // Alternar visibilidade da senha
@@ -177,13 +154,4 @@ document.addEventListener('DOMContentLoaded', function() {
       generateMobileTable();
     }
   });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(function() {
-        let alerts = document.querySelectorAll('.alert');
-        alerts.forEach(alert => {
-            alert.style.display = 'none';
-        });
-    }, 5000);
 });

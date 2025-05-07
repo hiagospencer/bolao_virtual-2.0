@@ -1,24 +1,27 @@
-from django.core.exceptions import RequestDataTooBig
+from django.http import JsonResponse
 
-class MessageSystem:
-    @staticmethod
-    def add_message(request, type, content):
-        """Adiciona mensagem à sessão"""
-        if not request.session.get('custom_messages'):
-            request.session['custom_messages'] = []
+def show_alert(request, type, title, message):
+    """Armazena alerta na sessão para mostrar na próxima página"""
+    if not request.session.get('global_alerts'):
+        request.session['global_alerts'] = []
 
-        messages = request.session['custom_messages']
-        messages.append({'type': type, 'content': content})
-        request.session['custom_messages'] = messages
-        request.session.modified = True
+    alerts = request.session['global_alerts']
+    alerts.append({'type': type, 'title': title, 'message': message})
+    request.session['global_alerts'] = alerts
 
-    @staticmethod
-    def get_messages(request):
-        """Obtém e limpa mensagens da sessão"""
-        messages = request.session.pop('custom_messages', [])
-        return messages
+def process_alerts(request, context):
+    """Adiciona alerts ao contexto template"""
+    alerts = request.session.pop('global_alerts', [])
+    context['global_alerts'] = alerts
+    return context
 
-    @staticmethod
-    def has_messages(request):
-        """Verifica se existem mensagens"""
-        return bool(request.session.get('custom_messages'))
+def json_alert(type, title, message):
+    """Retorna JsonResponse com alerta (para AJAX)"""
+    return JsonResponse({
+        'status': 'alert',
+        'alert': {
+            'type': type,
+            'title': title,
+            'message': message
+        }
+    }, status=200 if type == 'success' else 400)
