@@ -3,17 +3,18 @@ from django.db import models
 from usuarios.models import Usuario
 
 class CategoriaItem(models.Model):
-    nome = models.CharField(max_length=50)
-    icone = models.CharField(max_length=50)
+    nome = models.CharField(max_length=50,blank=True, null=True)
+    icone = models.CharField(max_length=50,blank=True, null=True)
 
     def __str__(self):
         return self.nome
 
 class ItemLoja(models.Model):
     TIPO_ITEM = [
-        ('badge', 'Emblema'),
-        ('boost', 'Boost'),
-        ('theme', 'Tema'),
+        ('camisa', 'Camisa'),
+        ('camiseta', 'Camiseta'),
+        ('calcao', 'Calção'),
+        ('basquete', 'Camisa de Basquete'),
     ]
 
     nome = models.CharField(max_length=100)
