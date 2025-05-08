@@ -1,6 +1,7 @@
 # apps/premios/views.py
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 
 from usuarios.models import Usuario, UserProfile
 from premios.models import *
@@ -33,6 +34,8 @@ def minhas_conquistas(request):
 @login_required
 def lista_premios(request):
     usuario = UserProfile.objects.get(user=request.user)
+    categorias_premios = CategoriaPremio.objects.all
+
     # Filtra prêmios disponíveis (estoque > 0 ou ilimitado)
     premios_disponiveis = Premio.objects.filter(
         disponivel=True
@@ -51,6 +54,7 @@ def lista_premios(request):
         'premios_disponiveis': premios_disponiveis,
         'premios_adquiridos': premios_adquiridos,
         'usuario': usuario,
+        "categorias_premios":categorias_premios,
     }
     return render(request, 'premios/conquistas_premios.html', context)
 
@@ -76,20 +80,20 @@ def meus_premios(request):
 def comprar_premio(request, premio_id):
     premio = get_object_or_404(Premio, id=premio_id, disponivel=True)
     usuario = request.user
-
+    error = None
+    success = None
     # Verifica se o usuário já possui o prêmio (exceto para itens sem estoque)
     if PedidoPremio.objects.filter(usuario=usuario, premio=premio).exists() and premio.estoque != -1:
-        show_alert(request, "error", "Erro!", "Você já adquiriu este prêmio!")
+        messages.error(request, "Você já adquiriu este prêmio!")
         return redirect('lista_premios')
 
     # Verifica moedas e estoque
     if usuario.moedas < premio.preco_moedas:
-        show_alert(request, "error", "Erro!", "Moedas insuficientes!")
-        print( "Moedas insuficientes!")
+        messages.error(request, "Moedas insuficientes!")
         return redirect('lista_premios')
 
     if premio.estoque == 0:
-        show_alert(request, "error", "Erro!", "Prêmio esgotado!")
+        messages.error(request, "Prêmio esgotado!")
         return redirect('lista_premios')
 
     # Realiza a compra
@@ -102,7 +106,7 @@ def comprar_premio(request, premio_id):
         premio.estoque -= 1
         premio.save()
 
-    show_alert(request, "success", "Success", f"Prêmio '{premio.nome}' adquirido com sucesso!")
+    messages.success(request, f"Prêmio '{premio.nome}' adquirido com sucesso!")
     return redirect('meus_premios')
 
 @login_required

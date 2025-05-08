@@ -27,9 +27,9 @@
         <div class="mural-post" data-topic-id="{{ topico.id }}">
           <div class="post-author">
             {% if topico.autor.foto_perfil %}
-              <img src="{{ topico.autor.foto_perfil.url }}" alt="Usuário" class="comment-avatar">
+              <img src="{{ topico.autor.foto_perfil.url }}" alt="Usuário" class="user-avatar">
             {% else %}
-              <img src="{% static 'img/perfil-null.png' %}" alt="Usuário" class="comment-avatar">
+              <img src="{% static 'img/perfil-null.png' %}" alt="Usuário" class="user-avatar">
             {% endif %}
             <span class="author-name">{{ topico.autor.username }}</span>
             <span class="post-time">{{ topico.data_criacao|timesince }} atrás</span>

@@ -64,6 +64,27 @@ body {
             float: right;
             cursor: pointer;
         }
+.mensagens {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.mensagens .error {
+  color: red;
+  background-color: #fdd;
+  border: 1px solid red;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.mensagens .success {
+  color: green;
+  background-color: #dfd;
+  border: 1px solid green;
+  padding: 10px;
+  border-radius: 5px;
+}
 
 /* ===== ESTILOS GERAIS ===== */
 a {

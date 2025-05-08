@@ -87,7 +87,7 @@
   outline: none;
 }
 
-.form-actions {
+.form-actions-palpites {
   display: flex;
   justify-content: center;
   gap: 20px;

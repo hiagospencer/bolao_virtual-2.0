@@ -3,14 +3,15 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 import datetime
 import pytz
-
 import pandas as pd
 
 from .utils import *
 from .models import *
 from usuarios.models import UserProfile
+
 
 @login_required
 def criar_palpites(request):
@@ -82,6 +83,7 @@ def criar_palpites(request):
                     )
 
 
+            messages.success(request, f"{verificacao_partida.rodada_atual}ª rodada salva com sucesso!")
             verificacao_partida.rodada_atual += 1
             verificacao_partida.save()
             return redirect('criar_palpites')

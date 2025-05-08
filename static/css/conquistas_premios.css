@@ -254,3 +254,39 @@
     border-radius: 20px;
     font-size: 0.8rem;
 }
+
+.filters-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 20px 0;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .filter-select {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .filter-select label {
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    .form-select-premios {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      background-color: white;
+      cursor: pointer;
+      min-width: 200px;
+    }
+
+    @media (max-width: 768px) {
+      .filters-container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }

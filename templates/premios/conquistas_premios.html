@@ -22,10 +22,23 @@
       </div>
     </section>
 
-    <!-- Abas -->
-    <div class="tabs">
-      <button class="tab-btn active" data-tab="disponiveis">Disponíveis</button>
-      <!-- <button class="tab-btn" data-tab="adquiridos">Adquiridos</button> -->
+    <!-- Filtros -->
+    <div class="filters-container">
+      <!-- Abas -->
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="disponiveis">Disponíveis</button>
+      </div>
+
+      <!-- Select de Tipo -->
+      <div class="filter-select">
+        <label for="tipo-premio"><i class="fas fa-filter"></i> Filtrar por:</label>
+        <select id="tipo-premio" class="form-select-premios">
+          <option value="todos">Todos os tipos</option>
+          {% for categoria in categorias_premios %}
+            <option value="titulo">{{ categoria.nome }}</option>
+          {% endfor %}
+        </select>
+      </div>
     </div>
 
     <!-- Lista de Prêmios -->
@@ -59,22 +72,19 @@
 
   <script>
     // Lógica para filtrar por abas
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+    document.getElementById('tipo-premio').addEventListener('change', function() {
+      const tipoSelecionado = this.value;
+      const cards = document.querySelectorAll('.titulo-card');
 
-        const tab = btn.dataset.tab;
-        document.querySelectorAll('.premio-card').forEach(card => {
-          card.style.display = (tab === 'disponiveis' && card.dataset.status !== 'adquirido') ||
-                              (tab === 'adquiridos' && card.dataset.status === 'adquirido') ?
-                              'block' : 'none';
-        });
+      cards.forEach(card => {
+        if (tipoSelecionado === 'todos' || card.dataset.tipo === tipoSelecionado) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
       });
     });
 
-    {% for alert in global_alerts %}
-      showGlobalAlert('{{ alert.type }}', '{{ alert.title }}', `{{ alert.message }}`);
-    {% endfor %}
+
   </script>
 {% endblock %}

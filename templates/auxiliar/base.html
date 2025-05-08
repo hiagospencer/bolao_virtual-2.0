@@ -55,6 +55,22 @@
     <script src="{% static 'js/pagamento.js' %}"></script>
     <script src="{% static 'js/comunidade.js' %}"></script>
     <script src="{% static 'js/premios.js' %}"></script>
+
+    <script>
+    // Lógica para filtrar por abas
+    document.getElementById('tipo-premio').addEventListener('change', function() {
+      const tipoSelecionado = this.value;
+      const cards = document.querySelectorAll('.titulo-card');
+
+      cards.forEach(card => {
+        if (tipoSelecionado === 'todos' || card.dataset.tipo === tipoSelecionado) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>

@@ -42,7 +42,7 @@ def cadastro(request):
         chave_pix = request.POST.get('chave_pix', '').strip()
 
          # Verifica campos obrigatórios
-        if not username or not email or not telefone or not senha or not senha2 or not chave_pix:
+        if not username or not email or not telefone or not senha or not senha2:
             messages.error(request, 'Todos os campos são obrigatórios.')
             return redirect('cadastro')
 
@@ -81,4 +81,3 @@ def cadastro(request):
 def fazer_logout(request):
     logout(request)
     return redirect('login_bolao')
-
