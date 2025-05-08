@@ -78,8 +78,9 @@ def meus_premios(request):
 
 @login_required
 def comprar_premio(request, premio_id):
-    premio = get_object_or_404(Premio, id=premio_id, disponivel=True)
     usuario = request.user
+    premio = get_object_or_404(Premio, id=premio_id, disponivel=True)
+    usuario_bolao = UserProfile.objects.get(user=request.user)
     error = None
     success = None
     # Verifica se o usuário já possui o prêmio (exceto para itens sem estoque)
@@ -88,7 +89,7 @@ def comprar_premio(request, premio_id):
         return redirect('lista_premios')
 
     # Verifica moedas e estoque
-    if usuario.moedas < premio.preco_moedas:
+    if usuario_bolao.moedas < premio.preco_moedas:
         messages.error(request, "Moedas insuficientes!")
         return redirect('lista_premios')
 
@@ -98,15 +99,15 @@ def comprar_premio(request, premio_id):
 
     # Realiza a compra
     PedidoPremio.objects.create(usuario=usuario, premio=premio)
-    usuario.moedas -= premio.preco_moedas
-    usuario.save()
+    usuario_bolao.moedas -= premio.preco_moedas
+    usuario_bolao.save()
 
     # Atualiza estoque (se não for ilimitado)
     if premio.estoque > 0:
         premio.estoque -= 1
         premio.save()
 
-    messages.success(request, f"Prêmio '{premio.nome}' adquirido com sucesso!")
+    messages.success(request, f"Prêmio {premio.nome} adquirido com sucesso!")
     return redirect('meus_premios')
 
 @login_required
@@ -119,7 +120,7 @@ def ativar_titulo(request, pedido_id):
     # Ativa o novo título
     TituloAtivo.objects.create(usuario=request.user, titulo=pedido)
 
-    show_alert(request, "success", "Success", f"Título '{pedido.premio.nome}' ativado!")
+    messages.success(request, f"Título '{pedido.premio.nome}' ativado!")
     return redirect('meus_premios')
 
 @login_required
@@ -127,7 +128,7 @@ def resgatar_voucher(request, pedido_id):
     pedido = get_object_or_404(PedidoPremio, id=pedido_id, usuario=request.user, premio__tipo='voucher')
 
     if pedido.utilizado:
-        show_alert(request, "error", "Error!", "Este voucher já foi resgatado!")
+        messages.errort(request, "Este voucher já foi resgatado!")
         return redirect('meus_premios')
 
     # Lógica de resgate (ex.: gerar código único)
