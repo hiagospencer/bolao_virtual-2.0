@@ -42,33 +42,35 @@
         </section>
 
         {% if destaque %}
-        <div class="tab-content" id="destaques" style="display: block;">
-            <h2><i class="fas fa-star"></i> Destaques da Comunidade</h2>
-            <div class="featured-section">
-                <h3><i class="fas fa-crown"></i> Palpiteiro da Rodada</h3>
-                <div class="featured-user">
-                <div class="user-profile">
-                    {{ destaque.usuario.usuario.foto_perfil.url }}
-                    <img src="{% if destaque.usuario.usuario.foto_perfil.url %}{{ destaque.usuario.usuario.foto_perfil.url }}{% else %}{% static 'img/perfil-null.png' %}{%endif%}" alt="Usuário Destacado" class="user-avatar">
-                    <div class="user-info">
-                    <h4>{{ destaque.usuario.username }} "O Profeta"</h4>
-                    <p>Acertou {{ destaque.acertos }} dos {{ destaque.total_jogos }} jogos da {{ destaque.rodada.numero }}ª rodada!</p>
-                    <div class="user-stats">
-                        <span><i class="fas fa-check-circle"></i> {{ destaque.porcentagem_acertos }}% de acertos</span>
+            <div class="tab-content" id="destaques" style="display: block;">
+                <h2><i class="fas fa-star"></i> Destaques da Comunidade</h2>
+                <div class="featured-section">
+                    <h3><i class="fas fa-crown"></i> Palpiteiro da Rodada</h3>
+                    <div class="featured-user">
+                    <div class="user-profile">
+                        <img src="{% if destaque.usuario.foto_perfil.url %}{{ destaque.usuario.foto_perfil.url }}{% else %}{% static 'img/perfil-null.png' %}{%endif%}" alt="{{ destaque.usuario.username }}" class="user-avatar">
+                        <div class="user-info">
+                        <h4>{{ destaque.usuario.username }}
+                            {% if destaque.usuario.tituloativo.titulo.premio.nome  %}
+                                "{{ destaque.usuario.tituloativo.titulo.premio.nome }}"
+                            {% endif %}
+                            </h4>
+                        <p>Acertou {{ destaque.acertos }} dos {{ destaque.total_jogos }} jogos da {{ destaque.rodada.numero }}ª rodada!</p>
+                        <div class="user-stats">
+                            <span><i class="fas fa-check-circle"></i> {{ destaque.porcentagem_acertos }}% de acertos</span>
+                        </div>
+                        </div>
                     </div>
-                    </div>
-                </div>
-                {% if destaque.dica_do_mestre %}
-                    <div class="user-tips">
-                        <h5>Dica do Mestre:</h5>
-                        <p>{{ destaque.pedidopremio.premio.descricao }}</p>
-                    </div>
+                    {% if destaque.usuario.tituloativo.titulo.premio.descricao %}
+                        <div class="user-tips">
+                            <h5>Dica do Mestre:</h5>
+                            <p>{{ destaque.usuario.tituloativo.titulo.premio.descricao }}</p>
+                        </div>
                     {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
         {% endif %}
-
         <div class="ranking-container">
             <div class="ranking-header">
                 <h2 class="section-title"><i class="fas fa-medal"></i> Classificação</h2>

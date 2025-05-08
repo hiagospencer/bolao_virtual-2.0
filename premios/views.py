@@ -120,7 +120,7 @@ def ativar_titulo(request, pedido_id):
     # Ativa o novo título
     TituloAtivo.objects.create(usuario=request.user, titulo=pedido)
 
-    messages.success(request, f"Título '{pedido.premio.nome}' ativado!")
+    messages.success(request, f"Título {pedido.premio.nome} ativado!")
     return redirect('meus_premios')
 
 @login_required

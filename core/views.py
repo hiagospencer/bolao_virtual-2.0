@@ -5,7 +5,7 @@ from django.db.models import Max
 from django.db.models import Prefetch
 
 from usuarios.models import Usuario, UserProfile, DestaqueDaSemana,Rodada
-from premios.models import ConquistaUsuario
+from premios.models import *
 from core.models import PremiacaoBolao
 from palpites.models import Classificacao,PontuacaoRodada, Palpite
 
@@ -35,7 +35,10 @@ def homepage(request):
         .order_by('-pontos', '-placar_exato', '-vitorias', '-empates')
     )
 
-    context = {'classificacao': classificacao, "premiacoes":premiacoes, "usuario": usuario, 'destaque': destaque}
+    titulo_ativo_destaque = None
+    if destaque:
+        titulo_ativo_destaque = TituloAtivo.objects.select_related('titulo__premio').filter(usuario=destaque.usuario).first()
+    context = {'classificacao': classificacao, "premiacoes":premiacoes, "usuario": usuario, 'destaque': destaque, 'titulo_ativo_destaque': titulo_ativo_destaque,}
     return render(request, 'index.html', context)
 
 def perfil(request):
