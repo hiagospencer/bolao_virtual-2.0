@@ -38,7 +38,7 @@ def lista_premios(request):
     categoria_id = request.GET.get('categoria')
 
     is_htmx = request.headers.get('HX-Request') == 'true'
-    print(categoria_id)
+
     # Filtra prêmios disponíveis (estoque > 0 ou ilimitado)
     premios_disponiveis = Premio.objects.filter(
         disponivel=True

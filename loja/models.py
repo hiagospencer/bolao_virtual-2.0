@@ -2,6 +2,20 @@
 from django.db import models
 from usuarios.models import Usuario
 
+
+
+class Loja(models.Model):
+    nome = models.CharField(max_length=100)
+    dono = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True)
+    descricao = models.TextField(blank=True)
+    logo = models.ImageField(upload_to='logos_loja/', blank=True, null=True)
+    ativo = models.BooleanField(default=True)
+    data_criacao = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.nome
+
+
 class CategoriaItem(models.Model):
     nome = models.CharField(max_length=50,blank=True, null=True)
     icone = models.CharField(max_length=50,blank=True, null=True)
@@ -19,15 +33,24 @@ class ItemLoja(models.Model):
 
     nome = models.CharField(max_length=100)
     descricao = models.TextField()
+    loja = models.ForeignKey(Loja, on_delete=models.CASCADE, related_name='itens', blank=True, null=True)
     categoria = models.ForeignKey(CategoriaItem, on_delete=models.SET_NULL, null=True)
     tipo = models.CharField(max_length=10, choices=TIPO_ITEM)
     preco = models.DecimalField(max_digits=10, decimal_places=2)
-    imagem = models.ImageField(upload_to='itens_loja/')
+    imagem_preview = models.ImageField(upload_to='itens_loja/')
     disponivel = models.BooleanField(default=True)
     data_criacao = models.DateTimeField(auto_now_add=True)
+    telefone = models.CharField(max_length=20,blank=True, null=True)
+    whatsapp_link = models.CharField(max_length=255,blank=True, null=True)
 
     def __str__(self):
         return self.nome
+
+    def save(self, *args, **kwargs):
+        if not self.whatsapp_link and self.telefone:
+            self.whatsapp_link = f"https://wa.me/{self.telefone}"
+        super().save(*args, **kwargs)
+
 
 class InventarioUsuario(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)

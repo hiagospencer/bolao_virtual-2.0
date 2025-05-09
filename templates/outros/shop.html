@@ -1,11 +1,10 @@
 {% extends 'auxiliar/base.html' %}
 {% load static %}
-{% block title %} Bolão virtual | Loja {% endblock %}
+{% block title %}Bolão virtual | Loja{% endblock %}
 {% load l10n %} {% load humanize %}
 {% block body %}
 
 <section class="shop-page">
-
   <main class="container">
     <section class="shop-hero">
       <h1><i class="fas fa-store-alt"></i> Loja do Bolão</h1>
@@ -15,53 +14,51 @@
     <div class="shop-filters">
       <div class="filter-group">
         <label for="category-filter"><i class="fas fa-filter"></i> Categoria:</label>
-        <select id="category-filter" class="shop-select">
+        <select id="category-filter" name="categoria" class="shop-select"
+                hx-get="{% url 'loja' %}"
+                hx-target=".shop-grid"
+                hx-indicator=".htmx-indicator">
           <option value="all">Todos os itens</option>
           {% for categoria in categorias %}
-            <option value="boosts">{{ categoria.nome }}</option>
+            <option value="{{ categoria.id }}" {% if categoria_selecionada == categoria.id|stringformat:"s" %}selected{% endif %}>
+              {{ categoria.nome }}
+            </option>
           {% endfor %}
-          <!-- <option value="badges">Emblemas</option>
-          <option value="themes">Temas</option> -->
         </select>
       </div>
 
       <div class="filter-group">
-        <label for="sort-by"><i class="fas fa-sort"></i> Ordenar por:</label>
-        <select id="sort-by" class="shop-select">
-          <option value="popular">Mais populares</option>
-          <option value="price-asc">Preço: menor primeiro</option>
-          <option value="price-desc">Preço: maior primeiro</option>
-          <option value="newest">Mais recentes</option>
+        <label for="loja-filter"><i class="fas fa-store"></i> Lojas:</label>
+        <select id="loja-filter" name="loja" class="shop-select"
+                hx-get="{% url 'loja' %}"
+                hx-target=".shop-grid"
+                hx-indicator=".htmx-indicator">
+          <option value="all">Todas as lojas</option>
+          {% for loja in lojas %}
+            <option value="{{ loja.id }}" {% if loja_selecionada == loja.id|stringformat:"s" %}selected{% endif %}>
+              {{ loja.nome }}
+            </option>
+          {% endfor %}
         </select>
       </div>
     </div>
 
-    <div class="shop-grid">
-      <!-- Exemplo de card de camisa -->
+    <!-- Indicador de carregamento -->
+    <div class="htmx-indicator" style="text-align: center; margin: 20px 0; display: block;">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Carregando...</span>
+      </div>
+      <p>Carregando produtos...</p>
+    </div>
 
-       {% for produto in produtos %}
-        <div class="shop-item" data-category="camisas">
-          <!-- <div class="item-badge">Lançamento!</div> -->
-          <div class="item-image" style="background-color: #FFFFFF;">
-            <img src="{{ produto.imagem.url}}" alt="Camisa do Flamengo 2023">
-          </div>
-          <div class="item-info">
-            <h3>{{ produto.nome }}</h3>
-            <div class="item-details">
-              <span class="item-size">{{ produto.descricao }}</span>
-            </div>
-            <div class="item-price">
-              <span class="price">R$ {{ produto.preco|intcomma }}</span>
-            </div>
-            <a  class="btn btn-add-to-cart"
-                onclick="sendToWhatSapp('{{ produto.nome }}','{{ produto.preco|intcomma }}','{{ produto.imagem.url }}')">
-              <i class="fas fa-cart-plus"></i> Comprar
-            </a>
-          </div>
-        </div>
-        {% endfor %}
-    <!-- endfor -->
+    <!-- Grid de produtos que será atualizado via HTMX -->
+    <div class="shop-grid" id="products-container">
+      {% include "outros/partials/produtos_grid.html" %}
+    </div>
   </main>
 </section>
+
+<!-- Adicione o HTMX antes do seu script -->
 <script src="{% static 'shop-scripts.js' %}"></script>
+
 {% endblock %}
