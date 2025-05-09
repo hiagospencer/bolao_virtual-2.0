@@ -1,0 +1,20 @@
+{% load l10n %} {% load humanize %} {% load custom_filters %}
+{% for premio in premios_disponiveis %}
+<div class="titulo-card" data-categoria="{{ premio.categoria.id }}">
+  <h3>{{ premio.nome }}</h3>
+  <p class="descricao">{{ premio.descricao }}</p>
+  <div class="preco-estoque">
+    <span class="preco">{{ premio.preco_moedas|intcomma }} moedas</span>
+    {% if premio.estoque > 0 or premio.estoque == -1 %}
+      <span class="estoque">
+        {% if premio.estoque == -1 %}Ilimitado{% else %}{{ premio.estoque }} restantes{% endif %}
+      </span>
+    {% else %}
+      <span class="estoque esgotado">ESGOTADO</span>
+    {% endif %}
+  </div>
+  <a href="{% url 'comprar_premio' premio.id %}" class="btn-comprar">Comprar</a>
+</div>
+{% empty %}
+<p class="sem-titulos">Nenhum prêmio encontrado nesta categoria.</p>
+{% endfor %}

@@ -1,9 +1,12 @@
 # models.py
-import qrcode
-from io import BytesIO
-from django.core.files.base import ContentFile
 from django.db import models
+from django.core.files.base import ContentFile
+from io import BytesIO
+import qrcode
 from usuarios.models import Usuario
+from pixqrcodegen import Payload
+
+
 
 class PagamentoPIX(models.Model):
     STATUS_CHOICES = [
@@ -15,8 +18,9 @@ class PagamentoPIX(models.Model):
 
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     valor = models.DecimalField(max_digits=10, decimal_places=2, default=30.00)
-    chave_pix = models.CharField(max_length=100, default='hiaguinhospencer@gmail.com')
+    chave_pix = models.CharField(max_length=100, default='hiagosouzadev10@gmail.com')
     destinatario = models.CharField(max_length=100, default='Hiago José de Souza')
+    cidade = models.CharField(max_length=100, default='Areia Branca')
     data_criacao = models.DateTimeField(auto_now_add=True)
     data_aprovacao = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pendente')
@@ -27,8 +31,17 @@ class PagamentoPIX(models.Model):
         return f"PIX de R${self.valor} - {self.usuario}"
 
     def gerar_qrcode(self):
-        payload = f"pix:chave={self.chave_pix}&nome={self.destinatario}&valor={self.valor}&txid={self.codigo_transacao[:25]}"
-        qr = qrcode.make(payload)
+        payload = Payload(
+        self.destinatario,
+        self.chave_pix,
+        f"{self.valor:.2f}",
+        self.cidade,
+        self.codigo_transacao[:35]
+        )
+
+        codigo_pix = payload.gerarPayload()
+
+        qr = qrcode.make(codigo_pix)
         buffer = BytesIO()
         qr.save(buffer, format='PNG')
         file_name = f'qrcode_pix_{self.codigo_transacao}.png'

@@ -34,8 +34,11 @@ def minhas_conquistas(request):
 @login_required
 def lista_premios(request):
     usuario = UserProfile.objects.get(user=request.user)
-    categorias_premios = CategoriaPremio.objects.all
+    categorias_premios = CategoriaPremio.objects.all()
+    categoria_id = request.GET.get('categoria')
 
+    is_htmx = request.headers.get('HX-Request') == 'true'
+    print(categoria_id)
     # Filtra prêmios disponíveis (estoque > 0 ou ilimitado)
     premios_disponiveis = Premio.objects.filter(
         disponivel=True
@@ -45,16 +48,27 @@ def lista_premios(request):
         id__in=PedidoPremio.objects.filter(usuario=request.user).values_list('premio_id', flat=True)
     )
 
+    # Aplicar filtro de categoria se existir
+    if categoria_id and categoria_id != 'todos':
+        premios_disponiveis = premios_disponiveis.filter(categoria_id=categoria_id)
+
+
     # Prêmios já adquiridos pelo usuário
     premios_adquiridos = Premio.objects.filter(
         pedidopremio__usuario=request.user
     ).distinct()
+
+    if is_htmx:
+        return render(request, 'premios/partials/premios_lista.html', {
+            'premios_disponiveis': premios_disponiveis
+        })
 
     context = {
         'premios_disponiveis': premios_disponiveis,
         'premios_adquiridos': premios_adquiridos,
         'usuario': usuario,
         "categorias_premios":categorias_premios,
+        'categoria_selecionada': categoria_id,
     }
     return render(request, 'premios/conquistas_premios.html', context)
 

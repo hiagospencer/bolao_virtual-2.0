@@ -40,13 +40,7 @@
           </div>
 
           <div class="pix-qrcode">
-            <!-- QR Code será gerado dinamicamente
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=PIX%3Ahiaguinhospencer%40gmail.com%3Famount%3D29.90%26name%3DHiago%2520Jos%25C3%25A9%2520de%2520Souza" alt="QR Code PIX"> -->
-              {% if pagamento.qr_code_image %}
-                <img src="{{ pagamento.qr_code_image.url }}" alt="QR Code PIX">
-              {% else %}
-                <p>Carregando QR Code...</p>
-              {% endif %}
+              <img src="{% static 'img/qrcode_pix/pix.jpeg' %}" alt="QR Code PIX">
           </div>
 
           <div class="pix-instructions">
@@ -82,7 +76,7 @@
           </div>
 
           <div class="payment-note">
-            <p><i class="fas fa-info-circle"></i> Assim que identificarmos seu pagamento, você receberá um e-mail de confirmação e seus créditos serão adicionados automaticamente.</p>
+            <p><i class="fas fa-info-circle"></i> Assim que identificarmos seu pagamento, você receberá um e-mail de confirmação e seus acesso ao bolão.</p>
           </div>
         </div>
       </div>

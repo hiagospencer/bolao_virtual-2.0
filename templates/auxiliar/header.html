@@ -39,32 +39,32 @@
                     </li>
                 {% endif %}
 
-                {% if request.resolver_match.url_name in "noticias" or request.resolver_match.url_name in "comunidade" or request.resolver_match.url_name in "trofeus" or request.resolver_match.url_name in "regras" %}
+                {% if request.resolver_match.url_name in "noticias" or request.resolver_match.url_name in "loja" or request.resolver_match.url_name in "trofeus" or request.resolver_match.url_name in "regras" %}
                     <li class="dropdown">
-                        <a href="#" class="active"><i class="fas fa-newspaper"></i> Interação <i class="fas fa-caret-down"></i></a>
+                        <a href="#" class="active"><i class="fas fa-newspaper"></i> Recompensas <i class="fas fa-caret-down"></i></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{% url 'comunidade' %}"><i class="fas fa-users"></i> Comunidade</a></li>
                             <li><a href="{% url 'trofeus' %}"><i class="fas fa-trophy"></i> Troféus</a></li>
                             <li><a href="{% url 'lista_premios' %}"><i class="fas fa-award"></i> Prêmios</a></li>
+                            <li><a href="{% url 'loja' %}"><i class="fas fa-shopping-cart"></i> Loja</a></li>
                             <li><a href="{% url 'regras' %}"><i class="fas fa-book"></i> Regras</a></li>
                         </ul>
                     </li>
                 {% else %}
                     <li class="dropdown">
-                        <a href="#"><i class="fas fa-newspaper"></i> Interação <i class="fas fa-caret-down"></i></a>
+                        <a href="#"><i class="fas fa-newspaper"></i> Recompensas <i class="fas fa-caret-down"></i></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{% url 'comunidade' %}"><i class="fas fa-users"></i> Comunidade</a></li>
                             <li><a href="{% url 'trofeus' %}"><i class="fas fa-trophy"></i> Troféus</a></li>
                             <li><a href="{% url 'lista_premios' %}"><i class="fas fa-award"></i> Prêmios</a></li>
+                            <li><a href="{% url 'loja' %}"><i class="fas fa-shopping-cart"></i> Loja</a></li>
                             <li><a href="{% url 'regras' %}"><i class="fas fa-book"></i> Regras</a></li>
                         </ul>
                     </li>
                 {% endif %}
 
-                {% if request.resolver_match.url_name in "loja" %}
-                    <li><a href="{% url 'loja' %}" class="active"><i class="fas fa-shopping-cart"></i> Loja</a></li>
+                {% if request.resolver_match.url_name in "comunidade" %}
+                    <li><a href="{% url 'comunidade' %}" class="active"><i class="fas fa-users"></i> Comunidade</a></li>
                 {% else %}
-                    <li><a href="{% url 'loja' %}"><i class="fas fa-shopping-cart"></i> Loja</a></li>
+                    <li><a href="{% url 'comunidade' %}"><i class="fas fa-users"></i> Comunidade</a></li>
                 {% endif %}
 
                 {% if request.resolver_match.url_name in "pagamento" %}
@@ -117,16 +117,16 @@
         </li>
         <!-- Menu Interação -->
         <li class="brasileirao-dropdown">
-            <a href="#"><i class="fas fa-newspaper"></i> Interação <i class="fas fa-caret-down brasileirao-dropdown-arrow"></i></a>
+            <a href="#"><i class="fas fa-newspaper"></i> Recompensas <i class="fas fa-caret-down brasileirao-dropdown-arrow"></i></a>
             <ul class="brasileirao-dropdown-menu">
                 <!-- <li><a href="{% url 'noticias' %}" class="active"><i class="fas fa-newspaper"></i> Notícias</a></li> -->
-                <li><a href="{% url 'comunidade' %}"><i class="fas fa-users"></i> Comunidade</a></li>
                 <li><a href="{% url 'trofeus' %}"><i class="fas fa-trophy"></i> Troféus</a></li>
                 <li><a href="{% url 'lista_premios' %}"><i class="fas fa-award"></i> Prêmios</a></li>
+                <li><a href="{% url 'loja' %}"><i class="fas fa-shopping-cart"></i> Loja</a></li>
                 <li><a href="{% url 'regras' %}"><i class="fas fa-book"></i> Regras</a></li>
             </ul>
         </li>
-        <li><a href="{% url 'loja' %}"><i class="fas fa-shopping-cart"></i> Shop</a></li>
+        <li><a href="{% url 'comunidade' %}"><i class="fas fa-users"></i> Comunidade</a></li>
         <li><a href="{% url 'pagamento' %}"><i class="fa-solid fa-credit-card"></i> Pagamento</a></li>
         <li><a href="{% url 'perfil' %}"><i class="fas fa-user"></i> Perfil</a></li>
         <li><a href="{% url 'configuracao' %}"><i class="fa-solid fa-gear"></i>Configurações</a></li>
