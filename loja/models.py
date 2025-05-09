@@ -11,6 +11,12 @@ class Loja(models.Model):
     logo = models.ImageField(upload_to='logos_loja/', blank=True, null=True)
     ativo = models.BooleanField(default=True)
     data_criacao = models.DateTimeField(auto_now_add=True)
+    cor_primaria = models.CharField(max_length=7, default='#6c757d',
+                                  help_text="Cor primária no formato HEX (#RRGGBB)")
+    cor_secundaria = models.CharField(max_length=7, default='#495057',
+                                    help_text="Cor secundária no formato HEX (#RRGGBB)")
+    cor_texto = models.CharField(max_length=7, default='#ffffff',
+                                help_text="Cor do texto no formato HEX (#RRGGBB)")
 
     def __str__(self):
         return self.nome

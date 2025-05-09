@@ -1,28 +1,43 @@
 {% load l10n %}
 {% load humanize %}
 
-{% for produto in produtos %}
-<div class="shop-item" data-category="camisas" data-loja-id="{{ produto.loja.id }}">
-    <div class="item-image" style="background-color: #FFFFFF;">
-        <img src="{{ produto.imagem_preview.url}}" alt="{{ produto.nome }}">
-    </div>
-    <div class="item-info">
-        <h3>{{ produto.nome }}</h3>
-        <div class="item-details">
-            <span class="item-size">{{ produto.descricao }}</span>
-            <span class="loja-info">Vendido por: {{ produto.loja.nome }}</span>
+    {% if loja_obj %}
+        <div class="loja-selected-message">
+        <p>Mostrando produtos da <strong>{{ loja_obj.nome }}</strong></p>
+        {% if categoria_selecionada != 'all' %}
+            <p>Filtrado por: <strong>{{ produtos.0.categoria.nome }}</strong></p>
+        {% endif %}
         </div>
-        <div class="item-price">
-            <span class="price">R$ {{ produto.preco|intcomma }}</span>
+        <div></div>
+        <div></div>
+    {% endif %}
+
+
+    {% for produto in produtos %}
+    <div class="shop-item" data-category="camisas" data-loja-id="{{ produto.loja.id }}">
+        <div class="item-image" style="background-color: #FFFFFF;">
+            <img src="{{ produto.imagem_preview.url}}" alt="{{ produto.nome }}">
         </div>
-        <button class="btn btn-add-to-cart"
-                onclick="sendToWhatsApp('{{ produto.nome }}', '{{ produto.preco|intcomma }}', '{{ produto.imagem.url }}', '{{ produto.loja.telefone}}')">
-            <i class="fas fa-cart-plus"></i> Comprar
-        </button>
+        <div class="item-info">
+            <h3>{{ produto.nome }}</h3>
+            <div class="item-details">
+                <span class="item-size">{{ produto.descricao }}</span>
+                <span class="loja-info">Vendido por: <b>{{ produto.loja.nome }}</b></span>
+            </div>
+            <div class="item-price">
+                <span class="price">R$ {{ produto.preco|intcomma }}</span>
+            </div>
+            <button class="btn btn-add-to-cart"
+                    onclick="sendToWhatsApp('{{ produto.nome }}', '{{ produto.preco|intcomma }}', '{{ produto.imagem.url }}', '{{ produto.telefone}}')">
+                <i class="fas fa-cart-plus"></i> Comprar
+            </button>
+        </div>
     </div>
-</div>
-{% empty %}
-<div class="no-products">
-    <p>Nenhum produto encontrado com esses filtros.</p>
-</div>
-{% endfor %}
+    {% empty %}
+        <div class="no-products">
+        <p>Nenhum produto encontrado com esses filtros.</p>
+        {% if loja_id != 'all' %}
+            <a href="?loja=all" class="btn btn-secondary">Ver todos os produtos</a>
+        {% endif %}
+        </div>
+    {% endfor %}

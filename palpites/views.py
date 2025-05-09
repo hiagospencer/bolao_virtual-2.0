@@ -17,7 +17,6 @@ from usuarios.models import UserProfile
 def criar_palpites(request):
     todos = UserProfile.objects.filter(pagamento=True)
     data_preencher_palpites = DataBolao.objects.all().order_by('data_final').first()
-    zerar_palpites_usuarios(2)
 
     if request.user.is_authenticated:
         user = request.user
@@ -94,7 +93,7 @@ def criar_palpites(request):
 @login_required
 def meus_palpites(request):
     user = request.user
-    calcular_pontuacao_usuario(2)
+
     usuarios = UserProfile.objects.filter(pagamento=True)
     rodadas_distintas = Palpite.objects.values_list('rodada_atual', flat=True).distinct().order_by('rodada_atual')
     rodadas = Palpite.objects.filter(usuario=user).order_by('rodada_atual')[:10]

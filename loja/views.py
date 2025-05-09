@@ -1,34 +1,41 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from django.template.loader import render_to_string
 from .models import *
 
 
 def loja(request):
-    categoria_id = request.GET.get('categoria')
-    loja_id = request.GET.get('loja')
+    categoria_id = request.GET.get('categoria', 'all')
+    loja_id = request.GET.get('loja', 'all')
 
     is_htmx = request.headers.get('HX-Request') == 'true'
     # Obter todos os produtos inicialmente
     produtos = ItemLoja.objects.all().order_by("-data_criacao")
+    lojas = Loja.objects.filter(ativo=True)
 
-    # Aplicar filtros se existirem
-    if categoria_id and categoria_id != 'all':
-        produtos = produtos.filter(categoria__id=categoria_id)
 
-    if loja_id and loja_id != 'all':
+    if loja_id != 'all':
         produtos = produtos.filter(loja__id=loja_id)
+        # Filtra categorias apenas da loja selecionada
+        categorias = CategoriaItem.objects.filter(
+            itemloja__loja__id=loja_id
+        ).distinct()
+    else:
+        categorias = CategoriaItem.objects.all()
 
     # Obter todas as categorias e lojas para os dropdowns
-    categorias = CategoriaItem.objects.all()
-    lojas = Loja.objects.filter(ativo=True)
+    if categoria_id != 'all':
+        produtos = produtos.filter(categoria__id=categoria_id)
+
+    loja_selecionada = Loja.objects.filter(id=loja_id).first() if loja_id != 'all' else None
 
     context = {
         "produtos": produtos,
         'categorias': categorias,
         'lojas': lojas,
-        'categoria_selecionada': categoria_id or 'all',
-        'loja_selecionada': loja_id or 'all',
+        'categoria_selecionada': categoria_id,
+        'loja_selecionada': loja_id,
+        'loja_obj': loja_selecionada,
     }
 
     if is_htmx:
@@ -36,3 +43,17 @@ def loja(request):
         return HttpResponse(html)
 
     return render(request, "outros/shop.html", context)
+
+
+def loja_api_detail(request, pk):
+    loja = get_object_or_404(Loja, pk=pk)
+    data = {
+        'id': loja.id,
+        'nome': loja.nome,
+        'descricao': loja.descricao,
+        'cor_primaria': loja.cor_primaria,
+        'cor_secundaria': loja.cor_secundaria,
+        'cor_texto': loja.cor_texto,
+        'logo': loja.logo.url if loja.logo else None,
+    }
+    return JsonResponse(data)
