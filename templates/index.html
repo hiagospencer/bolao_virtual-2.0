@@ -11,7 +11,7 @@
                 <div class="welcome-text">
                     <h2>Bem vindo, <strong>{{ usuario.user.username }}</strong>!</h2>
                     <div class="user-stats">
-                        <span class="stat-item"><i class="fas fa-medal"></i> Posição atual: <strong>{{ usuario.user.classificacao.posicao_atual|default:"-" }}</strong></span>
+                        <span class="stat-item"><i class="fas fa-medal"></i> Posição atual: <strong>{{ usuario.user.classificacao.posicao_atual|default:"-" }}º</strong></span>
                         <span class="stat-item"><i class="fas fa-level-up-alt"></i> Nível: <strong>{{ usuario.level|default:"1" }}</strong></span>
                         <span class="stat-item"><i class="fas fa-coins"></i> Moedas: <strong>{{ usuario.moedas|intcomma }}</strong></span>
                     </div>
@@ -48,14 +48,14 @@
                     <h3><i class="fas fa-crown"></i> Palpiteiro da Rodada</h3>
                     <div class="featured-user">
                     <div class="user-profile">
-                        <img src="{% if destaque.usuario.foto_perfil.url %}{{ destaque.usuario.foto_perfil.url }}{% else %}{% static 'img/perfil-null.png' %}{%endif%}" alt="{{ destaque.usuario.username }}" class="user-avatar">
+                        <img src="{% if destaque.usuario.foto_perfil %}{{ destaque.usuario.foto_perfil.url }}{% else %}{% static 'img/perfil-null.png' %}{%endif%}" alt="{{ destaque.usuario.username }}" class="user-avatar">
                         <div class="user-info">
                         <h4>{{ destaque.usuario.username }}
                             {% if destaque.usuario.tituloativo.titulo.premio.nome  %}
                                 "{{ destaque.usuario.tituloativo.titulo.premio.nome }}"
                             {% endif %}
                             </h4>
-                        <p>Acertou {{ destaque.acertos }} dos {{ destaque.total_jogos }} jogos da {{ destaque.rodada.numero }}ª rodada!</p>
+                        <p>Acertou {{ destaque.acertos }} dos {{ destaque.total_jogos }} jogos da {{ destaque.rodada.numero }}ª rodada totalizando {{ pontuacao_rodada.pontos }} pontos!</p>
                         <div class="user-stats">
                             <span><i class="fas fa-check-circle"></i> {{ destaque.porcentagem_acertos }}% de acertos</span>
                         </div>

@@ -15,6 +15,8 @@ from usuarios.models import UserProfile
 
 @login_required
 def criar_palpites(request):
+    zerar_palpites_usuarios(2)
+    calcular_pontuacao_usuario(2)
     todos = UserProfile.objects.filter(pagamento=True)
     data_preencher_palpites = DataBolao.objects.all().order_by('data_final').first()
 

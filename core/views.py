@@ -8,6 +8,7 @@ from usuarios.models import Usuario, UserProfile, DestaqueDaSemana,Rodada
 from premios.models import *
 from core.models import PremiacaoBolao
 from palpites.models import Classificacao,PontuacaoRodada, Palpite
+from palpites.utils import zerar_palpites_usuarios,calcular_pontuacao_usuario
 
 
 def homepage(request):
@@ -38,7 +39,11 @@ def homepage(request):
     titulo_ativo_destaque = None
     if destaque:
         titulo_ativo_destaque = TituloAtivo.objects.select_related('titulo__premio').filter(usuario=destaque.usuario).first()
-    context = {'classificacao': classificacao, "premiacoes":premiacoes, "usuario": usuario, 'destaque': destaque, 'titulo_ativo_destaque': titulo_ativo_destaque,}
+
+    if PontuacaoRodada.objects.all().exists():
+        pontuacao_rodada = PontuacaoRodada.objects.filter(usuario=destaque.usuario).first()
+        print(pontuacao_rodada.pontos)
+    context = {'classificacao': classificacao, "premiacoes":premiacoes, "usuario": usuario, 'destaque': destaque, 'titulo_ativo_destaque': titulo_ativo_destaque,"pontuacao_rodada":pontuacao_rodada}
     return render(request, 'index.html', context)
 
 def perfil(request):
