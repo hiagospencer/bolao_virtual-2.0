@@ -13,6 +13,8 @@ from usuarios.models import  Rodada as rodada_usuario
 from .signals import classificacao_finalizada
 
 
+
+
 def validar_senha(senha, confirmar_senha):
   """Valida se a senha atende aos critérios de segurança e se as senhas coincidem.
       A senha deve ter pelo menos 8 caracteres, uma letra maiúscula e um número.
@@ -335,7 +337,7 @@ def setar_rodadaAtual_rodadaFinal(rodada_atual, rodada_final):
   '''
   usuarios = Usuario.objects.all()
   for usuario in usuarios:
-    bloquear = Verificacao.objects.filter(user=usuario.usuario)
+    bloquear = BloquearPartida.objects.filter(usuario=usuario)
     for partida in bloquear:
         partida.partida_atual = rodada_atual
         partida.partida_final = rodada_final

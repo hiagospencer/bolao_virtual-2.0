@@ -17,6 +17,7 @@ from usuarios.models import UserProfile
 def criar_palpites(request):
     # zerar_palpites_usuarios(3)
     # calcular_pontuacao_usuario(3)
+
     todos = UserProfile.objects.filter(pagamento=True)
     data_preencher_palpites = DataBolao.objects.all().order_by('data_final').first()
 
@@ -30,9 +31,9 @@ def criar_palpites(request):
         img_casa = []
         img_visitante = []
         verificacao_partida, criado = BloquearPartida.objects.get_or_create(usuario=user)
-        rodadas = Rodada.objects.filter(rodada_atual=verificacao_partida.rodada_atual)
+        rodadas = Rodada.objects.filter(rodada_atual=verificacao_partida.partida_atual)
 
-        if verificacao_partida.rodada_atual <= verificacao_partida.partida_final:
+        if verificacao_partida.partida_atual <= verificacao_partida.partida_final:
             verificacao_partida.rodada_bloqueada = False
             verificacao_partida.save()
         else:
@@ -50,7 +51,7 @@ def criar_palpites(request):
             resultados = dict(dados)
 
 
-            if Palpite.objects.filter(rodada_atual=verificacao_partida.rodada_atual,usuario=user).exists():
+            if Palpite.objects.filter(rodada_atual=verificacao_partida.partida_atual,usuario=user).exists():
                 return HttpResponse('Rodada já existe')
 
             if resultados["resultado_casa"] and resultados["resultado_visitante"]:
@@ -80,12 +81,12 @@ def criar_palpites(request):
                     time_visitante=row['time_visitante'],
                     imagem_fora=row['img_visitante'],
                     usuario=user,
-                    rodada_atual=verificacao_partida.rodada_atual,
+                    rodada_atual=verificacao_partida.partida_atual,
                     )
 
 
-            messages.success(request, f"{verificacao_partida.rodada_atual}ª rodada salva com sucesso!")
-            verificacao_partida.rodada_atual += 1
+            messages.success(request, f"{verificacao_partida.partida_atual}ª rodada salva com sucesso!")
+            verificacao_partida.partida_atual += 1
             verificacao_partida.save()
             return redirect('criar_palpites')
         context = {"rodadas":rodadas, 'verificacao_partida':verificacao_partida,"data_preencher_palpites":data_preencher_palpites}
@@ -100,7 +101,7 @@ def meus_palpites(request):
     rodadas_distintas = Palpite.objects.values_list('rodada_atual', flat=True).distinct().order_by('rodada_atual')
     rodadas = Palpite.objects.filter(usuario=user).order_by('rodada_atual')[:10]
     rodadas_original = RodadaOriginal.objects.all().order_by('rodada_atual')[:10]
-    context = {'rodadas':rodadas, "usuarios":usuarios, "rodadas_distintas":rodadas_distintas, "rodadas_original": rodadas_original}
+    context = {'rodadas':rodadas, "usuarios":usuarios, "rodadas_distintas":range(1, 38), "rodadas_original": rodadas_original}
     return render(request, "palpites/meus_palpites.html", context)
 
 
