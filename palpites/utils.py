@@ -10,6 +10,7 @@ from .models import *
 from usuarios.models import *
 from .api_brasileirao import *
 from usuarios.models import  Rodada as rodada_usuario
+from .signals import classificacao_finalizada
 
 
 def validar_senha(senha, confirmar_senha):
@@ -232,6 +233,14 @@ def calcular_pontuacao_usuario(rodada_atualizada):
           defaults={'pontos': pontos_atuais}
           )
 
+      for usuario in todos_usuarios:
+        pontos_atuais = Classificacao.objects.get(usuario=usuario.user).pontos
+        PontuacaoRodada.objects.update_or_create(
+          usuario=usuario.user,
+          rodada=rodada_atualizada,
+          defaults={'pontos': pontos_atuais}
+          )
+
       usuarios_pontuacao = PontuacaoRodada.objects.filter(rodada=rodada_atualizada).order_by('-pontos')
       if usuarios_pontuacao.exists():
         destaque = usuarios_pontuacao.first()
@@ -248,6 +257,11 @@ def calcular_pontuacao_usuario(rodada_atualizada):
             acertos=acertos,
             total_jogos=total_jogos,
             dica_do_mestre="Mandou bem demais nessa rodada!"
+        )
+
+      classificacao_finalizada.send(
+            sender=None,
+            rodada_atualizada=rodada_atualizada
         )
   except:
     print('tabela pontuação não encontrada')

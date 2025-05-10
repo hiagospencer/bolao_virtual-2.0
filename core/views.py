@@ -40,9 +40,10 @@ def homepage(request):
     if destaque:
         titulo_ativo_destaque = TituloAtivo.objects.select_related('titulo__premio').filter(usuario=destaque.usuario).first()
 
+    pontuacao_rodada = None
     if PontuacaoRodada.objects.all().exists():
         pontuacao_rodada = PontuacaoRodada.objects.filter(usuario=destaque.usuario).first()
-        print(pontuacao_rodada.pontos)
+
     context = {'classificacao': classificacao, "premiacoes":premiacoes, "usuario": usuario, 'destaque': destaque, 'titulo_ativo_destaque': titulo_ativo_destaque,"pontuacao_rodada":pontuacao_rodada}
     return render(request, 'index.html', context)
 
