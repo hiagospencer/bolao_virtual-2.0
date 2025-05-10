@@ -111,42 +111,48 @@ def configurar_rodadas(request):
 def acoes_rodada(request):
     if request.method == 'POST':
         acao = request.POST.get('acao')
-
         if acao == 'criar':
-            messages.success(request, 'Nova rodada criada com sucesso.')
+            criar_rodadas_campeonato()
+            messages.success(request, 'Todas as rodadas criada com sucesso.')
         elif acao == 'apagar':
-            messages.warning(request, 'Rodada apagada.')
+            resetar_pontuacao_usuarios()
+            messages.success(request, f'Pontuações dos usuários resetadas.')
         elif acao == 'restaurar':
             messages.info(request, 'Rodada restaurada para o estado original.')
 
-    return redirect('acoes_rodada')
+    return redirect('configuracao')
 
 def atualizar_classificacao(request):
     if request.method == 'POST':
         acao = request.POST.get('acao')
-        rodada = request.POST.get('rodada_atualizar')
+        rodada_atualizar_classificacao = request.POST.get('atualizar_classificacao')
+        rodada_original = request.POST.get('rodada_original')
         rodada_false = request.POST.get('rodada_false')
 
-        if acao == 'resetar_pontuacao':
-            messages.success(request, f'Pontuações da rodada {rodada} resetadas.')
-        elif acao == 'resetar_pagamentos':
-            messages.success(request, 'Pagamentos resetados.')
-
+        if rodada_atualizar_classificacao:
+            calcular_pontuacao_usuario(rodada_atualizar_classificacao)
+            messages.success(request, 'Classificação Atualizada.')
+        if rodada_original:
+            salvar_rodada_original(rodada_original)
+            messages.warning(request, f'Rodada {rodada_original} criada com sucesso!')
         if rodada_false:
-            messages.warning(request, f'Rodada {rodada_false} desativada.')
+            rodadas_false(rodada_false)
+            messages.warning(request, f'Rodada {rodada_false} criada false com sucesso!')
 
-    return redirect('atualizar_classificacao')
+    return redirect('configuracao')
 
 def controle_partidas(request):
     if request.method == 'POST':
         acao = request.POST.get('acao')
 
         if acao == 'bloquear_todas':
+            bloquear_rodadas()
             messages.warning(request, 'Todas as partidas foram bloqueadas.')
         elif acao == 'desbloquear_todas':
+            desbloquear_rodadas()
             messages.success(request, 'Todas as partidas foram desbloqueadas.')
 
-    return redirect('controle_partidas')
+    return redirect('configuracao')
 
 def termos(request):
     return render(request,"termos/termos.html")

@@ -33,12 +33,12 @@ def criar_palpites(request):
         verificacao_partida, criado = BloquearPartida.objects.get_or_create(usuario=user)
         rodadas = Rodada.objects.filter(rodada_atual=verificacao_partida.partida_atual)
 
-        if verificacao_partida.partida_atual <= verificacao_partida.partida_final:
+        if verificacao_partida.partida_atual == verificacao_partida.partida_final:
             verificacao_partida.rodada_bloqueada = False
             verificacao_partida.save()
-        else:
-            verificacao_partida.rodada_bloqueada = True
-            verificacao_partida.save()
+        # else:
+        #     verificacao_partida.rodada_bloqueada = True
+        #     verificacao_partida.save()
 
         for rodada in rodadas:
             time_casa.append(rodada.time_casa)

@@ -11,7 +11,7 @@ from usuarios.models import *
 from .api_brasileirao import *
 from usuarios.models import  Rodada as rodada_usuario
 from .signals import classificacao_finalizada
-
+from palpites.models import *
 
 
 
@@ -269,7 +269,7 @@ def calcular_pontuacao_usuario(rodada_atualizada):
     print('tabela pontuação não encontrada')
 
 
-def resetar_pontuacao_usuarios_normal():
+def resetar_pontuacao_usuarios():
   '''
   Filtrar todos os usuários com o tipo aposta "normal", colocar o pagamento de todos os usuários em "False" e zera todos os pontos da classificação.
   '''
@@ -283,6 +283,18 @@ def resetar_pontuacao_usuarios_normal():
     pontuacao.posicao_anterior = None
     pontuacao.posicao_variacao = None
     pontuacao.save()
+
+def bloquear_rodadas():
+  bloquear_partidas = BloquearPartida.objects.all()
+  for partidas in bloquear_partidas:
+    partidas.rodada_bloqueada = True
+    partidas.save()
+
+def desbloquear_rodadas():
+  bloquear_partidas = BloquearPartida.objects.all()
+  for partidas in bloquear_partidas:
+    partidas.rodada_bloqueada = False
+    partidas.save()
 
 def resetar_pagamento():
   usuarios = Usuario.objects.all()
@@ -343,7 +355,7 @@ def setar_rodadaAtual_rodadaFinal(rodada_atual, rodada_final):
         partida.partida_final = rodada_final
         partida.save()
 
-def zerar_palpites_usuarios(rodada):
+def rodadas_false(rodada):
   palpites = Palpite.objects.filter(rodada_atual=rodada)
   for palpite in palpites:
     palpite.finalizado = False
