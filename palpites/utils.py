@@ -178,7 +178,6 @@ def calcular_pontuacao_usuario(rodada_atualizada):
           else:
             rodada.tipo_class = "result-wrong"
             rodada.finalizado = True
-            participante.moedas += 10
 
           # verifica os placares exatos
           if (rodada.placar_casa == resultado_original.placar_casa and

@@ -156,6 +156,11 @@
               <h3>{{ trofeu.nome }}</h3>
               <p>{{ trofeu.descricao }}</p>
             </div>
+            <span class="history-date">
+                Recompesas:
+                +{{ trofeu.xp_recompensa }} XP |
+                +{{ trofeu.moedas_recompensa }} moedas
+              </span>
           </div>
         {% endfor %}
     </div>

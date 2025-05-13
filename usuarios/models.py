@@ -52,7 +52,7 @@ class UserProfile(models.Model):
             self.xp -= self.xp_para_proximo_level
             self.level += 1
             level_up = True
-            recompensa = self.level * 100
+            recompensa = int(100 * (1.1 ** (self.level - 1)))
             self.moedas += recompensa
             moedas_ganhas += recompensa
             self.xp_para_proximo_level = self.calcular_xp_necessario()
@@ -71,7 +71,7 @@ class UserProfile(models.Model):
         while self.xp >= self.xp_para_proximo_level and self.level < self.nivel_maximo:
             self.xp -= self.xp_para_proximo_level
             self.level += 1
-            recompensa = self.level * 100
+            recompensa = int(100 * (1.1 ** (self.level - 1)))
             self.moedas += recompensa
             self.xp_para_proximo_level = self.calcular_xp_necessario()
         self.save()

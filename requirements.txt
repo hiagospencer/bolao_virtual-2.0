@@ -1,12 +1,13 @@
 asgiref==3.8.1
 certifi==2025.4.26
 charset-normalizer==3.4.1
+crcmod==1.7
 Django==5.2
 idna==3.10
 numpy==2.2.5
 pandas==2.2.3
 pillow==11.2.1
-pixqrcode==1.1.0
+pixqrcodegen==0.9.1
 python-dateutil==2.9.0.post0
 python-dotenv==1.1.0
 pytz==2025.2

@@ -10,6 +10,7 @@ class TipoTrofeuAdmin(admin.ModelAdmin):
 @admin.register(MetaConquista)
 class MetaConquistaAdmin(admin.ModelAdmin):
     list_display = ('nome', 'tipo', 'valor_requerido', 'xp_recompensa', 'moedas_recompensa')
+    list_editable = ('tipo', 'valor_requerido', 'xp_recompensa', 'moedas_recompensa')
     list_filter = ('tipo', 'tipo_trofeu')
     search_fields = ('nome', 'descricao')
 
