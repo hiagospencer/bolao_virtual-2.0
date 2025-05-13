@@ -1,10 +1,11 @@
 from django.contrib.auth.decorators import user_passes_test
+from django.db.models import Count
 from django.shortcuts import render
 from django.utils import timezone
 from datetime import timedelta
 
 from .models import VisitaSite, MetricasDiarias
-from estatisticas import models
+
 
 @user_passes_test(lambda u: u.is_staff)
 def estatisticas_visitas(request):
@@ -26,9 +27,9 @@ def estatisticas_visitas(request):
     ).count()
 
     # Visitas por página
-    # paginas_populares = VisitaSite.objects.values('pagina').annotate(
-    #     total=models.Count('id')
-    # ).order_by('-total')[:10]
+    paginas_populares = VisitaSite.objects.values('pagina').annotate(
+        total=Count('id')
+    ).order_by('-total')[:10]
 
     # Métricas diárias
     metricas = MetricasDiarias.objects.order_by('-data')[:30]
@@ -37,7 +38,7 @@ def estatisticas_visitas(request):
         'visitas_hoje': visitas_hoje,
         'visitas_semana': visitas_semana,
         'visitas_mes': visitas_mes,
-        # 'paginas_populares': paginas_populares,
+        'paginas_populares': paginas_populares,
         'metricas': metricas,
     }
 

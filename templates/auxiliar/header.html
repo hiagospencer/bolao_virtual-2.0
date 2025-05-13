@@ -113,6 +113,9 @@
             <ul class="brasileirao-dropdown-menu" id="palpites-dropdown">
                 <li><a href="{% url 'criar_palpites' %}"><i class="fas fa-plus-circle"></i> Criar Palpite</a></li>
                 <li><a href="{% url 'meus_palpites' %}"><i class="fas fa-history"></i> Meus Palpites</a></li>
+                {% if user.is_superuser %}
+                    <li><a href="{% url 'configuracao' %}"><i class="fa-solid fa-gear"></i>Configurações</a></li>
+                {% endif %}
             </ul>
         </li>
         <!-- Menu Interação -->
@@ -129,7 +132,6 @@
         <li><a href="{% url 'comunidade' %}"><i class="fas fa-users"></i> Comunidade</a></li>
         <li><a href="{% url 'pagamento' %}"><i class="fa-solid fa-credit-card"></i> Pagamento</a></li>
         <li><a href="{% url 'perfil' %}"><i class="fas fa-user"></i> Perfil</a></li>
-        <li><a href="{% url 'configuracao' %}"><i class="fa-solid fa-gear"></i>Configurações</a></li>
     </ul>
 
     <div class="mobile-auth-buttons">

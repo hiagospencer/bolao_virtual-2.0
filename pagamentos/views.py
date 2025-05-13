@@ -1,7 +1,11 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+
 from .models import PagamentoPIX
 import uuid
 
+
+@login_required
 def pagamento(request):
     usuario = request.user
     pagamento = PagamentoPIX.objects.filter(usuario=usuario, status='pendente').first()

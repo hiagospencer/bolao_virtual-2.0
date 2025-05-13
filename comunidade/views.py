@@ -7,7 +7,7 @@ from datetime import datetime
 
 from .models import TopicoForum, ComentarioForum, Enquete, OpcaoEnquete, VotoEnquete
 
-
+@login_required
 def comunidades(request):
     topicos = TopicoForum.objects.all().order_by('-data_criacao')
     enquetes = Enquete.objects.all().order_by('-data_criacao')

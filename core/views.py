@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Max
 from django.db.models import Prefetch
 
 from usuarios.models import Usuario, UserProfile, DestaqueDaSemana,Rodada
 from premios.models import *
+from premios.conquistas import verificar_conquistas
 from core.models import PremiacaoBolao
 from palpites.models import Classificacao,PontuacaoRodada, Palpite
 from palpites.utils import *
@@ -21,6 +23,7 @@ def homepage(request):
     if request.user.is_authenticated:
         participante = UserProfile.objects.get(user=usuario_logado)
         participante.corrigir_nivel()
+        verificar_conquistas(participante)
         try:
             usuario = UserProfile.objects.get(user=request.user)
         except UserProfile.DoesNotExist:
@@ -51,6 +54,7 @@ def homepage(request):
     context = {'classificacao': classificacao, "premiacoes":premiacoes, "usuario": usuario, 'destaque': destaque, 'titulo_ativo_destaque': titulo_ativo_destaque,"pontuacao_rodada":pontuacao_rodada}
     return render(request, 'index.html', context)
 
+@login_required
 def perfil(request):
     user = request.user
     usuario = UserProfile.objects.get(user=user)
@@ -95,9 +99,11 @@ def atualizar_perfil(request):
 def regras(request):
     return render(request,"regras.html")
 
+@user_passes_test(lambda u: u.is_superuser)
 def configuracao(request):
     return render(request,"outros/configuracoes.html",{'faixa_rodadas': range(1, 38)},)
 
+@user_passes_test(lambda u: u.is_superuser)
 def configurar_rodadas(request):
     if request.method == 'POST':
         rodada_inicial = request.POST.get('rodada_inicial')
@@ -111,7 +117,7 @@ def configurar_rodadas(request):
 
     return redirect('configuracao')
 
-
+@user_passes_test(lambda u: u.is_superuser)
 def acoes_rodada(request):
     if request.method == 'POST':
         acao = request.POST.get('acao')
@@ -126,6 +132,7 @@ def acoes_rodada(request):
 
     return redirect('configuracao')
 
+@user_passes_test(lambda u: u.is_superuser)
 def atualizar_classificacao(request):
     if request.method == 'POST':
         acao = request.POST.get('acao')
@@ -145,13 +152,14 @@ def atualizar_classificacao(request):
         if destaque_rodada:
             calcular_total_pontos_rodadas_usuarios(destaque_rodada)
             messages.success(request, f'Destaque da {destaque_rodada}ª rodada criado com sucesso!')
-            
+
         if rodada_false:
             rodadas_false(rodada_false)
             messages.success(request, f'Rodada {rodada_false} criada false com sucesso!')
 
     return redirect('configuracao')
 
+@user_passes_test(lambda u: u.is_superuser)
 def controle_partidas(request):
     if request.method == 'POST':
         acao = request.POST.get('acao')

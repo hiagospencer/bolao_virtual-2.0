@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse,JsonResponse
+from django.db.models import Count
 from django.template.loader import render_to_string
 from .models import *
 
@@ -11,7 +12,9 @@ def loja(request):
     is_htmx = request.headers.get('HX-Request') == 'true'
     # Obter todos os produtos inicialmente
     produtos = ItemLoja.objects.all().order_by("-data_criacao")
-    lojas = Loja.objects.filter(ativo=True)
+    lojas = Loja.objects.filter(ativo=True)\
+                .annotate(num_itens=Count('itens'))\
+                .filter(num_itens__gt=0)
 
 
     if loja_id != 'all':
