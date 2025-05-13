@@ -1,7 +1,7 @@
 # apps/premios/models.py
 from django.db import models
 from usuarios.models import Usuario
-
+from loja.models import Loja
 
 class TipoTrofeu(models.Model):
     nome = models.CharField(max_length=100)
@@ -85,6 +85,17 @@ class Premio(models.Model):
     estoque = models.PositiveIntegerField(default=1)  # -1 = ilimitado
     disponivel = models.BooleanField(default=True)
     data_criacao = models.DateTimeField(auto_now_add=True,null=True,blank=True)
+    loja = models.ForeignKey(
+        'loja.Loja',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Loja Parceira"
+    )
+    url_parceiro = models.URLField(blank=True)
+    valor_desconto = models.CharField(max_length=20, blank=True, null=True)
+    data_expiracao = models.DateField(null=True, blank=True)
+    whatsapp_loja = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
         return f"{self.nome} ({self.get_tipo_display()})"
@@ -95,7 +106,12 @@ class PedidoPremio(models.Model):
     premio = models.ForeignKey(Premio, on_delete=models.CASCADE)
     data_compra = models.DateTimeField(auto_now_add=True)
     utilizado = models.BooleanField(default=False)  # Para vouchers/produtos resgatados
-
+    codigo_voucher = models.CharField(max_length=20, blank=True, null=True)
+    data_resgate = models.DateTimeField(null=True, blank=True)
+    data_utilizacao = models.DateTimeField(null=True, blank=True)
+    utilizado = models.BooleanField(default=False)
+    data_expiracao = models.DateField(null=True, blank=True)
+    
     def __str__(self):
         return f"{self.usuario.username} - {self.premio.nome}"
 

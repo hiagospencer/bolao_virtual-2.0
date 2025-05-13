@@ -41,10 +41,19 @@ class BloquearPartidasAdmin(admin.ModelAdmin):
     list_editable = ("rodada_bloqueada" ,"partida_atual", "partida_final",)
     search_fields = ("usuario", "partida_atual", "partida_final")
 
+
+class PontuacaoRodadaAdmin(admin.ModelAdmin):
+    model = PontuacaoRodada
+    list_display = ["usuario","pontos", "rodada"]
+    list_editable = ("pontos" ,"rodada",)
+    list_filter = ["rodada"]
+    list_per_page = 10
+    search_fields = ("rodada",)
+
 admin.site.register(Classificacao, ClassificacaoAdmin)
 admin.site.register(RodadaOriginal, RodadaOriginalAdmin)
 admin.site.register(Rodada, RodadaAdmin)
 admin.site.register(Palpite, PalpiteAdmin)
 admin.site.register(BloquearPartida, BloquearPartidasAdmin)
-admin.site.register(PontuacaoRodada)
+admin.site.register(PontuacaoRodada, PontuacaoRodadaAdmin)
 admin.site.register(DataBolao)

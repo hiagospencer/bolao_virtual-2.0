@@ -78,13 +78,17 @@
                 <form method="POST" action="{% url 'atualizar_classificacao' %}" class="admin-form">
                     {% csrf_token %}
                     <div class="form-group">
-                        <label for="rodada-atualizar"><i class="fas fa-hashtag"></i> Número da Rodada</label>
+                        <label for="rodada-atualizar"><i class="fas fa-hashtag"></i> Atualizar Classificação</label>
                         <input type="number" name="atualizar_classificacao" id="rodada-atualizar" placeholder="Digite o número da rodada" min="1" >
                     </div>
 
                     <div class="form-group">
                         <label for="rodada-false"><i class="fas fa-toggle-off"></i> Criar Rodada Original</label>
                         <input type="number" name="rodada_original" id="rodada-false" placeholder="Digite a rodada para criar a rodada original" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="destaque-rodada"><i class="fas fa-toggle-off"></i> Criar Destaque da Rodada</label>
+                        <input type="number" name="destaque_rodada" id="destaque-rodada" placeholder="Digite a rodada para criar destaque da rodada" min="1">
                     </div>
                     <div class="form-group">
                         <label for="rodada_false"><i class="fas fa-toggle-off"></i> Deixar rodada em False</label>

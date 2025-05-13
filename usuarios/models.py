@@ -88,7 +88,7 @@ class Rodada(models.Model):
 
 class DestaqueDaSemana(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    rodada = models.ForeignKey(Rodada, on_delete=models.CASCADE)
+    rodada = models.IntegerField()
     acertos = models.PositiveIntegerField(default=0)
     total_jogos = models.PositiveIntegerField(default=0)
     dica_do_mestre = models.TextField()

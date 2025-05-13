@@ -9,14 +9,18 @@ from premios.models import *
 from core.models import PremiacaoBolao
 from palpites.models import Classificacao,PontuacaoRodada, Palpite
 from palpites.utils import *
+from .utils import calcular_total_pontos_rodadas_usuarios
 
 
 def homepage(request):
-    usuarios_pagantes = UserProfile.objects.filter(pagamento=True).values_list('user_id', flat=True)
-    destaque = DestaqueDaSemana.objects.order_by('-rodada__numero').first()
+    usuario_logado = request.user
 
+    usuarios_pagantes = UserProfile.objects.filter(pagamento=True).values_list('user_id', flat=True)
+    destaque = DestaqueDaSemana.objects.order_by('-rodada').first()
     usuario = None
     if request.user.is_authenticated:
+        participante = UserProfile.objects.get(user=usuario_logado)
+        participante.corrigir_nivel()
         try:
             usuario = UserProfile.objects.get(user=request.user)
         except UserProfile.DoesNotExist:
@@ -42,7 +46,7 @@ def homepage(request):
 
     pontuacao_rodada = None
     if PontuacaoRodada.objects.all().exists():
-        pontuacao_rodada = PontuacaoRodada.objects.filter(usuario=destaque.usuario).first()
+        pontuacao_rodada = PontuacaoRodada.objects.filter(usuario=destaque.usuario).order_by('-rodada').first()
 
     context = {'classificacao': classificacao, "premiacoes":premiacoes, "usuario": usuario, 'destaque': destaque, 'titulo_ativo_destaque': titulo_ativo_destaque,"pontuacao_rodada":pontuacao_rodada}
     return render(request, 'index.html', context)
@@ -127,17 +131,24 @@ def atualizar_classificacao(request):
         acao = request.POST.get('acao')
         rodada_atualizar_classificacao = request.POST.get('atualizar_classificacao')
         rodada_original = request.POST.get('rodada_original')
+        destaque_rodada = request.POST.get('destaque_rodada')
         rodada_false = request.POST.get('rodada_false')
 
         if rodada_atualizar_classificacao:
             calcular_pontuacao_usuario(rodada_atualizar_classificacao)
             messages.success(request, 'Classificação Atualizada.')
+
         if rodada_original:
             salvar_rodada_original(rodada_original)
-            messages.warning(request, f'Rodada {rodada_original} criada com sucesso!')
+            messages.success(request, f'Rodada {rodada_original} criada com sucesso!')
+
+        if destaque_rodada:
+            calcular_total_pontos_rodadas_usuarios(destaque_rodada)
+            messages.success(request, f'Destaque da {destaque_rodada}ª rodada criado com sucesso!')
+            
         if rodada_false:
             rodadas_false(rodada_false)
-            messages.warning(request, f'Rodada {rodada_false} criada false com sucesso!')
+            messages.success(request, f'Rodada {rodada_false} criada false com sucesso!')
 
     return redirect('configuracao')
 

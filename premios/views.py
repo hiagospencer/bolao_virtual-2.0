@@ -2,6 +2,10 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.utils import timezone
+from django.http import JsonResponse
+import secrets
+import string
 
 from usuarios.models import Usuario, UserProfile
 from premios.models import *
@@ -139,20 +143,46 @@ def ativar_titulo(request, pedido_id):
 
 @login_required
 def resgatar_voucher(request, pedido_id):
-    pedido = get_object_or_404(PedidoPremio, id=pedido_id, usuario=request.user, premio__tipo='voucher')
+    pedido = get_object_or_404(
+        PedidoPremio,
+        id=pedido_id,
+        usuario=request.user,
+        premio__tipo='voucher'
+    )
 
     if pedido.utilizado:
-        messages.errort(request, "Este voucher já foi resgatado!")
+        messages.error(request, "Este voucher já foi resgatado!")
         return redirect('meus_premios')
 
-    # Lógica de resgate (ex.: gerar código único)
-    codigo = f"BOLAO{pedido.id:04d}"
+    # Gera código único se ainda não existir
+    if not pedido.codigo_voucher:
+        alphabet = string.ascii_uppercase + string.digits
+        codigo = f"BOL{secrets.choice(alphabet)}{secrets.choice(alphabet)}{secrets.choice(string.digits)}"
+        pedido.codigo_voucher = codigo
+        pedido.data_resgate = timezone.now()
+        pedido.save()
+
+    # Verifica validade
+    valido = True
+    if pedido.premio.data_expiracao and pedido.premio.data_expiracao < timezone.now().date():
+        valido = False
 
     context = {
         'pedido': pedido,
-        'codigo': codigo,
+        'valido': valido,
+        'whatsapp_link': pedido.premio.whatsapp_loja if pedido.premio.whatsapp_loja else None,
     }
     return render(request, 'premios/resgate_voucher.html', context)
+
+@login_required
+def marcar_como_utilizado(request, pedido_id):
+    if request.method == 'POST':
+        pedido = get_object_or_404(PedidoPremio, id=pedido_id, usuario=request.user)
+        pedido.utilizado = True
+        pedido.data_utilizacao = timezone.now()
+        pedido.save()
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'}, status=400)
 
 
 @login_required
