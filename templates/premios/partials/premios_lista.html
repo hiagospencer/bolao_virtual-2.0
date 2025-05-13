@@ -1,7 +1,16 @@
 {% load l10n %} {% load humanize %} {% load custom_filters %}
 {% for premio in premios_disponiveis %}
 <div class="titulo-card" data-categoria="{{ premio.categoria.id }}">
-  <h3>{{ premio.nome }}</h3>
+  <div class="premio-type-badge {{ premio.tipo }}">
+    {% if premio.tipo == 'titulo' %}
+      <i class="fas fa-crown"></i> Título
+    {% elif premio.tipo == 'voucher' %}
+      <i class="fas fa-ticket-alt"></i> Voucher
+    {% else %}
+       <i class="fas fa-gift"></i> Produto
+    {% endif %}
+  </div>
+  <h3 style="margin-top:10px;">{{ premio.nome }}</h3>
   <p class="descricao">{{ premio.descricao }}</p>
   <div class="preco-estoque">
     <span class="preco">{{ premio.preco_moedas|intcomma }} moedas</span>
