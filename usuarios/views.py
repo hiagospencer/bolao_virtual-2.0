@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.core.mail import send_mail
 
 from .models import UserProfile, Usuario
 from palpites.models import *
@@ -73,6 +74,15 @@ def cadastro(request):
         UserProfile.objects.create(user=user, telefone=telefone, chave_pix=chave_pix)
         Classificacao.objects.create(usuario=user)
         BloquearPartida.objects.create(usuario=user)
+        destinatario = 'hiaguinhospencer@gmail.com'
+        assunto = f"Novo cadastro no site Bolão Virtual!"
+        corpo = f"""
+        Nome: {username}
+        Email: {email}
+        Whatsapp: {telefone}
+        """
+        remetente = "hiagosouzadev10@gmail.com"
+        send_mail(assunto,corpo,remetente,[destinatario])
 
         messages.success(request, 'Conta criada com sucesso! Faça login.')
         return redirect('login_bolao')
