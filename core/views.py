@@ -16,11 +16,13 @@ from .utils import calcular_total_pontos_rodadas_usuarios
 
 def homepage(request):
     usuario_logado = request.user
+    ultimo_premio = None
 
     usuarios_pagantes = UserProfile.objects.filter(pagamento=True).values_list('user_id', flat=True)
     destaque = DestaqueDaSemana.objects.order_by('-rodada').first()
     usuario = None
     if request.user.is_authenticated:
+        ultimo_premio = Premio.objects.filter(disponivel=True).order_by('-data_criacao').first()
         participante = UserProfile.objects.get(user=usuario_logado)
         participante.corrigir_nivel()
         verificar_conquistas(participante)
@@ -51,7 +53,7 @@ def homepage(request):
     if PontuacaoRodada.objects.all().exists():
         pontuacao_rodada = PontuacaoRodada.objects.filter(usuario=destaque.usuario).order_by('-rodada').first()
 
-    context = {'classificacao': classificacao, "premiacoes":premiacoes, "usuario": usuario, 'destaque': destaque, 'titulo_ativo_destaque': titulo_ativo_destaque,"pontuacao_rodada":pontuacao_rodada}
+    context = {'classificacao': classificacao, "premiacoes":premiacoes, "usuario": usuario, 'destaque': destaque, 'titulo_ativo_destaque': titulo_ativo_destaque,"pontuacao_rodada":pontuacao_rodada, 'ultimo_premio': ultimo_premio,}
     return render(request, 'index.html', context)
 
 @login_required

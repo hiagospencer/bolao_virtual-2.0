@@ -35,6 +35,8 @@ class ItemLoja(models.Model):
         ('camiseta', 'Camiseta'),
         ('calcao', 'Calção'),
         ('basquete', 'Camisa de Basquete'),
+        ('acessorios', 'Acessórios'),
+        ('games', 'Games'),
     ]
 
     nome = models.CharField(max_length=100)

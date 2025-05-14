@@ -50,11 +50,11 @@ def lista_premios(request):
         estoque=0
     ).exclude(
         id__in=PedidoPremio.objects.filter(usuario=request.user).values_list('premio_id', flat=True)
-    )
+    ).order_by('-data_criacao')
 
     # Aplicar filtro de categoria se existir
     if categoria_id and categoria_id != 'todos':
-        premios_disponiveis = premios_disponiveis.filter(categoria_id=categoria_id)
+        premios_disponiveis = premios_disponiveis.filter(categoria_id=categoria_id).order_by('-data_criacao')
 
 
     # Prêmios já adquiridos pelo usuário

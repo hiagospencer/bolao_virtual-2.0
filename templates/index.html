@@ -170,5 +170,7 @@
             </div>
         </section>
     </main>
-
+{% if ultimo_premio %}
+  {% include 'premios/novo_premio_popup.html' %}
+{% endif %}
 {% endblock %}

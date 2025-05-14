@@ -111,7 +111,7 @@ class PedidoPremio(models.Model):
     data_utilizacao = models.DateTimeField(null=True, blank=True)
     utilizado = models.BooleanField(default=False)
     data_expiracao = models.DateField(null=True, blank=True)
-    
+
     def __str__(self):
         return f"{self.usuario.username} - {self.premio.nome}"
 

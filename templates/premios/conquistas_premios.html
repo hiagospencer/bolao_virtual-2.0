@@ -58,6 +58,17 @@
 
         {% for premio in premios_disponiveis %}
           <div class="titulo-card" data-categoria="{{ premio.categoria.id }}">
+            <!-- Imagem do prêmio -->
+            {% if premio.imagem %}
+              <div class="premio-imagem-container">
+                  <img src="{{ premio.imagem.url }}" alt="{{ premio.nome }}" class="premio-imagem">
+              </div>
+            {% else %}
+              <div class="premio-sem-imagem">
+                  <i class="fas fa-{{ premio.tipo|default:'award' }}"></i>
+              </div>
+            {% endif %}
+
             <div class="premio-type-badge {{ premio.tipo }}">
               {% if premio.tipo == 'titulo' %}
                 <i class="fas fa-crown"></i> Título
