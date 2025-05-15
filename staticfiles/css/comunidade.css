@@ -1,0 +1,682 @@
+.community-page main {
+  padding-bottom: 50px;
+}
+
+.community-hero {
+  text-align: center;
+  margin: 30px 0;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--secondary);
+}
+
+.community-hero h1 {
+  color: var(--primary);
+  font-family: var(--font-title);
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.community-hero p {
+  color: #666;
+  font-size: 1.1rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.community-tabs {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+  margin: 30px 0 20px;
+  gap: 5px;
+}
+
+.tab-btn {
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.tab-btn:hover {
+  color: var(--primary);
+}
+
+.tab-btn.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Estilos do Mural */
+.mural-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.mural-header h2 {
+  margin: 0;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-new-post {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-new-post:hover {
+  background-color: #1a5276;
+}
+
+.mural-posts {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mural-post {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.post-author {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.author-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.author-name {
+  font-weight: bold;
+  color: #333;
+}
+
+.post-time {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.post-content p {
+  margin: 0 0 15px 0;
+  line-height: 1.5;
+}
+
+.post-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.btn-like, .btn-comment {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+
+.btn-like:hover, .btn-comment:hover {
+  background-color: #f5f5f5;
+  color: var(--primary);
+}
+
+/* Estilos das Enquetes */
+.polls-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.polls-header h2 {
+  margin: 0;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-new-poll {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-new-poll:hover {
+  background-color: #1a5276;
+}
+
+.polls-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.poll-card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.poll-card h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.poll-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.poll-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.poll-option:hover:not(.view-only) {
+  background-color: #f5f5f5;
+}
+
+.poll-option.view-only {
+  cursor: default;
+}
+
+.poll-option.user-vote {
+  background-color: #e8f4fd;
+  border-left: 3px solid #3498db;
+}
+
+.option-result {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background-color: rgba(52, 152, 219, 0.2);
+  border-radius: 5px;
+  z-index: 1;
+  transition: width 0.5s ease;
+}
+
+.option-text {
+  position: relative;
+  z-index: 2;
+}
+
+.option-percent {
+  margin-left: auto;
+  position: relative;
+  z-index: 2;
+  font-weight: bold;
+  color: var(--primary);
+}
+
+.poll-meta {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  color: #666;
+  gap: 3px;
+}
+
+.your-vote-badge {
+  background: #3498db;
+  color: white;
+  font-size: 0.7em;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: 10px;
+}
+
+.already-voted {
+  color: #27ae60;
+  font-size: 0.9em;
+}
+
+/* Estilos dos Destaques */
+.featured-section {
+  margin-bottom: 40px;
+}
+
+.featured-section h3 {
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #eee;
+}
+
+.featured-user {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.user-profile {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.user-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--primary);
+}
+
+.user-info h4 {
+  margin: 0 0 5px 0;
+  color: #333;
+}
+
+.user-info p {
+  margin: 0 0 10px 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.user-stats {
+  display: flex;
+  gap: 15px;
+  font-size: 0.8rem;
+}
+
+.user-stats span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.user-tips {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid var(--primary);
+}
+
+.user-tips h5 {
+  margin: 0 0 10px 0;
+  color: var(--primary);
+}
+
+.rising-users {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+}
+
+.rising-user {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background-color: white;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+.rising-user img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.rising-badge {
+  background-color: #2ecc71;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+/* Modais */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 15px 20px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+  min-height: 120px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.input-title input {
+  flex: 1;
+  padding: 8px;
+  margin-right: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.btn-cancel {
+  background-color: #f1f1f1;
+  color: #333;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-submit {
+  background-color: #2c3e50;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Formulários de enquete */
+.poll-option-input {
+  display: flex;
+  margin-bottom: 8px;
+}
+
+.poll-option-input input {
+  flex: 1;
+  padding: 8px;
+  margin-right: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.btn-remove-option {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  width: 30px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn-add-option {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-top: 5px;
+}
+
+/* Comentários e respostas */
+.post-comments {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.comment {
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 4px;
+}
+
+.comment-author {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.comment-avatar {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.comment-time {
+  margin-left: 10px;
+  color: #777;
+  font-size: 0.8em;
+}
+
+.btn-view-more {
+  background: none;
+  border: none;
+  color: #3498db;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.no-posts {
+  text-align: center;
+  padding: 40px;
+  background: white;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+/* Botões de administração */
+.post-actions-admin, .comment-actions-admin {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.btn-edit-post, .btn-delete-post,
+.btn-edit-comment, .btn-delete-comment {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9em;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.btn-edit-post, .btn-edit-comment {
+  color: #3498db;
+  border: 1px solid #3498db;
+}
+
+.btn-delete-post, .btn-delete-comment {
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+}
+
+.comment-actions-admin {
+  margin-left: 10px;
+}
+
+.comment-actions-admin button {
+  padding: 3px 6px;
+  font-size: 0.8em;
+}
+
+/* Formulários de resposta */
+.reply-form, .reply-comment-form {
+  margin: 15px 0;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.reply-form textarea, .reply-comment-form textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.btn-reply-comment {
+  background: none;
+  border: none;
+  color: #3498db;
+  cursor: pointer;
+  padding: 5px 10px;
+  font-size: 0.9em;
+  transition: 0.3s ease;
+}
+
+.btn-reply-comment:hover {
+  background-color: #3498db;
+  color:rgb(236, 239, 241);
+}
+
+.btn-cancel-reply, .btn-cancel-reply-comment {
+  background: #f1f1f1;
+  color: #333;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Estilo durante votação */
+.poll-option.voting-in-progress {
+  position: relative;
+  opacity: 0.7;
+}
+
+.poll-option.voting-in-progress::after {
+  content: "Votando...";
+  position: absolute;
+  right: 10px;
+  color: #3498db;
+  font-size: 0.8em;
+}
+
+/* Mensagens de erro */
+.poll-error {
+  color: #e74c3c;
+  padding: 8px;
+  margin-top: 10px;
+  border: 1px solid #e74c3c;
+  border-radius: 4px;
+  background-color: #fde8e8;
+}

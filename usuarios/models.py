@@ -1,8 +1,9 @@
 from django.contrib.auth.models import AbstractUser
+from cloudinary.models import CloudinaryField
 from django.db import models
 
 class Usuario(AbstractUser):
-    foto_perfil = models.ImageField(upload_to='perfis/', null=True, blank=True)
+    foto_perfil = CloudinaryField('imagem')
     data_nascimento = models.DateField(null=True, blank=True)
     pontos_totais = models.PositiveIntegerField(default=0)
     moedas_virtuais = models.PositiveIntegerField(default=0)
