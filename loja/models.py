@@ -1,14 +1,15 @@
 # apps/loja/models.py
 from django.db import models
-from usuarios.models import Usuario
+from cloudinary.models import CloudinaryField
 
+from usuarios.models import Usuario
 
 
 class Loja(models.Model):
     nome = models.CharField(max_length=100)
     dono = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True)
     descricao = models.TextField(blank=True)
-    logo = models.ImageField(upload_to='logos_loja/', blank=True, null=True)
+    logo = CloudinaryField('logos_lojas')
     ativo = models.BooleanField(default=True)
     data_criacao = models.DateTimeField(auto_now_add=True)
     cor_primaria = models.CharField(max_length=7, default='#6c757d',
@@ -45,7 +46,7 @@ class ItemLoja(models.Model):
     categoria = models.ForeignKey(CategoriaItem, on_delete=models.SET_NULL, null=True)
     tipo = models.CharField(max_length=10, choices=TIPO_ITEM)
     preco = models.DecimalField(max_digits=10, decimal_places=2)
-    imagem_preview = models.ImageField(upload_to='itens_loja/')
+    imagem_preview = CloudinaryField('itens_lojas')
     disponivel = models.BooleanField(default=True)
     data_criacao = models.DateTimeField(auto_now_add=True)
     telefone = models.CharField(max_length=20,blank=True, null=True)
