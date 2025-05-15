@@ -16,7 +16,9 @@
     {% for produto in produtos %}
     <div class="shop-item" data-category="camisas" data-loja-id="{{ produto.loja.id }}">
         <div class="item-image" style="background-color: #FFFFFF;">
-            <img src="{{ produto.imagem_preview.url}}" alt="{{ produto.nome }}">
+            {% if produto.imagem_preview %}
+                <img src="{{ produto.imagem_preview.url}}" alt="{{ produto.nome }}">
+            {% endif %}
         </div>
         <div class="item-info">
             <h3>{{ produto.nome }}</h3>

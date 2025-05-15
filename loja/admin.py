@@ -31,7 +31,7 @@ class ItemLojaAdmin(admin.ModelAdmin):
     list_display = ('nome', 'loja', 'categoria','whatsapp_link','telefone', 'tipo', 'preco', 'disponivel', 'imagem_preview', 'data_criacao')
     list_filter = ('loja', 'categoria', 'tipo', 'disponivel', 'data_criacao')
     search_fields = ('nome', 'descricao', 'loja__nome')
-    list_editable = ('preco', 'disponivel','whatsapp_link','telefone')
+    list_editable = ('preco', 'disponivel','whatsapp_link','telefone','imagem_preview')
     readonly_fields = ('data_criacao',)
     fieldsets = (
         ('Informações Básicas', {
