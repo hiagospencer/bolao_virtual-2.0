@@ -27,7 +27,6 @@ class PremioAdmin(admin.ModelAdmin):
     list_filter = ('tipo', 'categoria', 'disponivel')
 
 
-
 @admin.register(PremioUsuario)
 class PremioUsuarioAdmin(admin.ModelAdmin):
     list_display = ('usuario', 'premio', 'valor_recebido', 'pago', 'data_premiacao')
