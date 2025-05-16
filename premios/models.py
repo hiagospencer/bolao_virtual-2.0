@@ -83,7 +83,7 @@ class Premio(models.Model):
     categoria = models.ForeignKey(CategoriaPremio, on_delete=models.SET_NULL, null=True)
     descricao = models.TextField()  # Ex.: "Estudo estatísticas como um oráculo..."
     preco_moedas = models.PositiveIntegerField(default=100)
-    imagem = CloudinaryField('imagem')  # Opcional
+    imagem = CloudinaryField('imagem',null=True,blank=True)  # Opcional
     estoque = models.PositiveIntegerField(default=1)  # -1 = ilimitado
     disponivel = models.BooleanField(default=True)
     data_criacao = models.DateTimeField(auto_now_add=True,null=True,blank=True)

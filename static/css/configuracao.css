@@ -95,6 +95,56 @@
   border-color: var(--secondary);
 }
 
+.input-rodada {
+  /* Layout */
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  padding: 12px 15px;
+  margin-top: 8px;
+
+  /* Estilo Visual */
+  border: 2px solid #128C28; /* Verde do Brasileirão */
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+  /* Tipografia */
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+  color: #333;
+
+  /* Transições */
+  transition: all 0.3s ease;
+}
+
+.input-rodada:focus {
+  outline: none;
+  border-color: #0a5c1a; /* Verde mais escuro */
+  box-shadow: 0 0 0 3px rgba(18, 140, 40, 0.2); /* Efeito de foco */
+  background-color: #fff;
+}
+
+.input-rodada::placeholder {
+  color: #6c757d;
+  opacity: 0.7;
+}
+
+/* Estilo para o label */
+.input-rodada-label {
+  display: block;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+/* Estilo para o ícone */
+.input-rodada-label i {
+  margin-right: 8px;
+  color: #128C28;
+}
+
 .radio-group {
   display: flex;
   flex-direction: column;

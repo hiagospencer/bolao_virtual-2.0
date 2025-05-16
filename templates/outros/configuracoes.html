@@ -78,21 +78,21 @@
                 <form method="POST" action="{% url 'atualizar_classificacao' %}" class="admin-form">
                     {% csrf_token %}
                     <div class="form-group">
-                        <label for="rodada-atualizar"><i class="fas fa-hashtag"></i> Atualizar Classificação</label>
-                        <input type="number" name="atualizar_classificacao" id="rodada-atualizar" placeholder="Digite o número da rodada" min="1" >
+                        <label for="rodada-atualizar" class="input-rodada-label"><i class="fas fa-hashtag"></i> Atualizar Classificação</label>
+                        <input class="input-rodada" type="number" name="atualizar_classificacao" id="rodada-atualizar" placeholder="Digite o número da rodada" min="1" >
                     </div>
 
                     <div class="form-group">
-                        <label for="rodada-false"><i class="fas fa-toggle-off"></i> Criar Rodada Original</label>
-                        <input type="number" name="rodada_original" id="rodada-false" placeholder="Digite a rodada para criar a rodada original" min="1">
+                        <label for="rodada-false" class="input-rodada-label"><i class="fas fa-toggle-off"></i> Criar Rodada Original</label>
+                        <input class="input-rodada" type="number" name="rodada_original" id="rodada-false" placeholder="Digite a rodada para criar a rodada original" min="1">
                     </div>
                     <div class="form-group">
-                        <label for="destaque-rodada"><i class="fas fa-toggle-off"></i> Criar Destaque da Rodada</label>
-                        <input type="number" name="destaque_rodada" id="destaque-rodada" placeholder="Digite a rodada para criar destaque da rodada" min="1">
+                        <label for="destaque-rodada" class="input-rodada-label"><i class="fas fa-toggle-off"></i> Criar Destaque da Rodada</label>
+                        <input class="input-rodada" type="number" name="destaque_rodada" id="destaque-rodada" placeholder="Digite a rodada para criar destaque da rodada" min="1">
                     </div>
                     <div class="form-group">
-                        <label for="rodada_false"><i class="fas fa-toggle-off"></i> Deixar rodada em False</label>
-                        <input type="number" name="rodada_false" id="rodada_false" placeholder="Digite a rodada para deixar ela false" min="1">
+                        <label for="rodada_false" class="input-rodada-label"><i class="fas fa-toggle-off"></i> Deixar rodada em False</label>
+                        <input class="input-rodada" type="number" name="rodada_false" id="rodada_false" placeholder="Digite a rodada para deixar ela false" min="1">
                     </div>
 
                     <div class="form-actions">

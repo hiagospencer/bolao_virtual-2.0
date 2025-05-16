@@ -189,8 +189,8 @@
         <form id="newPostForm" method="post" action="{% url 'criar_topico' %}">
           {% csrf_token %}
           <div class="form-group">
-            <label for="postTitle">Título:</label>
-            <input type="text" id="postTitle" name="titulo" required>
+            <label class="input-rodada-label" for="postTitle">Título:</label>
+            <input class="input-rodada" type="text" id="postTitle" name="titulo" required>
           </div>
           <div class="form-group">
             <label for="postContent">Mensagem:</label>
@@ -216,12 +216,12 @@
         <form id="newPollForm" method="post" action="{% url 'criar_enquete' %}">
           {% csrf_token %}
           <div class="form-group">
-            <label for="pollQuestion">Pergunta:</label>
-            <input type="text" id="pollQuestion" name="pergunta" required>
+            <label class="input-rodada-label" for="pollQuestion">Pergunta:</label>
+            <input class="input-rodada" style="width:100%;" type="text" id="pollQuestion" name="pergunta" required>
           </div>
           <div class="form-group">
             <label for="pollEndDate">Data de encerramento:</label>
-            <input type="datetime-local" id="pollEndDate" name="data_encerramento" required>
+            <input class="input-rodada" style="width:100%;" type="datetime-local" id="pollEndDate" name="data_encerramento" required>
           </div>
           <div class="form-group">
             <label>Opções:</label>

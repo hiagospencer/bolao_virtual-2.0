@@ -17,7 +17,7 @@
     <div class="shop-item" data-category="camisas" data-loja-id="{{ produto.loja.id }}">
         <div class="item-image" style="background-color: #FFFFFF;">
             {% if produto.imagem_preview %}
-                <img src="{{ produto.imagem_preview.url}}" alt="{{ produto.nome }}">
+                <img src="{{ produto.imagem_preview.url }}" alt="{{ produto.nome }}">
             {% endif %}
         </div>
         <div class="item-info">
@@ -30,7 +30,7 @@
                 <span class="price">R$ {{ produto.preco|intcomma }}</span>
             </div>
             <button class="btn btn-add-to-cart"
-                    onclick="sendToWhatsApp('{{ produto.nome }}', '{{ produto.preco|intcomma }}', '{{ produto.imagem.url }}', '{{ produto.telefone}}')">
+                    onclick="sendToWhatsApp('{{ produto.nome }}', '{{ produto.preco|intcomma }}', '{{ produto.imagem_preview.url }}', '{{ produto.telefone}}')">
                 <i class="fas fa-cart-plus"></i> Comprar
             </button>
         </div>
