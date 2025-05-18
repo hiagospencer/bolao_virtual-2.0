@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7
+    container_name: redis_server
+    ports:
+      - "6380:6379"
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
+
+  celery:
+    build:
+      context: .
+    container_name: celery_worker
+    command: celery -A bolao_virtual worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+    environment:
+      - CELERY_BROKER_URL=redis://:${REDIS_PASSWORD}@redis:6379/0

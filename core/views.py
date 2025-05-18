@@ -11,7 +11,9 @@ from premios.conquistas import verificar_conquistas
 from core.models import PremiacaoBolao
 from palpites.models import Classificacao,PontuacaoRodada, Palpite
 from palpites.utils import *
+from palpites.tasks import *
 from .utils import calcular_total_pontos_rodadas_usuarios
+
 
 
 def homepage(request):
@@ -101,9 +103,11 @@ def atualizar_perfil(request):
 def regras(request):
     return render(request,"regras.html")
 
+
 @user_passes_test(lambda u: u.is_superuser)
 def configuracao(request):
     return render(request,"outros/configuracoes.html",{'faixa_rodadas': range(1, 38)},)
+
 
 @user_passes_test(lambda u: u.is_superuser)
 def configurar_rodadas(request):
@@ -112,7 +116,7 @@ def configurar_rodadas(request):
         rodada_final = request.POST.get('rodada_final')
 
         if rodada_inicial and rodada_final:
-            setar_rodadaAtual_rodadaFinal(rodada_inicial, rodada_final)
+            setar_rodada_atual_final_task.delay(rodada_inicial, rodada_final)
             print(f'Rodada inicial: {rodada_inicial} - Rodada Final: {rodada_final}')
 
         messages.success(request, 'Rodadas configuradas com sucesso.')
@@ -124,10 +128,10 @@ def acoes_rodada(request):
     if request.method == 'POST':
         acao = request.POST.get('acao')
         if acao == 'criar':
-            criar_rodadas_campeonato()
+            criar_rodadas_campeonato_task.delay()
             messages.success(request, 'Todas as rodadas criada com sucesso.')
         elif acao == 'apagar':
-            resetar_pontuacao_usuarios()
+            resetar_pontuacao_usuarios_task.delay()
             messages.success(request, f'Pontuações dos usuários resetadas.')
         elif acao == 'restaurar':
             messages.info(request, 'Rodada restaurada para o estado original.')
@@ -144,19 +148,19 @@ def atualizar_classificacao(request):
         rodada_false = request.POST.get('rodada_false')
 
         if rodada_atualizar_classificacao:
-            calcular_pontuacao_usuario(rodada_atualizar_classificacao)
+            calcular_pontuacao_usuario_task.delay(rodada_atualizar_classificacao)
             messages.success(request, 'Classificação Atualizada.')
 
         if rodada_original:
-            salvar_rodada_original(rodada_original)
+            salvar_rodada_original_task.delay(rodada_original)
             messages.success(request, f'Rodada {rodada_original} criada com sucesso!')
 
         if destaque_rodada:
-            calcular_total_pontos_rodadas_usuarios(destaque_rodada)
+            calcular_total_pontos_rodadas_usuarios_task.delay(destaque_rodada)
             messages.success(request, f'Destaque da {destaque_rodada}ª rodada criado com sucesso!')
 
         if rodada_false:
-            rodadas_false(rodada_false)
+            resetar_rodadas_task.delay(rodada_false)
             messages.success(request, f'Rodada {rodada_false} criada false com sucesso!')
 
     return redirect('configuracao')
@@ -167,10 +171,10 @@ def controle_partidas(request):
         acao = request.POST.get('acao')
 
         if acao == 'bloquear_todas':
-            bloquear_rodadas()
+            bloquear_rodadas_task.delay()
             messages.warning(request, 'Todas as partidas foram bloqueadas.')
         elif acao == 'desbloquear_todas':
-            desbloquear_rodadas()
+            desbloquear_rodadas_task.delay()
             messages.success(request, 'Todas as partidas foram desbloqueadas.')
 
     return redirect('configuracao')

@@ -35,6 +35,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
 
+    'celery',
+    'django_celery_results',
+
     'cloudinary',
     'cloudinary_storage',
 
@@ -49,9 +52,21 @@ INSTALLED_APPS = [
     'premios',
 ]
 
+# Configurações do Celery - Ambiente Local
+REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD")
+
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", f"redis://:{REDIS_PASSWORD}@localhost:6380/0")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", f"redis://:{REDIS_PASSWORD}@localhost:6380/0")
+
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'America/Sao_Paulo'
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+print("CELERY_BROKER_URL:", CELERY_BROKER_URL)
 
 # Configuração do Cloudinary
-
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # URL onde os arquivos de mídia estarão acessíveis

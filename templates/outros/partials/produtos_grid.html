@@ -30,7 +30,7 @@
                 <span class="price">R$ {{ produto.preco|intcomma }}</span>
             </div>
             <button class="btn btn-add-to-cart"
-                    onclick="sendToWhatsApp('{{ produto.nome }}', '{{ produto.preco|intcomma }}', '{{ produto.imagem_preview.url }}', '{{ produto.telefone}}')">
+                    onclick="sendToWhatsApp('{{ produto.nome }}', '{{ produto.preco|intcomma }}', '{{ produto.imagem_preview.url }}', '{{ produto.telefone }}')">
                 <i class="fas fa-cart-plus"></i> Comprar
             </button>
         </div>

@@ -1,15 +1,16 @@
 function sendToWhatsApp(produtoNome, produtoPreco, produtoImagemUrl, telefoneLoja = null) {
     const numeroDestino = telefoneLoja;
-    console.log(telefoneLoja)
+
     const mensagem = `
       Olá, estou vindo diretamente do site Bolão Virtual e gostaria de comprar o produto:
 
       *${produtoNome}*
       *Preço*: R$ ${produtoPreco}
 
-      🔗 *Imagem do Produto*: ${window.location.origin}${produtoImagemUrl}
+      🔗 *Imagem do Produto*: ${produtoImagemUrl}
     `;
-
+    // ${window.location.origin}
+    
     const url = `https://wa.me/${numeroDestino}?text=${encodeURIComponent(mensagem)}`;
     window.open(url, "_blank").focus();
 }

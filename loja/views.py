@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse,JsonResponse
+from django.core.paginator import Paginator
 from django.db.models import Count
 from django.template.loader import render_to_string
 from .models import *

@@ -30,6 +30,7 @@ class CategoriaItem(models.Model):
     def __str__(self):
         return self.nome
 
+
 class ItemLoja(models.Model):
     TIPO_ITEM = [
         ('camisa', 'Camisa'),
@@ -53,7 +54,7 @@ class ItemLoja(models.Model):
     whatsapp_link = models.CharField(max_length=255,blank=True, null=True)
 
     def __str__(self):
-        return self.nome
+        return self.nome if self.nome else "Item sem nome"
 
     def save(self, *args, **kwargs):
         if not self.whatsapp_link and self.telefone:

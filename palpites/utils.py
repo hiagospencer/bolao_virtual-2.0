@@ -221,41 +221,6 @@ def calcular_pontuacao_usuario(rodada_atualizada):
         item.posicao_variacao = 0  # Nenhuma variação se não há posição anterior
       item.save()
 
-    # Verifica se todos os jogos da rodada foram finalizados
-    # palpites_rodada = Palpite.objects.filter(rodada_atual=rodada_atualizada)
-    # todos_finalizados = all(p.finalizado for p in palpites_rodada)
-
-    # if todos_finalizados and palpites_rodada.exists():
-    #   for usuario in todos_usuarios:
-    #     pontos_atuais = Classificacao.objects.get(usuario=usuario.user).pontos
-    #     PontuacaoRodada.objects.update_or_create(
-    #       usuario=usuario.user,
-    #       rodada=rodada_atualizada,
-    #       defaults={'pontos': pontos_atuais}
-    #       )
-
-      # usuarios_pontuacao = PontuacaoRodada.objects.filter(rodada=rodada_atualizada).order_by('-pontos')
-      # if usuarios_pontuacao.exists():
-      #   destaque = usuarios_pontuacao.first()
-      #   if not DestaqueDaSemana.objects.filter(rodada__numero=rodada_atualizada).exists():
-      #     rodada_obj, _ = rodada_usuario.objects.get_or_create(numero=rodada_atualizada)
-      #     usuario_obj = destaque.usuario
-      #     total_jogos = Palpite.objects.filter(usuario=usuario_obj, rodada_atual=rodada_atualizada).count()
-
-      #     acertos = Palpite.objects.filter(usuario=usuario_obj,rodada_atual=rodada_atualizada,tipo_class__in=['result-correct', 'exact-correct']).count()
-
-      #     DestaqueDaSemana.objects.create(
-      #       usuario=usuario_obj,
-      #       rodada=rodada_obj,
-      #       acertos=acertos,
-      #       total_jogos=total_jogos,
-      #       dica_do_mestre="Mandou bem demais nessa rodada!"
-      #   )
-
-      # classificacao_finalizada.send(
-      #       sender=None,
-      #       rodada_atualizada=rodada_atualizada
-      #   )
   except:
     print('tabela pontuação não encontrada')
 

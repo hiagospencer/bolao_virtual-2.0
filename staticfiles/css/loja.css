@@ -1,7 +1,7 @@
  body {
     transition: background-color 0.5s ease;
   }
-  
+
 .shop-page main {
   padding-bottom: 100px;
 }
@@ -370,4 +370,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+#load-more-trigger {
+    height: 1px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    visibility: hidden;
+}
+
+.htmx-indicator {
+    opacity: 0;
+    transition: opacity 200ms ease-in;
+}
+
+.htmx-request .htmx-indicator {
+    opacity: 1;
+}
+
+.htmx-request.htmx-indicator {
+    opacity: 1;
 }
