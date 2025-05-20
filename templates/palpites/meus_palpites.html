@@ -104,9 +104,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('bolaoEditModal');
     const modalBody = document.getElementById('bolaoModalBody');
 
+    // Adicione esta função para pré-carregar imagens
+    function preloadTeamImages() {
+        const images = document.querySelectorAll('.bolao-team-logo-modal');
+        images.forEach(img => {
+            const src = img.getAttribute('src');
+            if (src) {
+                new Image().src = src;
+            }
+        });
+    }
+
     // Função para abrir o modal
-    window.openBolaoEditModal = function(palpiteId) {
-        modalBody.innerHTML = '<p>Carregando...</p>';
+      window.openBolaoEditModal = function(palpiteId) {
+        modalBody.innerHTML = '<div class="bolao-loading-modal"><i class="fas fa-spinner fa-spin"></i> Carregando...</div>';
         modal.style.display = 'block';
 
         fetch(`/palpites/editar-palpite/${palpiteId}/`, {
@@ -120,7 +131,8 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(html => {
             modalBody.innerHTML = html;
-            // Adiciona evento ao formulário após carregar
+            preloadTeamImages();
+            // Adiciona evento ao formulário
             const form = document.getElementById('bolaoEditForm');
             if (form) {
                 form.addEventListener('submit', function(e) {
@@ -131,7 +143,11 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => {
             console.error('Error:', error);
-            modalBody.innerHTML = `<p class="error-message">Erro ao carregar: ${error.message}</p>`;
+            modalBody.innerHTML = `<div class="bolao-error-modal">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>Erro ao carregar os dados do palpite</p>
+                <button onclick="closeBolaoModal()">Fechar</button>
+            </div>`;
         });
     };
 
