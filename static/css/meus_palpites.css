@@ -613,3 +613,15 @@
         font-size: 0.8rem;
     }
 }
+
+
+.bet-item.other-user {
+    opacity: 0.8;
+    background-color: #f9f9f9;
+}
+
+.bet-item.other-user .match-info {
+    border-left: 4px solid #ddd;
+    padding-left: 10px;
+}
+

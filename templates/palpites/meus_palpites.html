@@ -41,7 +41,7 @@
       <div class="bets-list">
         {% for rodada in rodadas %}
           {% if rodada %}
-            <div class="bet-item {{ rodada.tipo_class }}">
+            <div class="bet-item {{ rodada.tipo_class }} {% if not is_own_profile %}other-user{% endif %}">
               <div class="match-info">
                 <div class="teams">
                   <span class="team home-team">
@@ -119,6 +119,11 @@ document.addEventListener('DOMContentLoaded', function() {
       window.openBolaoEditModal = function(palpiteId) {
         modalBody.innerHTML = '<div class="bolao-loading-modal"><i class="fas fa-spinner fa-spin"></i> Carregando...</div>';
         modal.style.display = 'block';
+
+        if (!document.querySelector('.results-header').innerHTML.includes('Palpites de {{ request.user.username }}')) {
+            alert('Você só pode editar seus próprios palpites');
+            return;
+        }
 
         fetch(`/palpites/editar-palpite/${palpiteId}/`, {
             headers: {

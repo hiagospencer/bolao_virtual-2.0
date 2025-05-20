@@ -1,17 +1,12 @@
 <div class="bets-results" id="palpites-container">
   <div class="results-header">
     <h3>{{ rodada_atual }}ª Rodada - Palpites de {{ usuario.user.username }}</h3>
-    {% if editavel %}
-    <button class="bolao-edit-button" onclick="openBolaoEditModal('all')">
-      <i class="fas fa-edit"></i> Editar Rodada
-    </button>
-    {% endif %}
   </div>
 
   <div class="bets-list">
     {% for rodada in rodadas %}
       {% if rodada %}
-        <div class="bet-item {{ rodada.tipo_class }}" id="palpite-{{ rodada.id }}">
+        <div class="bet-item {{ rodada.tipo_class }} {% if not is_own_profile %}other-user{% endif %}" id="palpite-{{ rodada.id }}">
           <div class="match-info">
             <div class="teams">
               <span class="team home-team">
@@ -24,9 +19,9 @@
                 {{ rodada.time_visitante }}
               </span>
             </div>
-            {% if editavel %}
-            <button class="bolao-small-edit" onclick="openBolaoEditModal({{ rodada.id }})">
-              <i class="fas fa-pencil-alt"></i> Editar
+            {% if editavel and is_own_profile %}
+            <button class="bolao-edit-button" onclick="openBolaoEditModal({{ rodada.id }})">
+              <i class="fas fa-edit"></i> Editar Rodada
             </button>
             {% endif %}
           </div>
