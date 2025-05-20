@@ -76,6 +76,18 @@
     <script src="{% static 'js/novo_premio_popup.js' %}"></script>
 
     <script>
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+        if (csrftoken) {
+            fetchDefaults = {
+                headers: {
+                    'X-CSRFToken': csrftoken
+                }
+            };
+        }
+    });
+
     // Lógica para filtrar por abas
     document.getElementById('tipo-premio').addEventListener('change', function() {
       const tipoSelecionado = this.value;

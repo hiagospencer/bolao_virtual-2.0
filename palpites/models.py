@@ -76,6 +76,15 @@ class Rodada(models.Model):
         return f"{self.time_casa} x {self.time_visitante}"
 
 
+class ConfiguracaoRodada(models.Model):
+    numero_rodada = models.IntegerField(unique=True, null=True, blank=True)
+    editar_rodada = models.BooleanField(default=False)
+    data_limite_edicao = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Rodada {self.numero_rodada} - Edição {'Liberada' if self.editar_rodada else 'Bloqueada'}"
+
+
 class Classificacao(models.Model):
     usuario = models.OneToOneField(Usuario, null=True, blank=True, on_delete=models.CASCADE)
     pontos = models.IntegerField(default=0)

@@ -1,0 +1,23 @@
+{% load static %}
+<div class="bolao-edit-form">
+    <h4>Editar Palpite: {{ palpite.time_casa }} vs {{ palpite.time_visitante }}</h4>
+    <form id="bolaoEditForm">
+        {% csrf_token %}
+        <div class="bolao-score-input">
+            <input type="number" name="placar_casa" value="{{ palpite.placar_casa }}" min="0" required>
+            <span>X</span>
+            <input type="number" name="placar_visitante" value="{{ palpite.placar_visitante }}" min="0" required>
+        </div>
+        <div class="bolao-form-actions">
+            <button type="button" class="bolao-cancel-btn" onclick="closeBolaoModal()">Cancelar</button>
+            <button type="submit" class="bolao-save-btn">Salvar</button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.getElementById('bolaoEditForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    submitBolaoEditForm(this, {{ palpite.id }});
+});
+</script>

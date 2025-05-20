@@ -64,7 +64,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'America/Sao_Paulo'
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
-print("CELERY_BROKER_URL:", CELERY_BROKER_URL)
+
 
 # Configuração do Cloudinary
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

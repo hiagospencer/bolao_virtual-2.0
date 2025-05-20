@@ -1,9 +1,12 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.views.decorators.http import require_http_methods
+from django.db import transaction
+from django.utils import timezone
 import datetime
 import pytz
 import pandas as pd
@@ -15,8 +18,6 @@ from usuarios.models import UserProfile
 
 @login_required
 def criar_palpites(request):
-    # zerar_palpites_usuarios(3)
-    # calcular_pontuacao_usuario(3)
 
     todos = UserProfile.objects.filter(pagamento=True)
     data_preencher_palpites = DataBolao.objects.all().order_by('data_final').first()
@@ -101,28 +102,96 @@ def meus_palpites(request):
     rodadas_distintas = Palpite.objects.values_list('rodada_atual', flat=True).distinct().order_by('rodada_atual')
     rodadas = Palpite.objects.filter(usuario=user).order_by('rodada_atual')[:10]
     rodadas_original = RodadaOriginal.objects.all().order_by('rodada_atual')[:10]
-    context = {'rodadas':rodadas, "usuarios":usuarios, "rodadas_distintas":range(1, 38), "rodadas_original": rodadas_original}
+    # Obter todas as configurações de uma vez
+    configs_rodadas = {config.numero_rodada: config for config in ConfiguracaoRodada.objects.all()}
+
+    context = {'rodadas':rodadas, "usuarios":usuarios, "rodadas_distintas":range(1, 38), "rodadas_original": rodadas_original,'configs_rodadas': configs_rodadas}
     return render(request, "palpites/meus_palpites.html", context)
 
 
 def filtrar_palpites(request):
     usuario_id = request.GET.get("usuario")
     rodada = request.GET.get("rodada")
-    usuario = UserProfile.objects.get(id=usuario_id)
-    palpites = Palpite.objects.all()
+
+    try:
+        usuario = UserProfile.objects.get(id=usuario_id)
+    except (UserProfile.DoesNotExist, ValueError):
+        return HttpResponse("Usuário não encontrado", status=404)
+
+    palpites = Palpite.objects.filter(usuario__id=usuario_id)
     rodadas_original = RodadaOriginal.objects.all().order_by('rodada_atual')[:10]
 
-    if usuario_id:
-        palpites = palpites.filter(usuario__id=usuario_id)
-
     if rodada:
-        palpites = palpites.filter(rodada_atual=rodada)
-        rodadas_original = RodadaOriginal.objects.filter(rodada_atual=rodada)
+        try:
+            rodada_int = int(rodada)
+            palpites = palpites.filter(rodada_atual=rodada_int)
+            rodadas_original = RodadaOriginal.objects.filter(rodada_atual=rodada_int)
+
+            # Verificar se a rodada pode ser editada
+            config_rodada = ConfiguracaoRodada.objects.filter(numero_rodada=rodada_int).first()
+            editavel = config_rodada.editar_rodada if config_rodada else False
+
+            # Verificar data limite se existir
+            if config_rodada and config_rodada.data_limite_edicao:
+                editavel = editavel and timezone.now() < config_rodada.data_limite_edicao
+        except ValueError:
+            return HttpResponse("Rodada inválida", status=400)
+
     context = {
         'rodadas': palpites,
-        "usuario":usuario,
-        "rodada_atual": rodada,
-        "rodadas_original": rodadas_original
+        'usuario': usuario,
+        'rodada_atual': rodada,
+        'rodadas_original': rodadas_original,
+        'editavel': editavel if rodada else False
     }
     html = render_to_string('palpites/partials/palpites_lista.html', context)
     return HttpResponse(html)
+
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def editar_palpite(request, palpite_id):
+    print(f"\n\n--- Iniciando editar_palpite para palpite_id: {palpite_id} ---")
+
+    try:
+        palpite = Palpite.objects.get(id=palpite_id, usuario=request.user)
+        print(f"Palpite encontrado: {palpite}")
+    except Palpite.DoesNotExist:
+        print("Palpite não encontrado ou usuário não tem permissão")
+        return JsonResponse({'status': 'error', 'message': 'Palpite não encontrado'}, status=404)
+
+    # Verificar se a rodada pode ser editada
+    config_rodada = ConfiguracaoRodada.objects.filter(numero_rodada=palpite.rodada_atual).first()
+    if not config_rodada or not config_rodada.editar_rodada:
+        print("Edição não permitida para esta rodada")
+        return JsonResponse({'status': 'error', 'message': 'Edição não permitida para esta rodada'}, status=403)
+
+    if config_rodada.data_limite_edicao and timezone.now() > config_rodada.data_limite_edicao:
+        print("Prazo para edição expirado")
+        return JsonResponse({'status': 'error', 'message': 'Prazo para edição expirado'}, status=403)
+
+    if request.method == 'GET':
+        print("Método GET - Retornando formulário")
+        context = {'palpite': palpite}
+        return render(request, 'palpites/partials/editar_palpite_form.html', context)
+
+    # POST request
+    print("Método POST - Processando edição")
+    print(f"Dados recebidos: {request.POST}")
+
+    placar_casa = request.POST.get('placar_casa')
+    placar_visitante = request.POST.get('placar_visitante')
+
+    try:
+        print(f"Tentando atualizar palpite: {placar_casa} x {placar_visitante}")
+        palpite.placar_casa = int(placar_casa)
+        palpite.placar_visitante = int(placar_visitante)
+        palpite.save()
+        print("Palpite atualizado com sucesso!")
+        return JsonResponse({'status': 'success'})
+    except (ValueError, TypeError) as e:
+        print(f"Erro ao converter placar: {str(e)}")
+        return JsonResponse({'status': 'error', 'message': 'Placar inválido'}, status=400)
+    except Exception as e:
+        print(f"Erro inesperado: {str(e)}")
+        return JsonResponse({'status': 'error', 'message': 'Erro ao salvar palpite'}, status=500)

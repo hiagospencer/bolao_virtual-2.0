@@ -36,11 +36,6 @@
     <div class="bets-results" id="palpites-container">
       <div class="results-header">
         <h3>1ª Rodada - Palpites de HiagoSouza</h3>
-        <!-- <div class="results-summary">
-          <span class="badge points">Total: 15 pontos</span>
-          <span class="badge exact">5 placares exatos</span>
-          <span class="badge correct">10 acertos</span>
-        </div> -->
       </div>
 
       <div class="bets-list">
@@ -95,6 +90,103 @@
         {% endfor %}
       </div>
     </div>
+    <!-- Modal de Edição -->
+    <div id="bolaoEditModal" class="bolao-modal-edit">
+      <div class="bolao-modal-content">
+        <span class="bolao-close-modal">&times;</span>
+        <div id="bolaoModalBody"></div>
+      </div>
+    </div>
   </main><br/><br />
+
+   <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('bolaoEditModal');
+    const modalBody = document.getElementById('bolaoModalBody');
+
+    // Função para abrir o modal
+    window.openBolaoEditModal = function(palpiteId) {
+        modalBody.innerHTML = '<p>Carregando...</p>';
+        modal.style.display = 'block';
+
+        fetch(`/palpites/editar-palpite/${palpiteId}/`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) throw new Error(response.statusText);
+            return response.text();
+        })
+        .then(html => {
+            modalBody.innerHTML = html;
+            // Adiciona evento ao formulário após carregar
+            const form = document.getElementById('bolaoEditForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    submitBolaoEditForm(this, palpiteId);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            modalBody.innerHTML = `<p class="error-message">Erro ao carregar: ${error.message}</p>`;
+        });
+    };
+
+    // Fechar modal com o X
+    document.querySelector('.bolao-close-modal').addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+
+    // Fechar modal clicando fora
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    // Função global para fechar o modal
+    window.closeBolaoModal = function() {
+        modal.style.display = 'none';
+    };
+});
+
+function submitBolaoEditForm(form, palpiteId) {
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Salvando...';
+
+    fetch(`/palpites/editar-palpite/${palpiteId}/`, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => {
+        if (!response.ok) throw new Error(response.statusText);
+        return response.json();
+    })
+    .then(data => {
+        if (data.status === 'success') {
+            window.location.reload();
+        } else {
+            alert(data.message || 'Erro ao salvar palpite');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Salvar';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Erro ao conectar com o servidor: ' + error.message);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Salvar';
+    });
+}
+</script>
+
 </section>
 {% endblock %}
