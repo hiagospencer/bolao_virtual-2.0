@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.decorators import user_passes_test
-from django.db.models import Max
-from django.db.models import Prefetch
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import JsonResponse
+from django.db.models import Max, Prefetch
+import requests
+from django.conf import settings
+from django.views.decorators.cache import cache_page
 
 from usuarios.models import Usuario, UserProfile, DestaqueDaSemana,Rodada
 from premios.models import *
