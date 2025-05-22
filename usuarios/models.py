@@ -100,7 +100,7 @@ class DestaqueDaSemana(models.Model):
         ordering = ['-rodada']
 
     def __str__(self):
-        return f"{self.usuario.username} - Rodada {self.rodada.numero}"
+        return f"{self.usuario.username} - Rodada {self.rodada}"
 
     @property
     def porcentagem_acertos(self):

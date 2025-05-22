@@ -60,9 +60,9 @@ class RodadaAdmin(admin.ModelAdmin):
 class DestaqueDaSemanaAdmin(admin.ModelAdmin):
     list_display = ('usuario', 'rodada', 'acertos', 'total_jogos', 'porcentagem_acertos', 'criado_em')
     list_filter = ('rodada', 'usuario')
-    search_fields = ('usuario__username', 'rodada__numero')
+    search_fields = ('usuario__username', 'rodada')
     readonly_fields = ('porcentagem_acertos', 'criado_em')
-    ordering = ('-rodada__numero',)
+    ordering = ('-rodada',)
     list_per_page = 20
 
     # @admin.display(description="Acertos (%)")
