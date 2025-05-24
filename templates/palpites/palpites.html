@@ -47,6 +47,10 @@
                           onblur="if(this.value === '') { this.value = 0; }">
             </div>
           </div>
+          {% empty %}
+            <div class="bet-card">
+              <h3>As rodadas ainda não foram definidas</h3>
+            </div>
           {% endfor %}
     </div>
 

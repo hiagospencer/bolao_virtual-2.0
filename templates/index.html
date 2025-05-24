@@ -140,6 +140,10 @@
                                     </div>
                                 </td>
                             </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="8" style="text-align: center;">Nenhum jogador encontrado</td>
+                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -166,6 +170,10 @@
                         <span class="pix-badge"><i class="fa-brands fa-pix"></i> PIX</span>
                     </div>
                 </div>
+                {% empty %}
+                    <div class="prize-card">
+                        <h3>A premiação ainda não foi definida</h3>
+                    </div>
                 {% endfor %}
             </div>
         </section>

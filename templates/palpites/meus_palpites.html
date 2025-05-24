@@ -87,6 +87,10 @@
               <h3>Usuários ainda não tem rodadas salvas.</p>
             </div>
           {% endif %}
+        {% empty %}
+          <div class="locked-rounds">
+            <h3>Usuários ainda não tem rodadas salvas.</h3>
+          </div>
         {% endfor %}
       </div>
     </div>

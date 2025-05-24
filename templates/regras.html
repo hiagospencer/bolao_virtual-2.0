@@ -94,10 +94,46 @@
             <span>Último critério para desempate</span>
           </li>
         </ol>
-        <div class="note-box">
-          <i class="fas fa-info-circle"></i>
-          <p>As partidas adiadas serão avaliadas assim que forem realizadas.</p>
+        <div class="note-box delayed-matches">
+          <div class="note-icon">
+            <i class="fas fa-calendar-exclamation"></i>
+          </div>
+          <div class="note-content">
+            <h4>Partidas Adiadas - Como Funciona?</h4>
+            <div class="delayed-matches-grid">
+              <div class="match-status included">
+                <div class="status-header">
+                  <i class="fas fa-check-circle"></i>
+                  <span>Dentro do Bolão</span>
+                </div>
+                <p>Jogos realizados durante o período de vigência do bolão serão avaliados normalmente, mesmo que adiados.</p>
+              </div>
+              <div class="match-status excluded">
+                <div class="status-header">
+                  <i class="fas fa-times-circle"></i>
+                  <span>Fora do Bolão</span>
+                </div>
+                <p>Partidas remarcadas para após o término do bolão não serão consideradas para pontuação.</p>
+              </div>
+            </div>
+            <div class="example-note">
+              <i class="fas fa-lightbulb"></i>
+              <span>Exemplo: Se seu bolão vai até a 7ª rodada, jogos da 8ª rodada em diante não serão computados.</span>
+            </div>
+          </div>
         </div>
+        <!-- <div class="note-box">
+          <i class="fas fa-info-circle"></i>
+          <div>
+            <p><strong>Tratamento de partidas adiadas:</strong></p>
+            <ul class="note-list">
+              <li>Jogos adiados que forem realizados <strong>dentro do período de vigência do bolão</strong> serão normalmente avaliados e pontuados conforme as regras</li>
+              <li>Jogos adiados para <strong>após o término oficial do bolão</strong> <strong>não serão considerados</strong> para pontuação</li>
+              <li><strong>Exemplo:</strong> Se o bolão vai da 1ª à 7ª rodada, partidas adiadas para a 8ª rodada ou posterior não serão computadas</li>
+              <li>Todas as atualizações de datas e resultados são processadas automaticamente pelo sistema</li>
+            </ul>
+          </div>
+        </div> -->
       </div>
     </section>
 
@@ -142,9 +178,14 @@
           <span>O Ranking Geral mostra a classificação de todos</span>
         </li>
         <li>
-          <i class="fas fa-lock"></i>
-          <span>As partidas são bloqueadas antes do 1º jogo da rodada</span>
+          <i class="fas fa-edit"></i>
+          <span>Durante a semana, um botão de edição estará disponível para alteração de palpites</span>
         </li>
+        <li>
+          <i class="fas fa-lock"></i>
+          <span>O sistema será bloqueado 1 dia antes do primeiro jogo da rodada, impedindo novas edições</span>
+        </li>
+
         <li>
           <i class="fas fa-award"></i>
           <span>Prêmios são entregues aos melhores colocados</span>
