@@ -16,10 +16,12 @@ Django==5.2
 django-cloudinary-storage==0.3.0
 django-storages==1.14.6
 django_celery_results==2.6.0
+gunicorn==23.0.0
 idna==3.10
 jmespath==1.0.1
 kombu==5.5.3
 numpy==2.2.5
+packaging==25.0
 pandas==2.2.3
 pillow==11.2.1
 pixqrcodegen==0.9.1
