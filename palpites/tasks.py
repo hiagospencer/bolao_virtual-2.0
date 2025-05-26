@@ -4,6 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from usuarios.models import UserProfile, DestaqueDaSemana
 from palpites.models import Palpite, Classificacao, RodadaOriginal, BloquearPartida, Rodada, PontuacaoRodada
 from .api_brasileirao import get_api_data
+from django.contrib import messages
 
 import time
 import pandas as pd
@@ -96,7 +97,6 @@ def calcular_pontuacao_usuario_task(self, rodada_atualizada):
             else:
                 item.posicao_variacao = 0
             item.save()
-
         return "Pontuações calculadas com sucesso!"
 
     except Exception as e:
@@ -120,8 +120,6 @@ def resetar_pontuacao_usuarios_task(self):
             pontuacao.posicao_anterior = None
             pontuacao.posicao_variacao = None
             pontuacao.save()
-
-
         return "Pontuações resetadas com sucesso!"
 
     except Exception as e:
@@ -162,6 +160,7 @@ def setar_rodada_atual_final_task(self, rodada_atual, rodada_final):
                 partida_atual=rodada_atual,
                 partida_final=rodada_final
             )
+
         return f"Rodadas atualizadas: Atual={rodada_atual}, Final={rodada_final}"
     except Exception as e:
         self.retry(exc=e, countdown=60)
@@ -176,6 +175,7 @@ def resetar_rodadas_task(self, rodada):
             finalizado=False,
             tipo_class='none'
         )
+
         return f"{updated} palpites resetados para a rodada {rodada}"
     except Exception as e:
         self.retry(exc=e, countdown=60)
@@ -220,13 +220,19 @@ def criar_rodadas_campeonato_task(self):
 
         for contador in range(1, 39):
             try:
+                print(f"🔄 Buscando dados da rodada {contador}")
                 data = get_api_data(contador)
+
+                if not data or "matches" not in data:
+                    raise ValueError(f"❌ Dados inválidos ou vazios para a rodada {contador}")
+
                 batch = []
 
                 for jogo in data["matches"]:
                     dt_utc = datetime.datetime.strptime(
                         jogo["utcDate"], "%Y-%m-%dT%H:%M:%SZ"
                     ).replace(tzinfo=pytz.UTC)
+
                     dt_brasil = dt_utc.astimezone(fuso_brasil)
 
                     batch.append(Rodada(
@@ -238,19 +244,22 @@ def criar_rodadas_campeonato_task(self):
                         rodada_atual=jogo['matchday']
                     ))
 
-                # Limpa rodada existente antes de criar
+                # Deleta rodada existente e cria nova
                 Rodada.objects.filter(rodada_atual=contador).delete()
                 Rodada.objects.bulk_create(batch)
                 total_created += len(batch)
 
-                time.sleep(5)  # Evita sobrecarregar a API
+                print(f"✅ Rodada {contador} criada com {len(batch)} jogos.")
+                time.sleep(9)  # Respeitar limite de requisição
 
             except Exception as e:
+                print(f"⚠️ Erro na rodada {contador}: {e}")
                 self.retry(exc=e, countdown=120)
                 continue
+        return f"🏆 Campeonato criado com {total_created} jogos em 38 rodadas."
 
-        return f"Campeonato criado com {total_created} jogos em 38 rodadas"
     except Exception as e:
+        print(f"🔥 Erro geral na criação das rodadas: {e}")
         self.retry(exc=e, countdown=300)
 
 

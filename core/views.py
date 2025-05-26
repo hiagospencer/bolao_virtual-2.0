@@ -121,7 +121,7 @@ def configurar_rodadas(request):
             setar_rodada_atual_final_task.delay(rodada_inicial, rodada_final)
             print(f'Rodada inicial: {rodada_inicial} - Rodada Final: {rodada_final}')
 
-        messages.success(request, 'Rodadas configuradas com sucesso.')
+        messages.success(request, f'Rodada inicial: {rodada_inicial} - Rodada Final: {rodada_final}, setadas com sucesso!')
 
     return redirect('configuracao')
 

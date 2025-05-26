@@ -23,6 +23,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+CSRF_COOKIE_SECURE = False  # Em dev
+SESSION_COOKIE_SECURE = False  # Em dev
 
 # Application definition
 
