@@ -21,7 +21,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -55,8 +55,12 @@ INSTALLED_APPS = [
 # Configurações do Celery - Ambiente Local
 REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD")
 
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", f"redis://:{REDIS_PASSWORD}@localhost:6380/0")
-CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", f"redis://:{REDIS_PASSWORD}@localhost:6380/0")
+CELERY_BROKER_URL = os.environ.get(
+    "CELERY_BROKER_URL", f"redis://:{REDIS_PASSWORD}@redis:6379/0"
+)
+CELERY_RESULT_BACKEND = os.environ.get(
+    "CELERY_RESULT_BACKEND", f"redis://:{REDIS_PASSWORD}@redis:6379/0"
+)
 
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 CELERY_ACCEPT_CONTENT = ['json']
