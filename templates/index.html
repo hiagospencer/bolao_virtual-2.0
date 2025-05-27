@@ -181,4 +181,10 @@
 {% if ultimo_premio %}
   {% include 'premios/novo_premio_popup.html' %}
 {% endif %}
+
+
+<div id="level-up-data"
+     data-level-up="{{ level_up|default:'False' }}"
+     data-new-level="{{ new_level|default:'0' }}"
+     style="display: none;"></div>
 {% endblock %}

@@ -21,6 +21,8 @@ from .utils import calcular_total_pontos_rodadas_usuarios
 def homepage(request):
     usuario_logado = request.user
     ultimo_premio = None
+    level_up = False
+    new_level = None
 
     usuarios_pagantes = UserProfile.objects.filter(pagamento=True).values_list('user_id', flat=True)
     destaque = DestaqueDaSemana.objects.order_by('-rodada').first()
@@ -28,8 +30,17 @@ def homepage(request):
     if request.user.is_authenticated:
         ultimo_premio = Premio.objects.filter(disponivel=True).order_by('-data_criacao').first()
         participante = UserProfile.objects.get(user=usuario_logado)
+
+        # Armazena o nível antes da correção
+        nivel_anterior = participante.level
+
         participante.corrigir_nivel()
         verificar_conquistas(participante)
+        # Verifica se houve mudança de nível
+        if participante.level > nivel_anterior:
+            level_up = True
+            new_level = participante.level
+
         try:
             usuario = UserProfile.objects.get(user=request.user)
         except UserProfile.DoesNotExist:
@@ -57,7 +68,7 @@ def homepage(request):
     if PontuacaoRodada.objects.all().exists():
         pontuacao_rodada = PontuacaoRodada.objects.filter(usuario=destaque.usuario).order_by('-rodada').first()
 
-    context = {'classificacao': classificacao, "premiacoes":premiacoes, "usuario": usuario, 'destaque': destaque, 'titulo_ativo_destaque': titulo_ativo_destaque,"pontuacao_rodada":pontuacao_rodada, 'ultimo_premio': ultimo_premio,}
+    context = {'classificacao': classificacao, "premiacoes":premiacoes, "usuario": usuario, 'destaque': destaque, 'titulo_ativo_destaque': titulo_ativo_destaque,"pontuacao_rodada":pontuacao_rodada, 'ultimo_premio': ultimo_premio,'level_up': level_up,'new_level': new_level,}
     return render(request, 'index.html', context)
 
 @login_required

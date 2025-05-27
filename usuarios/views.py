@@ -9,6 +9,10 @@ from .models import UserProfile, Usuario
 from palpites.models import *
 from pagamentos.models import PagamentoPIX
 
+from .utils import *
+from .templates_mensagens import *
+
+
 User = get_user_model()
 
 # Create your views here.
@@ -74,16 +78,9 @@ def cadastro(request):
         UserProfile.objects.create(user=user, telefone=telefone, chave_pix=chave_pix)
         Classificacao.objects.create(usuario=user)
         BloquearPartida.objects.create(usuario=user)
-        destinatario = 'hiaguinhospencer@gmail.com'
-        assunto = f"Novo cadastro no site Bolão Virtual!"
-        corpo = f"""
-        Nome: {username}
-        Email: {email}
-        Whatsapp: {telefone}
-        """
-        remetente = "hiagosouzadev10@gmail.com"
-        send_mail(assunto,corpo,remetente,[destinatario])
 
+        mensagem = template_cadastro(username, email, telefone)
+        send_telegram_message(mensagem)
         messages.success(request, 'Conta criada com sucesso! Faça login.')
         return redirect('login_bolao')
     return render(request,"autenticacao/cadastro.html")
