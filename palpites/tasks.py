@@ -15,76 +15,92 @@ import pytz
 @shared_task(bind=True, max_retries=3)
 def calcular_pontuacao_usuario_task(self, rodada_atualizada):
     try:
-        todos_usuarios = UserProfile.objects.filter(pagamento=True)
+        usuarios = UserProfile.objects.filter(pagamento=True).select_related('user')
+        resultados = RodadaOriginal.objects.filter(rodada_atual=rodada_atualizada)
 
-        for usuario in todos_usuarios:
-            participante = UserProfile.objects.get(user=usuario.user)
-            rodadas = Palpite.objects.filter(finalizado=False, usuario=usuario.user, rodada_atual=rodada_atualizada)
-            pontuacao_usuario = Classificacao.objects.get(usuario=usuario.user)
+        resultados_dict = {
+            (r.time_casa, r.time_visitante): r for r in resultados
+        }
+
+        # Listas para armazenar objetos que precisam ser atualizados
+        palpites_para_atualizar = []
+        usuarios_para_atualizar = []
+        classificacoes_para_atualizar = []
+
+        for usuario in usuarios:
+            participante = usuario
+            pontuacao_usuario, _ = Classificacao.objects.get_or_create(usuario=usuario.user)
+
+            rodadas = Palpite.objects.filter(
+                finalizado=False,
+                usuario=usuario.user,
+                rodada_atual=rodada_atualizada
+            )
 
             for rodada in rodadas:
-                try:
-                    resultado_original = RodadaOriginal.objects.get(
-                        rodada_atual=rodada.rodada_atual,
-                        time_casa=rodada.time_casa,
-                        time_visitante=rodada.time_visitante
-                    )
+                resultado_key = (rodada.time_casa, rodada.time_visitante)
+                resultado_original = resultados_dict.get(resultado_key)
 
-                    if rodada.vencedor == "empate" and resultado_original.vencedor == 'empate':
-                        pontuacao_usuario.empates += 1
-                        pontuacao_usuario.vitorias -= 1
-                        participante.xp += 50
-                        participante.moedas += 30
-                        participante.save()
-                        pontuacao_usuario.save()
-
-                    # Verifica se os placares coincidem
-                    if (rodada.vencedor == resultado_original.vencedor):
-                        pontuacao_usuario.pontos += 2
-                        pontuacao_usuario.vitorias += 1
-                        rodada.vitorias = 2
-                        rodada.tipo_class = "result-correct"
-                        rodada.finalizado = True
-                        participante.xp += 50
-                        participante.moedas += 30
-                        participante.save()
-                        pontuacao_usuario.save()
-                    else:
-                        rodada.tipo_class = "result-wrong"
-                        rodada.finalizado = True
-
-                    # verifica os placares exatos
-                    if (rodada.placar_casa == resultado_original.placar_casa and
-                        rodada.placar_visitante == resultado_original.placar_visitante):
-                        pontuacao_usuario.pontos += 3
-                        pontuacao_usuario.placar_exato += 1
-                        rodada.placar_exato = 3
-                        rodada.tipo_class = "exact-correct"
-                        rodada.finalizado = True
-                        participante.xp += 100
-                        participante.moedas += 50
-                        participante.save()
-                        pontuacao_usuario.save()
-                    else:
-                        print("Resultados não exatos")
-                        rodada.finalizado = True
-
-                    # Verificando quais os jogos que não foram realizados
-                    if resultado_original.placar_casa == 9999 and resultado_original.placar_visitante == 9999:
-                        rodada.finalizado = False
-                        rodada.tipo_class = "none"
-                        rodada.save()
-
-                    rodada.save()
-                    pontuacao_usuario.save()
-                except ObjectDoesNotExist:
+                if not resultado_original:
                     continue
 
+                # Verifica se o jogo foi realizado
+                if resultado_original.placar_casa == 9999 and resultado_original.placar_visitante == 9999:
+                    rodada.finalizado = False
+                    rodada.tipo_class = "none"
+                    palpites_para_atualizar.append(rodada)
+                    continue
+
+                pontos_ganhos = 0
+                xp_ganhos = 0
+                moedas_ganhas = 0
+
+                # Empate correto
+                if rodada.vencedor == "empate" and resultado_original.vencedor == "empate":
+                    pontuacao_usuario.empates += 1
+                    pontuacao_usuario.vitorias -= 1
+                    xp_ganhos += 50
+                    moedas_ganhas += 30
+
+                # Acertou vencedor
+                if rodada.vencedor == resultado_original.vencedor:
+                    pontuacao_usuario.pontos += 2
+                    pontuacao_usuario.vitorias += 1
+                    rodada.vitorias = 2
+                    rodada.tipo_class = "result-correct"
+                    pontos_ganhos += 2
+                    xp_ganhos += 50
+                    moedas_ganhas += 30
+                else:
+                    rodada.tipo_class = "result-wrong"
+
+                # Acertou placar exato
+                if (rodada.placar_casa == resultado_original.placar_casa and
+                    rodada.placar_visitante == resultado_original.placar_visitante):
+                    pontuacao_usuario.pontos += 3
+                    pontuacao_usuario.placar_exato += 1
+                    rodada.placar_exato = 3
+                    rodada.tipo_class = "exact-correct"
+                    pontos_ganhos += 3
+                    xp_ganhos += 100
+                    moedas_ganhas += 50
+
+                rodada.finalizado = True
+                palpites_para_atualizar.append(rodada)
+
+                participante.xp += xp_ganhos
+                participante.moedas += moedas_ganhas
+                if participante not in usuarios_para_atualizar:
+                    usuarios_para_atualizar.append(participante)
+
+                if pontuacao_usuario not in classificacoes_para_atualizar:
+                    classificacoes_para_atualizar.append(pontuacao_usuario)
+
         # Atualizando classificação geral
-        usuarios_pagantes = UserProfile.objects.filter(pagamento=True).values_list('user_id', flat=True)
+        usuarios_ids = usuarios.values_list('user_id', flat=True)
         classificacao = (
             Classificacao.objects
-            .filter(usuario__in=usuarios_pagantes)
+            .filter(usuario__in=usuarios_ids)
             .select_related('usuario')
             .order_by('-pontos', '-placar_exato', '-vitorias', '-empates')
         )
@@ -92,15 +108,30 @@ def calcular_pontuacao_usuario_task(self, rodada_atualizada):
         for index, item in enumerate(classificacao, start=1):
             item.posicao_anterior = item.posicao_atual
             item.posicao_atual = index
-            if item.posicao_anterior is not None:
-                item.posicao_variacao = item.posicao_anterior - item.posicao_atual
-            else:
-                item.posicao_variacao = 0
-            item.save()
+            item.posicao_variacao = (item.posicao_anterior - index) if item.posicao_anterior else 0
+            if item not in classificacoes_para_atualizar:
+                classificacoes_para_atualizar.append(item)
+
+        # 🚀 Executa todos os updates de uma vez
+        Palpite.objects.bulk_update(
+            palpites_para_atualizar,
+            ['finalizado', 'vitorias', 'placar_exato', 'tipo_class']
+        )
+        UserProfile.objects.bulk_update(
+            usuarios_para_atualizar,
+            ['xp', 'moedas']
+        )
+        Classificacao.objects.bulk_update(
+            classificacoes_para_atualizar,
+            ['pontos', 'vitorias', 'empates', 'placar_exato', 'posicao_atual', 'posicao_anterior', 'posicao_variacao']
+        )
+
+        print("✅ Pontuações calculadas com sucesso usando bulk_update!")
         return "Pontuações calculadas com sucesso!"
 
     except Exception as e:
-        self.retry(exc=e, countdown=60)  # Tenta novamente após 60 segundos em caso de erro
+        print(f"🔥 Erro na task: {e}")
+        self.retry(exc=e, countdown=60)
 
 
 @shared_task(bind=True, max_retries=3)
