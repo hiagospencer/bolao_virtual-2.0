@@ -66,7 +66,11 @@
             <i class="fas fa-medal"></i>
           </div>
           <div class="stat-info">
-            <span class="stat-value">{{ usuario.user.classificacao.posicao_atual }}º</span>
+            {% if usuario.user.classificacao.posicao_atual %}
+              <span class="stat-value">{{ usuario.user.classificacao.posicao_atual }}º</span>
+            {% else %}
+              <span class="stat-value">-</span>
+            {% endif %}
             <span class="stat-label">Posição no Ranking</span>
           </div>
         </div>

@@ -1,21 +1,16 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import JsonResponse
-from django.db.models import Max, Prefetch
-import requests
-from django.conf import settings
+from django.db.models import Prefetch
 from django.views.decorators.cache import cache_page
 
-from usuarios.models import Usuario, UserProfile, DestaqueDaSemana,Rodada
+from usuarios.models import UserProfile, DestaqueDaSemana
 from premios.models import *
 from premios.conquistas import verificar_conquistas
 from core.models import PremiacaoBolao
-from palpites.models import Classificacao,PontuacaoRodada, Palpite
+from palpites.models import Classificacao,PontuacaoRodada
 from palpites.utils import *
 from palpites.tasks import *
-from .utils import calcular_total_pontos_rodadas_usuarios
-
 
 
 def homepage(request):
@@ -31,7 +26,6 @@ def homepage(request):
         ultimo_premio = Premio.objects.filter(disponivel=True).order_by('-data_criacao').first()
         participante = UserProfile.objects.get(user=usuario_logado)
 
-        # Armazena o nível antes da correção
         nivel_anterior = participante.level
 
         participante.corrigir_nivel()
@@ -81,6 +75,7 @@ def perfil(request):
 
 @login_required
 def atualizar_perfil(request):
+
     if request.method == 'POST':
         try:
             # Obtém os objetos relacionados

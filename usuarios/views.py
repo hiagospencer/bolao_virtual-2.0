@@ -1,13 +1,10 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.core.mail import send_mail
 
 from .models import UserProfile, Usuario
 from palpites.models import *
-from pagamentos.models import PagamentoPIX
 
 from .utils import *
 from .templates_mensagens import *
@@ -32,7 +29,7 @@ def login_bolao(request):
 
         if user is not None:
             login(request, user)
-            return redirect('homepage')  # ou outra página de destino
+            return redirect('homepage')
         else:
             messages.error(request, 'Usuário ou senha inválidos.')
     return render(request,"autenticacao/login_bolao.html")
