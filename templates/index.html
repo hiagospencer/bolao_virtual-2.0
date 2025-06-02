@@ -5,19 +5,19 @@
 {% block body %}
 <!-- Nova seção de informações do usuário -->
     {% if user.is_authenticated %}
-    <section class="user-welcome-bar">
-        <div class="container">
-            <div class="welcome-content">
-                <div class="welcome-text">
-                    <h2>Bem vindo, <strong>{{ usuario.user.username }}</strong>!</h2>
-                    <div class="user-stats">
-                        <span class="stat-item"><i class="fas fa-medal"></i> Posição atual: <strong>{{ usuario.user.classificacao.posicao_atual|default:"-" }}º</strong></span>
-                        <span class="stat-item"><i class="fas fa-level-up-alt"></i> Nível: <strong>{{ usuario.level|default:"1" }}</strong></span>
-                        <span class="stat-item"><i class="fas fa-coins"></i> Moedas: <strong>{{ usuario.moedas|intcomma }}</strong></span>
+        <section class="user-welcome-bar">
+            <div class="container">
+                <div class="welcome-content">
+                    <div class="welcome-text">
+                        <h2>Bem vindo, <strong>{{ usuario.user.username }}</strong>!</h2>
+                        <div class="user-stats">
+                            <span class="stat-item"><i class="fas fa-medal"></i> Posição atual: <strong>{{ usuario.user.classificacao.posicao_atual|default:"-" }}º</strong></span>
+                            <span class="stat-item"><i class="fas fa-level-up-alt"></i> Nível: <strong>{{ usuario.level|default:"1" }}</strong></span>
+                            <span class="stat-item"><i class="fas fa-coins"></i> Moedas: <strong>{{ usuario.moedas|intcomma }}</strong></span>
+                        </div>
                     </div>
-                </div>
-        </div>
-    </section>
+            </div>
+        </section>
     {% endif %}
 
     <main class="container">
@@ -155,6 +155,67 @@
             </div>
         </div>
 
+        <!-- Mostrar os campeões -->
+        <div class="champions-container">
+            <h2 class="section-title">🏆 Hall da Fama</h2>
+
+            <div class="table-responsive">
+                <table class="champions-table">
+                    <thead>
+                        <tr class="champions-header">
+                            <th class="champion-col champion-col--photo"></th>
+                            <th class="champion-col champion-col--name">Campeão</th>
+                            <th class="champion-col champion-col--titles">Títulos</th>
+                            <th class="champion-col champion-col--details">Histórico</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for campeao in campeoes_agrupados %}
+                        <tr class="champion-row">
+                            <td class="champion-col champion-col--photo">
+                                {% if campeao.usuario__foto_perfil %}
+                                <img src="{{ campeao.usuario__foto_perfil.url }}"
+                                    alt="{{ campeao.usuario__username }}"
+                                    class="champion-avatar">
+                                {% else %}
+                                <div class="champion-avatar-initial">
+                                    {{ campeao.usuario__username|first|upper }}
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td class="champion-col champion-col--name">
+                                {{ campeao.usuario__username }}
+                            </td>
+                            <td class="champion-col champion-col--titles">
+                                <span class="titles-badge">{{ campeao.total_titulos }}</span>
+                            </td>
+                            <td class="champion-col champion-col--details">
+                                <div class="champion-details-toggle"
+                                    data-user-id="{{ campeao.usuario__id }}">
+                                    ▼ Detalhes
+                                </div>
+                                <div class="champion-details"
+                                    id="details-{{ campeao.usuario__id }}"
+                                    style="display:none;">
+                                    {% for titulo in titulos_por_usuario|get_item:campeao.usuario__id %}
+                                    <div class="edition-detail">
+                                        <span class="edition">{{ titulo.edicao }}ª Edição</span>
+                                        <span class="points">{{ titulo.pontos }} pts</span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="no-champions">Nenhum campeão registrado ainda</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <section class="prizes-section">
             <h2><i class="fas fa-gift"></i> Premiações</h2>
             <p>Quanto mais participantes, maiores os prêmios! Pagamentos via PIX ao final de cada bolão.</p>
@@ -185,5 +246,22 @@
 <div id="level-up-data"
      data-level-up="{{ level_up|default:'False' }}"
      data-new-level="{{ new_level|default:'0' }}"
-     style="display: none;"></div>
+     style="display: none;">
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.champion-details-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            const userId = this.dataset.userId;
+            const details = document.getElementById(`details-${userId}`);
+            const isHidden = details.style.display !== 'block';
+
+            details.style.display = isHidden ? 'block' : 'none';
+            this.textContent = isHidden ? '▲ Ocultar' : '▼ Detalhes';
+        });
+    });
+});
+</script>
+
 {% endblock %}

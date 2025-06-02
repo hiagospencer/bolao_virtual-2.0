@@ -75,6 +75,20 @@ class Rodada(models.Model):
     def __str__(self):
         return f"{self.time_casa} x {self.time_visitante}"
 
+class CampeaoBolao(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='campeonatos')
+    pontos = models.PositiveIntegerField()
+    edicao = models.CharField(max_length=50)  # Ex: "2023", "Copa 2022"
+    data_coroado = models.DateField(auto_now_add=True)
+    titulos_conquistados = models.PositiveIntegerField(default=1)  # Contagem de títulos
+
+    class Meta:
+        ordering = ['-edicao']
+        verbose_name_plural = 'Campeões do Bolão'
+        unique_together = ('usuario', 'edicao')  # Evita duplicatas
+
+    def __str__(self):
+        return f"{self.usuario.username} - {self.edicao} ({self.titulos_conquistados}º título)"
 
 class ConfiguracaoRodada(models.Model):
     numero_rodada = models.IntegerField(unique=True, null=True, blank=True)

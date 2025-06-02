@@ -2,13 +2,13 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Prefetch
-from django.views.decorators.cache import cache_page
+from django.db.models import Count, Max
 
 from usuarios.models import UserProfile, DestaqueDaSemana
 from premios.models import *
 from premios.conquistas import verificar_conquistas
 from core.models import PremiacaoBolao
-from palpites.models import Classificacao,PontuacaoRodada
+from palpites.models import Classificacao,PontuacaoRodada,CampeaoBolao
 from palpites.utils import *
 from palpites.tasks import *
 
@@ -18,6 +18,24 @@ def homepage(request):
     ultimo_premio = None
     level_up = False
     new_level = None
+
+    # Query otimizada para agrupamento correto
+    campeoes = CampeaoBolao.objects.values(
+        'usuario__id',
+        'usuario__username',
+        'usuario__foto_perfil'
+    ).annotate(
+        total_titulos=Count('id'),
+        ultimos_pontos=Max('pontos'),
+        ultima_edicao=Max('edicao')
+    ).order_by('-total_titulos', '-data-coroados')
+
+    # Obter todos os títulos para cada usuário
+    titulos_por_usuario = {}
+    for titulo in CampeaoBolao.objects.select_related('usuario').all():
+        if titulo.usuario.id not in titulos_por_usuario:
+            titulos_por_usuario[titulo.usuario.id] = []
+        titulos_por_usuario[titulo.usuario.id].append(titulo)
 
     usuarios_pagantes = UserProfile.objects.filter(pagamento=True).values_list('user_id', flat=True)
     destaque = DestaqueDaSemana.objects.order_by('-rodada').first()
@@ -62,7 +80,12 @@ def homepage(request):
     if PontuacaoRodada.objects.all().exists():
         pontuacao_rodada = PontuacaoRodada.objects.filter(usuario=destaque.usuario).order_by('-rodada').first()
 
-    context = {'classificacao': classificacao, "premiacoes":premiacoes, "usuario": usuario, 'destaque': destaque, 'titulo_ativo_destaque': titulo_ativo_destaque,"pontuacao_rodada":pontuacao_rodada, 'ultimo_premio': ultimo_premio,'level_up': level_up,'new_level': new_level,}
+    context = {'classificacao': classificacao, "premiacoes":premiacoes, "usuario": usuario,
+               'destaque': destaque, 'titulo_ativo_destaque': titulo_ativo_destaque,
+               "pontuacao_rodada":pontuacao_rodada, 'ultimo_premio': ultimo_premio,
+               'level_up': level_up,'new_level': new_level, 'campeoes_agrupados': campeoes,
+                'titulos_por_usuario': titulos_por_usuario,
+               }
     return render(request, 'index.html', context)
 
 @login_required
