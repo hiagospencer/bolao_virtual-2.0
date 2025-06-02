@@ -28,7 +28,7 @@ def homepage(request):
         total_titulos=Count('id'),
         ultimos_pontos=Max('pontos'),
         ultima_edicao=Max('edicao')
-    ).order_by('-total_titulos', '-data-coroados')
+    ).order_by('-total_titulos', '-ultimos_pontos')
 
     # Obter todos os títulos para cada usuário
     titulos_por_usuario = {}
