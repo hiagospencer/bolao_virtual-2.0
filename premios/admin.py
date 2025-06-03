@@ -49,7 +49,13 @@ class PedidoPremioAdmin(admin.ModelAdmin):
     list_display = ('usuario', 'premio', 'utilizado')
     list_filter = ('utilizado',)
     search_fields = ('usuario__username', 'premio__nome')
-  # Útil se tiver muitas lojas
+
+
+@admin.register(TipoMeta)
+class TipoMetaAdmin(admin.ModelAdmin):
+    list_display = ['nome', 'codigo']
+    search_fields = ['nome', 'codigo']
+
 
 admin.site.register(PedidoPremio, PedidoPremioAdmin)
 

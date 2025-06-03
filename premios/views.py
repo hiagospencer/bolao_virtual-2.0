@@ -205,13 +205,14 @@ def trofeus(request):
 
     conquistas_concluidas = conquistas_usuario.filter(concluida=True)
     conquistas_em_progresso = conquistas_usuario.filter(concluida=False)
-
+    conquistas_ids = conquistas_concluidas.values_list('meta_id', flat=True)
 
     todos_trofeus = MetaConquista.objects.all()
 
     context = {
         'conquistas_concluidas': conquistas_concluidas,
         'conquistas_em_progresso': conquistas_em_progresso,
+        'conquistas_ids': list(conquistas_ids),
         'historico_conquistas': historico,
         'todos_trofeus': todos_trofeus,
         'usuario': usuario,

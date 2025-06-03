@@ -1,8 +1,7 @@
-# apps/premios/conquistas.py
-
 from django.utils import timezone
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib import messages
 
 from premios.models import MetaConquista, ConquistaUsuario, HistoricoConquista, TipoTrofeu
 from palpites.models import Classificacao
@@ -20,14 +19,13 @@ TIPOS_META_CAMPO = {
 # Metas compostas com lógica personalizada
 METAS_COMPOSTAS = {
     'sequencia': {
-        'condicao': lambda c: (c.vitorias or 0) >= 20 and (c.placar_exato or 0) >= 10,
-        'descricao': 'Troféu para táticos impecáveis com +15 vitórias e +10 placares exatos',
+        'condicao': lambda c: (c.vitorias or 0) >= 15 and (c.placar_exato or 0) >= 7,
+        'descricao': 'Troféu para táticos impecáveis com +15 vitórias e +7 placares exatos',
     },
     'rei_palpites': {
-        'condicao': lambda c: (c.vitorias or 0) >= 10 and (c.empates or 0) >= 8 and (c.placar_exato or 0) >= 8,
-        'descricao': 'Troféu para táticos impecáveis com +15 vitórias e +10 placares exatos',
+        'condicao': lambda c: (c.vitorias or 0) >= 20 and (c.empates or 0) >= 7 and (c.placar_exato or 0) >= 8,
+        'descricao': 'Troféu para táticos impecáveis com +20 vitórias, +7 empates, +8 placares exatos',
     },
-    # Adicione outras metas compostas aqui
 }
 
 def verificar_conquistas(participante, request=None):
@@ -40,7 +38,7 @@ def verificar_conquistas(participante, request=None):
     # Verificar metas simples
     for tipo, campo in TIPOS_META_CAMPO.items():
         progresso = getattr(classificacao, campo, 0) or 0
-        meta = MetaConquista.objects.filter(tipo=tipo).first()
+        meta = MetaConquista.objects.filter(tipo__codigo=tipo).first()
         if not meta:
             continue
         if progresso >= meta.valor_requerido:
@@ -69,7 +67,7 @@ def verificar_conquistas(participante, request=None):
     # Verificar metas compostas
     for tipo, dados in METAS_COMPOSTAS.items():
         if dados['condicao'](classificacao):
-            meta = MetaConquista.objects.filter(tipo=tipo).first()
+            meta = MetaConquista.objects.filter(tipo__codigo=tipo).first()
             if not meta:
                 continue
             conquista, created = ConquistaUsuario.objects.get_or_create(
@@ -95,12 +93,12 @@ def verificar_conquistas(participante, request=None):
                     messages.success(request, f"Conquista desbloqueada: {meta.nome}")
 
     # Verificar meta "colecionador"
-    meta_colecionador = MetaConquista.objects.filter(tipo="colecionador").first()
+    meta_colecionador = MetaConquista.objects.filter(tipo__codigo="colecionador").first()
     if meta_colecionador:
-        total_metas = MetaConquista.objects.exclude(tipo="colecionador").count()
+        total_metas = MetaConquista.objects.exclude(tipo__codigo="colecionador").count()
         total_conquistadas = ConquistaUsuario.objects.filter(
             usuario=participante.user, concluida=True
-        ).exclude(meta__tipo="colecionador").count()
+        ).exclude(meta__tipo__codigo="colecionador").count()
 
         if total_conquistadas >= total_metas:
             conquista, created = ConquistaUsuario.objects.get_or_create(

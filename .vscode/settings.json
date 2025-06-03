@@ -1,6 +1,6 @@
 {
   // 🚀 Configurações de formatação e salvamento automático
-  "editor.formatOnSave": true,
+  //   "editor.formatOnSave": true,
   "files.autoSave": "onFocusChange",
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,

@@ -23,23 +23,19 @@ class TipoTrofeu(models.Model):
         ).exists()
 
 
-class MetaConquista(models.Model):
-    TIPO_META = [
-        ('placar_exato', 'Placar Exato'),
-        ('pontos_rodada', 'Pontos em uma Rodada'),
-        ('sequencia', 'Sequência de Acertos'),
-        ('participacao', 'Participação em Rodadas'),
-        ('top_ranking', 'Posição no Ranking'),
-        ('pontos_totais', 'Pontos Totais Acumulados'),
-        ('total_conquistas', 'Total de Conquistas Únicas'),
-        ('rei_palpites', 'Rei dos Palpites'),
-        ('colecionador', 'Colecionadoor de Troféus'),
-    ]
+class TipoMeta(models.Model):
+    nome = models.CharField(max_length=100, unique=True)
+    codigo = models.CharField(max_length=50, unique=True)
 
+    def __str__(self):
+        return self.nome
+
+
+class MetaConquista(models.Model):
     tipo_trofeu = models.ForeignKey(TipoTrofeu, on_delete=models.CASCADE)
     nome = models.CharField(max_length=100)
     descricao = models.TextField()
-    tipo = models.CharField(max_length=20, choices=TIPO_META)
+    tipo = models.ForeignKey(TipoMeta, on_delete=models.CASCADE)
     valor_requerido = models.PositiveIntegerField()
     xp_recompensa = models.PositiveIntegerField(default=100)
     moedas_recompensa = models.PositiveIntegerField(default=0)
