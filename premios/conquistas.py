@@ -13,7 +13,8 @@ TIPOS_META_CAMPO = {
     'placar_exato': 'placar_exato',
     'pontos_totais': 'pontos',
     'vitorias': 'vitorias',
-    'top_ranking': 'posicao_atual',
+    'empates': 'empates',
+    'posicao_atual': 'posicao_atual',
 }
 
 # Metas compostas com lógica personalizada
@@ -21,10 +22,6 @@ METAS_COMPOSTAS = {
     'sequencia': {
         'condicao': lambda c: (c.vitorias or 0) >= 15 and (c.placar_exato or 0) >= 7,
         'descricao': 'Troféu para táticos impecáveis com +15 vitórias e +7 placares exatos',
-    },
-    'rei_palpites': {
-        'condicao': lambda c: (c.vitorias or 0) >= 20 and (c.empates or 0) >= 7 and (c.placar_exato or 0) >= 8,
-        'descricao': 'Troféu para táticos impecáveis com +20 vitórias, +7 empates, +8 placares exatos',
     },
 }
 
