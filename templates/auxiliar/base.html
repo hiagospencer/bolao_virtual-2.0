@@ -90,7 +90,6 @@
     <link rel="stylesheet" href="{% static 'css/pagamento.css' %}" />
     <link rel="stylesheet" href="{% static 'css/termos.css' %}" />
     <link rel="stylesheet" href="{% static 'css/conquistas_premios.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/conquista.css' %}" />
     <link rel="stylesheet" href="{% static 'css/novo_premio_popup.css' %}" />
     <link rel="stylesheet" href="{% static 'css/aposta.css' %}" />
     <link rel="stylesheet" href="{% static 'css/level_up.css' %}" />
@@ -100,6 +99,7 @@
     {% include 'auxiliar/header.html' %} {% block body %} {% endblock %}
     {%include 'auxiliar/footer.html' %}
 
+
     <script src="{% static 'js/script.js' %}"></script>
     <script src="{% static 'js/shop-scripts.js' %}"></script>
     <script src="{% static 'js/pagamento.js' %}"></script>
@@ -108,7 +108,6 @@
     <script src="{% static 'js/novo_premio_popup.js' %}"></script>
     <script src="{% static 'js/aposta.js' %}"></script>
     <script src="{% static 'js/level_up.js' %}"></script>
-    <script src="{% static 'js/conquista.js' %}"></script>
     <script>
       document.addEventListener('DOMContentLoaded', function () {
         const csrftoken = document.querySelector(

@@ -90,7 +90,7 @@ document.getElementById('btn-copiar').addEventListener('click', function() {
 document.getElementById('btn-whatsapp')?.addEventListener('click', function() {
   const codigo = document.getElementById('voucher-code').value;
   const mensagem = `Olá, resgatei meu voucher {{ pedido.premio.nome}}, código: ${codigo} e gostaria de usá-lo.`;
-  const whatsappUrl = `https://wa.me/{{ whatsapp_link }}?text=${encodeURIComponent(mensagem)}`;
+  const whatsappUrl = `https://wa.me/+55{{ whatsapp_link }}?text=${encodeURIComponent(mensagem)}`;
   window.open(whatsappUrl, '_blank');
 });
 

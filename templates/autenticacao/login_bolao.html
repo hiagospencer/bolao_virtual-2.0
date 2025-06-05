@@ -6,75 +6,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Bolão Virtual</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/autenticacao.css' %}">
 </head>
 
 <body class="auth-page login-page">
-    <div class="auth-container">
-        <div class="auth-header">
-            <h1><i class="fas fa-trophy"></i> Bolão Virtual</h1>
-            <p>Faça login para acessar sua conta</p>
-        </div>
-        {% if messages %}
-        <ul class="mensagens">
-          {% for message in messages %}
-            <li class="{{ message.tags }}">{{ message }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-        <form method="POST" class="auth-form">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="login-email"><i class="fas fa-envelope"></i> Usuario ou E-mail</label>
-                <input
-                    type="text"
-                    id="login-email"
-                    name="username"
-                    value="{{ request.POST.username|default:'' }}"
-                    placeholder="Digite seu usuário ou e-mail"
-                    required
-                    class="{% if messages %}is-invalid{% endif %}"
-                    >
+    <div class="auth-wrapper">
+        <div class="auth-container">
+            <div class="auth-logo-container">
+                <img src="{% static 'img/logo-brasileirao.png' %}" alt="Bolão Virtual Logo" class="auth-logo">
+                <h1 class="auth-title">Bolão Virtual</h1>
             </div>
 
-            <div class="form-group">
-                <label for="login-password"><i class="fas fa-lock"></i> Senha</label>
-                <div class="password-input">
-                    <input
-                    type="password"
-                    id="login-password"
-                    name="password"
-                    placeholder="Sua senha"
-                    required
-                    class="{% if messages %}is-invalid{% endif %}">
+            <div class="auth-header">
+                <p class="auth-subtitle">Faça login para acessar sua conta</p>
+            </div>
 
-                    <button type="button" class="toggle-password" aria-label="Mostrar senha">
-                        <i class="fas fa-eye"></i>
-                    </button>
+            {% if messages %}
+            <ul class="auth-messages">
+                {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            <form method="POST" class="auth-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <div class="input-with-icon">
+                        <i class="fas fa-user"></i>
+                        <input
+                            type="text"
+                            id="login-email"
+                            name="username"
+                            value="{{ request.POST.username|default:'' }}"
+                            placeholder="Usuário ou E-mail"
+                            required
+                            class="{% if messages %}is-invalid{% endif %}"
+                        >
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-options">
-                <label class="remember-me">
-                    <input type="checkbox" id="remember-me">
-                    <span class="checkmark"></span>
-                    Lembrar de mim
-                </label>
-                <a href="{% url 'password_reset' %}" class="forgot-password">Esqueceu a senha?</a>
-            </div>
+                <div class="form-group">
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <div class="password-input">
+                            <input
+                                type="password"
+                                id="login-password"
+                                name="password"
+                                placeholder="Sua senha"
+                                required
+                                class="{% if messages %}is-invalid{% endif %}"
+                            >
+                        </div>
+                    </div>
+                </div>
 
-            <button type="submit" class="btn btn-auth">
-                <i class="fas fa-sign-in-alt"></i> Entrar
-            </button>
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember-me">
+                        <span class="checkmark"></span>
+                        Lembrar de mim
+                    </label>
+                    <a href="{% url 'password_reset' %}" class="forgot-password">Esqueceu a senha?</a>
+                </div>
 
-            <div class="auth-footer">
-                <p>Não tem uma conta? <a href="{% url 'cadastro' %}">Cadastre-se</a></p>
-            </div>
-        </form>
+                <button type="submit" class="btn btn-auth">
+                    <i class="fas fa-sign-in-alt"></i> Entrar
+                </button>
+
+                <div class="auth-footer">
+                    <p>Não tem uma conta? <a href="{% url 'cadastro' %}" class="auth-link">Cadastre-se</a></p>
+                </div>
+            </form>
+        </div>
+
+        <div class="auth-decoration">
+            <div class="decoration-image"></div>
+            <div class="decoration-overlay"></div>
+        </div>
     </div>
 
     <script src="{% static 'js/script.js' %}"></script>

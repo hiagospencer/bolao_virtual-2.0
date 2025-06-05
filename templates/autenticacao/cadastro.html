@@ -1,130 +1,194 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cadastro - Bolão Virtual</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-  <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Bolão Virtual</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/autenticacao.css' %}">
 </head>
 
 <body class="auth-page register-page">
-  <div class="auth-container">
-    <div class="auth-header">
-      <h1><i class="fas fa-trophy"></i> Bolão Virtual</h1>
-      <p>Crie sua conta e comece a apostar</p>
-      {% if messages %}
-        <ul class="mensagens">
-          {% for message in messages %}
-            <li class="{{ message.tags }}">{{ message }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
+    <div class="auth-wrapper">
+        <div class="auth-container">
+            <div class="auth-logo-container">
+                <img src="{% static 'img/logo-brasileirao.png' %}" alt="Bolão Virtual Logo" class="auth-logo">
+                <h1 class="auth-title">Bolão Virtual</h1>
+            </div>
+
+            <div class="auth-header">
+                <p class="auth-subtitle">Crie sua conta e comece a apostar</p>
+            </div>
+
+            {% if messages %}
+            <ul class="auth-messages">
+                {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            <form method="POST" class="auth-form">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="input-with-icon">
+                            <i class="fas fa-user-tag"></i>
+                            <input
+                                type="text"
+                                id="register-username"
+                                name="username"
+                                placeholder="Nome de usuário"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-with-icon">
+                            <i class="fas fa-envelope"></i>
+                            <input
+                                type="email"
+                                id="register-email"
+                                name="email"
+                                placeholder="seu@email.com"
+                                required
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="input-with-icon">
+                            <i class="fab fa-whatsapp"></i>
+                            <input
+                                type="tel"
+                                id="whatsapp"
+                                name="telefone"
+                                placeholder="(00) 00000-0000"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-with-icon">
+                            <i class="fa-brands fa-pix"></i>
+                            <input
+                                type="text"
+                                id="pix"
+                                name="chave_qrcode"
+                                placeholder="Chave Pix (Opcional)"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock"></i>
+                            <div class="password-input">
+                                <input
+                                    type="password"
+                                    id="register-password"
+                                    name="password"
+                                    placeholder="Crie uma senha forte"
+                                    required
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock"></i>
+                            <div class="password-input">
+                                <input
+                                    type="password"
+                                    id="register-confirm-password"
+                                    name="confirm_password"
+                                    placeholder="Confirme sua senha"
+                                    required
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-terms">
+                    <label class="terms-check">
+                        <input type="checkbox" id="terms" required>
+                        <span class="checkmark"></span>
+                        Eu concordo com os <a href="#" class="terms-link">Termos de Serviço</a> e <a href="#" class="terms-link">Política de Privacidade</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-auth">
+                    <i class="fas fa-user-plus"></i> Criar Conta
+                </button>
+
+                <div class="auth-footer">
+                    <p>Já tem uma conta? <a href="{% url 'login_bolao' %}" class="auth-link">Faça login</a></p>
+                </div>
+            </form>
+        </div>
+
+        <div class="auth-decoration">
+            <div class="decoration-image"></div>
+            <div class="decoration-overlay"></div>
+        </div>
     </div>
 
-    <form class="auth-form" method="POST">
-  {% csrf_token %}
-  <div class="form-group">
-    <label for="register-username"><i class="fas fa-user-tag"></i> Nome de Usuário</label>
-    <input type="text" id="register-username" name="username" placeholder="Escolha um nome de usuário" required>
-  </div>
-
-  <div class="form-group">
-    <label for="register-email"><i class="fas fa-envelope"></i> E-mail</label>
-    <input type="email" id="register-email" name="email" placeholder="seu@email.com" required>
-  </div>
-
-  <div class="form-group">
-    <label for="whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</label>
-    <input type="tel" id="whatsapp" name="telefone" placeholder="(00) 00000-0000" required>
-  </div>
-
-  <div class="form-group">
-    <label for="register-password"><i class="fas fa-lock"></i> Senha</label>
-    <div class="password-input">
-      <input type="password" id="register-password" name="password" placeholder="Crie uma senha forte" required>
-      <button type="button" class="toggle-password"><i class="fas fa-eye"></i></button>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label for="register-confirm-password"><i class="fas fa-lock"></i> Confirmar Senha</label>
-    <div class="password-input">
-      <input type="password" id="register-confirm-password" name="confirm_password" placeholder="Digite a senha novamente" required>
-      <button type="button" class="toggle-password"><i class="fas fa-eye"></i></button>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label for="pix"><i class="fa-brands fa-pix"></i> Chave Pix</label>
-    <input type="text" id="pix" name="chave_qrcode" placeholder="Sua Chave Pix(Opcional)">
-  </div>
-
-  <button type="submit" class="btn btn-auth">
-    <i class="fas fa-user-plus"></i> Criar Conta
-  </button>
-
-  <div class="auth-footer">
-    <p>Já tem uma conta? <a href="{% url 'login_bolao' %}">Faça login</a></p>
-  </div>
-</form>
-  </div>
-
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
-  <script>
-        // Receber seletor do id celular
+    <script>
+        // Formatação do campo WhatsApp
         var celular = document.getElementById("whatsapp");
 
         celular.addEventListener("input", () => {
-
-            // Remover os caracteres não numéricos usando a expressão regular /\D/g e limitar a 11 dígitos.
             var limparValor = celular.value.replace(/\D/g, "").substring(0, 11);
-
-            // Dividir a string em um array de caracteres individuais.
             var numerosArray = limparValor.split("");
-
-            // Criar a variável para receber o número formatado
             var numeroFormatado = "";
 
-            // Acessa o IF quando a quantidade de números é maior do que zero
             if (numerosArray.length > 0) {
-                // Formatar o DD e concatenar o valor
-                // slice - extraie uma parte do array
-                // join - unir os elementos do array em uma única string
                 numeroFormatado += `(${numerosArray.slice(0, 2).join("")})`;
             }
 
-            // Acessa o IF quando a quantidade de números é maior do que dois
             if (numerosArray.length > 2) {
-                // Formatar o número do telefone e concatenar o valor
-                // slice - extraie uma parte do array
-                // join - unir os elementos do array em uma única string
                 numeroFormatado += ` ${numerosArray.slice(2, 7).join("")}`;
             }
 
-            // Acessa o IF quando a quantidade de números é maior do que sete
             if (numerosArray.length > 7) {
-                // Formatar o número do telefone e concatenar o valor
-                // slice - extraie uma parte do array
-                // join - unir os elementos do array em uma única string
                 numeroFormatado += `-${numerosArray.slice(7, 11).join("")}`;
             }
 
-            // Enviar para o campo o número formatado
             celular.value = numeroFormatado;
+        });
+
+        // Toggle password visibility
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.previousElementSibling;
+                const icon = this.querySelector('i');
+
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.replace('fa-eye', 'fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.replace('fa-eye-slash', 'fa-eye');
+                }
+            });
         });
     </script>
 
-
-  <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
 </body>
+
 </html>
