@@ -93,7 +93,6 @@
                     <div class="form-group full-width">
                         <div class="input-with-icon">
                             <i class="fas fa-lock"></i>
-                            <div class="password-input">
                                 <input
                                     type="password"
                                     id="register-password"
@@ -101,7 +100,6 @@
                                     placeholder="Crie uma senha forte"
                                     required
                                 >
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -110,7 +108,6 @@
                     <div class="form-group full-width">
                         <div class="input-with-icon">
                             <i class="fas fa-lock"></i>
-                            <div class="password-input">
                                 <input
                                     type="password"
                                     id="register-confirm-password"
@@ -118,7 +115,6 @@
                                     placeholder="Confirme sua senha"
                                     required
                                 >
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -127,7 +123,7 @@
                     <label class="terms-check">
                         <input type="checkbox" id="terms" required>
                         <span class="checkmark"></span>
-                        Eu concordo com os <a href="#" class="terms-link">Termos de Serviço</a> e <a href="#" class="terms-link">Política de Privacidade</a>
+                        Eu concordo com os <a href="{% url 'termos' %}" target="_blank" class="terms-link">Termos de Serviço</a> e <a href="{% url 'privacidade' %}" target="_blank" class="terms-link">Política de Privacidade</a>
                     </label>
                 </div>
 
