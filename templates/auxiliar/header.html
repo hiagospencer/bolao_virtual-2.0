@@ -85,7 +85,7 @@
                     {% endif %}
                 {% endif %}
 
-                <div class="user-area" id="user-area">
+                <div class="user-area" id="user-area" style="display:flex;">
                     {% if request.user.is_authenticated %}
                         <li><a href="{% url 'fazer_logout' %}" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
                     {% else %}
