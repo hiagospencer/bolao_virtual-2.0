@@ -1,6 +1,7 @@
 # apps/loja/models.py
 from django.db import models
 from cloudinary.models import CloudinaryField
+from ckeditor.fields import RichTextField
 
 from usuarios.models import Usuario
 
@@ -42,7 +43,7 @@ class ItemLoja(models.Model):
     ]
 
     nome = models.CharField(max_length=100)
-    descricao = models.TextField()
+    descricao = RichTextField()
     loja = models.ForeignKey(Loja, on_delete=models.CASCADE, related_name='itens', blank=True, null=True)
     categoria = models.ForeignKey(CategoriaItem, on_delete=models.SET_NULL, null=True)
     tipo = models.CharField(max_length=10, choices=TIPO_ITEM)

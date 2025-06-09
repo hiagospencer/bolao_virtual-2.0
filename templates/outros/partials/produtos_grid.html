@@ -22,8 +22,9 @@
         </div>
         <div class="item-info">
             <h3>{{ produto.nome }}</h3>
+            <hr>
             <div class="item-details">
-                <span class="item-size">{{ produto.descricao }}</span>
+                <span class="item-size">{{ produto.descricao|safe }}</span>
                 <span class="loja-info">Vendido por: <b>{{ produto.loja.nome }}</b></span>
             </div>
             <div class="item-price">

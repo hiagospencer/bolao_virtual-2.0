@@ -104,16 +104,13 @@ main {
 }
 
 .logo-tipo {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
+  width: 120px;
+  height: auto;
   object-fit: cover;
-  border: 2px solid var(--secondary);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .main-header {
-  background: linear-gradient(135deg, var(--primary), #1b3d0f);
+  background: linear-gradient(135deg, #285918, #265316);
   color: white;
   padding: 1rem 0;
   position: sticky;
@@ -717,7 +714,7 @@ main {
 .user-welcome-bar {
   background: linear-gradient(135deg, var(--primary), #1e4611);
   color: white;
-  padding: 20px 0;
+  padding: 30px 0 20px 0;
   margin-bottom: 30px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }

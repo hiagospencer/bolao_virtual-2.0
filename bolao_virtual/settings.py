@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'cloudinary',
     'cloudinary_storage',
 
+    'ckeditor',
+
     # Local apps
     'core',
     'usuarios',
@@ -51,7 +53,6 @@ INSTALLED_APPS = [
     'comunidade',
     'estatisticas',
     'pagamentos',
-
     'premios',
 ]
 

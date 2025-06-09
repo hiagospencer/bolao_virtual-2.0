@@ -23,7 +23,7 @@
       {% endif %}
 
       <div class="voucher-value">{{ pedido.premio.nome|default:"15%" }}</div>
-      <p class="voucher-desc">{{ pedido.premio.descricao }}</p>
+      <p class="voucher-desc">{{ pedido.premio.descricao|safe }}</p>
 
       <div class="voucher-code-box">
         <span>Código:</span>

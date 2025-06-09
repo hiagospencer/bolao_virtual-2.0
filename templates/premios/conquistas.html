@@ -5,7 +5,7 @@
 
 {% block body %}
 <div class="container">
-    
+
     <section class="rewards-hero">
       <h1><i class="fas fa-award"></i> Minhas Conquistas</h1>
     </section>
@@ -23,7 +23,7 @@
                 <div class="conquista-card concluida">
                     <i class="fas fa-{{ conquista.meta.tipo_trofeu.icone }}" style="color: {{ conquista.meta.tipo_trofeu.cor }}"></i>
                     <h3>{{ conquista.meta.nome }}</h3>
-                    <p>{{ conquista.meta.descricao }}</p>
+                    <p>{{ conquista.meta.descricao|safe }}</p>
                     <div class="conquista-meta">
                         <span>Conquistado em: {{ conquista.data_conquista|date:"d/m/Y" }}</span>
                     </div>

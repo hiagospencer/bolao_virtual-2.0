@@ -44,7 +44,7 @@
             </div>
 
             <h3>{{ pedido.premio.nome }}</h3>
-            <p class="descricao">{{ pedido.premio.descricao }}</p>
+            <p class="descricao">{{ pedido.premio.descricao|safe }}</p>
             <p class="data-compra">Adquirido em: {{ pedido.data_compra|date:"d/m/Y" }}</p>
 
             {% if pedido.premio.tipo == 'titulo' %}

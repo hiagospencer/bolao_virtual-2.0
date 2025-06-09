@@ -22,7 +22,7 @@
     {% endif %}
   </div>
   <h3 style="margin-top:10px;">{{ premio.nome }}</h3>
-  <p class="descricao">{{ premio.descricao }}</p>
+  <p class="descricao">{{ premio.descricao|safe }}</p>
   <div class="preco-estoque">
     <span class="preco">{{ premio.preco_moedas|intcomma }} moedas</span>
     {% if premio.estoque > 0 or premio.estoque == -1 %}

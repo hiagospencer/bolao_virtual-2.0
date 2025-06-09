@@ -18,7 +18,7 @@
 
       <div class="np-premio-info">
         <h4 class="np-premio-name">{{ ultimo_premio.nome }}</h4>
-        <p class="np-premio-desc">{{ ultimo_premio.descricao }}</p>
+        <p class="np-premio-desc">{{ ultimo_premio.descricao|safe }}</p>
         <div class="np-premio-price">
           <i class="fas fa-coins"></i> {{ ultimo_premio.preco_moedas }} moedas
         </div>
