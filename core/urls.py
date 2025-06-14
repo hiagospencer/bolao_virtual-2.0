@@ -7,6 +7,8 @@ urlpatterns = [
     path('perfil/', perfil, name='perfil'),
     path('perfil/atualizar/', atualizar_perfil, name='atualizar_perfil'),
     path('regras/', regras, name='regras'),
+    path('manutencao/', manutencao, name='manutencao'),
+
 
     #configurações
     path('configuracao/', configuracao, name='configuracao'),

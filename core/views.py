@@ -215,3 +215,6 @@ def termos(request):
 
 def privacidade(request):
     return render(request,"termos/privacidade.html")
+
+def manutencao(request):
+    return render(request,"maintenance.html")
