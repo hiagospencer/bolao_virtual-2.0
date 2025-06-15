@@ -19,15 +19,23 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["bolaovirtual.site", "www.bolaovirtual.site"]
 
-CSRF_COOKIE_SECURE = False  # Em dev
-SESSION_COOKIE_SECURE = False  # Em dev
+# CSRF_COOKIE_SECURE = False  # Em dev
+# SESSION_COOKIE_SECURE = False  # Em dev
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = False
+SECURE_HSTS_SECONDS = 31536000  # 1 ano
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+SECURE_REFERRER_POLICY = "strict-origin"
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
