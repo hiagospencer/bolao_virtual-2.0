@@ -10,8 +10,8 @@ function sendToWhatsApp(produtoNome, produtoPreco, produtoImagemUrl, telefoneLoj
       🔗 *Imagem do Produto*: ${produtoImagemUrl}
     `;
     // ${window.location.origin}
-    
-    const url = `https://wa.me/${numeroDestino}?text=${encodeURIComponent(mensagem)}`;
+
+    const url = `https://wa.me/+55${numeroDestino}?text=${encodeURIComponent(mensagem)}`;
     window.open(url, "_blank").focus();
 }
 

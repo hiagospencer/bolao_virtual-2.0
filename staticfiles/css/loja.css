@@ -165,12 +165,6 @@
   gap: 5px;
 }
 
-.item-details span {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
 .item-details i {
   font-size: 0.7rem;
   color: var(--primary);
