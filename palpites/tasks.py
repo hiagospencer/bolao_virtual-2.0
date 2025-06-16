@@ -1,7 +1,7 @@
-# tasks.py
+from django.db.models import Sum
 from celery import shared_task
 from django.core.exceptions import ObjectDoesNotExist
-from usuarios.models import UserProfile, DestaqueDaSemana
+from usuarios.models import UserProfile, DestaqueDaSemana, Usuario
 from palpites.models import Palpite, Classificacao, RodadaOriginal, BloquearPartida, Rodada, PontuacaoRodada
 from .api_brasileirao import get_api_data
 from django.contrib import messages
