@@ -180,6 +180,7 @@ def atualizar_classificacao(request):
 
         if rodada_atualizar_classificacao:
             calcular_pontuacao_usuario_task.delay(rodada_atualizar_classificacao)
+            # calcular_pontuacao_usuario(rodada_atualizar_classificacao)
             messages.success(request, 'Classificação Atualizada.')
 
         if rodada_original:

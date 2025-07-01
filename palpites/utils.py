@@ -220,7 +220,7 @@ def calcular_pontuacao_usuario(rodada_atualizada):
       else:
         item.posicao_variacao = 0  # Nenhuma variação se não há posição anterior
       item.save()
-
+    print("Classificação atualizada de forma normal")
   except:
     print('tabela pontuação não encontrada')
 
