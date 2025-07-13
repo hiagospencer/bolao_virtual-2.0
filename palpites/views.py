@@ -33,9 +33,8 @@ def criar_palpites(request):
         img_visitante = []
         verificacao_partida, criado = BloquearPartida.objects.get_or_create(usuario=user)
         rodadas = Rodada.objects.filter(rodada_atual=verificacao_partida.partida_atual)
-
         if verificacao_partida.partida_atual == verificacao_partida.partida_final:
-            verificacao_partida.rodada_bloqueada = False
+            verificacao_partida.rodada_bloqueada = True
             verificacao_partida.save()
         # else:
         #     verificacao_partida.rodada_bloqueada = True
