@@ -83,8 +83,6 @@ def criar_palpites(request):
                     usuario=user,
                     rodada_atual=verificacao_partida.partida_atual,
                     )
-
-
             messages.success(request, f"{verificacao_partida.partida_atual}ª rodada salva com sucesso!")
             verificacao_partida.partida_atual += 1
             verificacao_partida.save()
@@ -96,15 +94,15 @@ def criar_palpites(request):
 @login_required
 def meus_palpites(request):
     user = request.user
-
+    participante = UserProfile.objects.get(id=user.id)
     usuarios = UserProfile.objects.filter(pagamento=True)
     rodadas_distintas = Palpite.objects.values_list('rodada_atual', flat=True).distinct().order_by('rodada_atual')
     rodadas = Palpite.objects.filter(usuario=user).order_by('rodada_atual')[:10]
     rodadas_original = RodadaOriginal.objects.all().order_by('rodada_atual')[:10]
+
     # Obter todas as configurações de uma vez
     configs_rodadas = {config.numero_rodada: config for config in ConfiguracaoRodada.objects.all()}
-
-    context = {'rodadas':rodadas, "usuarios":usuarios, "rodadas_distintas":range(1, 39), "rodadas_original": rodadas_original,'configs_rodadas': configs_rodadas}
+    context = {'rodadas':rodadas, "usuarios":usuarios, "rodadas_distintas":range(1, 39), "rodadas_original": rodadas_original,'configs_rodadas': configs_rodadas,"participante":participante}
     return render(request, "palpites/meus_palpites.html", context)
 
 

@@ -299,7 +299,7 @@
 
 .bolao-modal-content {
     background: linear-gradient(to bottom, #ffffff 0%, #f5f5f5 100%);
-    margin: 10% auto;
+    margin: 13% auto;
     padding: 25px;
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
@@ -580,10 +580,18 @@
     }
 }
 
+@media (max-width: 768px) {
+    .bolao-modal-content {
+        margin: 30% auto;
+        width: 95%;
+        padding: 20px;
+    }
+}
+
 /* Responsividade */
 @media (max-width: 576px) {
     .bolao-modal-content {
-        margin: 20% auto;
+        margin: 32% auto;
         width: 95%;
         padding: 20px;
     }
