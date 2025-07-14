@@ -19,10 +19,10 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ["bolaovirtual.site", "www.bolaovirtual.site"]
-# ALLOWED_HOSTS = ["*"]
+# ALLOWED_HOSTS = ["bolaovirtual.site", "www.bolaovirtual.site"]
+ALLOWED_HOSTS = ["*"]
 
 # CSRF_COOKIE_SECURE = False  # Em dev
 # SESSION_COOKIE_SECURE = False  # Em dev
