@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -99,7 +100,7 @@ def perfil(request):
     boloes_premium = user.total_boloes_premium()
     faltam_para_premium = max(0, 3 - convidados_ativos)
 
-    if user.verificar_e_aplicar_recompensa():
+    if user.verificar_e_aplicar_recompensa(request=request):
         messages.success(request, "🎉 Você ganhou um Bolão Premium por indicar 3 amigos!")
 
     context = {"usuario":usuario,'link_convite': link_convite,'convidados_ativos': convidados_ativos,
@@ -141,6 +142,11 @@ def atualizar_perfil(request):
 
         return redirect('perfil')
     return redirect('perfil')
+
+@login_required
+def limpar_modal_sessao(request):
+    request.session.pop('mostrar_modal_recompensa', None)
+    return JsonResponse({'status': 'ok'})
 
 def regras(request):
     return render(request,"regras.html")

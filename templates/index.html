@@ -249,6 +249,25 @@
      style="display: none;">
 </div>
 
+    {% if request.session.mostrar_modal_recompensa %}
+        <div id="modal-premio-convite" class="modal-premio-convite show">
+        <div class="modal-premio-content">
+            <span class="modal-premio-close" onclick="fecharModalPremio()">&times;</span>
+            <h2>🎉 Parabéns!</h2>
+            <p>Você ganhou um <strong>Bolão Premium</strong> por indicar 3 amigos que ativaram a conta!</p>
+            <p>Continue compartilhando seu link para ganhar ainda mais recompensas.</p>
+            <button onclick="fecharModalPremio()">Fechar</button>
+        </div>
+        </div>
+        <script>
+        function fecharModalPremio() {
+            const modal = document.getElementById('modal-premio-convite');
+            modal.classList.remove('show');
+            fetch("{% url 'limpar_modal_sessao' %}");
+        }
+        </script>
+    {% endif %}
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.champion-details-toggle').forEach(toggle => {

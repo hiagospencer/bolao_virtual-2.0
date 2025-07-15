@@ -41,13 +41,15 @@ class Usuario(AbstractUser):
         usados = Usuario.objects.filter(recompensas_usadas__in=self.recompensas.all())
         return convites.exclude(convidado__in=usados)
 
-    def verificar_e_aplicar_recompensa(self):
+    def verificar_e_aplicar_recompensa(self, request=None):
         convites_validos = self.convidados_pagantes_disponiveis()
         if convites_validos.count() >= 3:
             convidados_para_usar = list(convites_validos[:3].values_list('convidado', flat=True))
             recompensa = RecompensaPremium.objects.create(usuario=self)
             recompensa.convidados_utilizados.set(convidados_para_usar)
             recompensa.save()
+            if request:
+                request.session['mostrar_modal_recompensa'] = True  # <- Sinaliza para o frontend
             return True
         return False
 

@@ -84,7 +84,7 @@ def cadastro(request):
         # Associar convite
         if convite_codigo:
             try:
-                codigo_uuid = uuid.UUID(convite_codigo)  # CONVERTE aqui
+                codigo_uuid = uuid.UUID(convite_codigo)
                 codigo_obj = CodigoConvite.objects.get(codigo=codigo_uuid)
                 Convite.objects.create(
                     codigo=codigo_obj,
