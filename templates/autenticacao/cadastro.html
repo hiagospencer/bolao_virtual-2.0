@@ -82,7 +82,7 @@
                             <input
                                 type="text"
                                 id="pix"
-                                name="chave_qrcode"
+                                name="chave_pix"
                                 placeholder="Chave Pix (Opcional)"
                             >
                         </div>
@@ -118,6 +118,10 @@
                         </div>
                     </div>
                 </div>
+
+                {% if convite %}
+                    <input type="hidden" name="convite" value="{{ convite }}">
+                {% endif %}
 
                 <div class="form-terms">
                     <label class="terms-check">

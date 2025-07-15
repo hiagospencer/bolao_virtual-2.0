@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from cloudinary.models import CloudinaryField
 from django.db import models
+import uuid
+from django.conf import settings
 
 class Usuario(AbstractUser):
     foto_perfil = CloudinaryField('imagem')
@@ -16,6 +18,41 @@ class Usuario(AbstractUser):
 
     def __str__(self):
         return self.username
+
+
+    def convites_recebidos(self):
+        return Convite.objects.filter(convidado=self)
+
+    def convites_enviados(self):
+        try:
+            codigo = self.codigoconvite
+            return codigo.usos.all()
+        except CodigoConvite.DoesNotExist:
+            return Convite.objects.none()
+
+    def convidados_pagantes(self):
+        return self.convites_enviados().filter(convidado__userprofile__pagamento=True).count()
+
+    def total_convidados(self):
+        return self.convites_enviados().filter(convidado__isnull=False).count()
+
+    def convidados_pagantes_disponiveis(self):
+        convites = self.convites_enviados().filter(convidado__userprofile__pagamento=True)
+        usados = Usuario.objects.filter(recompensas_usadas__in=self.recompensas.all())
+        return convites.exclude(convidado__in=usados)
+
+    def verificar_e_aplicar_recompensa(self):
+        convites_validos = self.convidados_pagantes_disponiveis()
+        if convites_validos.count() >= 3:
+            convidados_para_usar = list(convites_validos[:3].values_list('convidado', flat=True))
+            recompensa = RecompensaPremium.objects.create(usuario=self)
+            recompensa.convidados_utilizados.set(convidados_para_usar)
+            recompensa.save()
+            return True
+        return False
+
+    def total_boloes_premium(self):
+        return self.recompensas.count()
 
 
 class UserProfile(models.Model):
@@ -77,6 +114,31 @@ class UserProfile(models.Model):
             self.xp_para_proximo_level = self.calcular_xp_necessario()
         self.save()
 
+
+class CodigoConvite(models.Model):
+    usuario = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    codigo = models.UUIDField(default=uuid.uuid4, unique=True)
+
+    def __str__(self):
+        return f"Código de {self.usuario.username}"
+
+
+class Convite(models.Model):
+    codigo = models.ForeignKey(CodigoConvite, on_delete=models.CASCADE, related_name='usos')
+    convidado = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='convite_recebido')
+    data_aceito = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.codigo.usuario.username} convidou {self.convidado.username if self.convidado else 'Aguardando'}"
+
+
+class RecompensaPremium(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='recompensas')
+    data = models.DateTimeField(auto_now_add=True)
+    convidados_utilizados = models.ManyToManyField(Usuario, related_name='recompensas_usadas')
+
+    def __str__(self):
+        return f"{self.usuario.username} ganhou Bolão Premium em {self.data.strftime('%d/%m/%Y')}"
 
 class Rodada(models.Model):
     numero = models.PositiveIntegerField(unique=True)

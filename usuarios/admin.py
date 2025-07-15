@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Usuario, UserProfile, Rodada, DestaqueDaSemana
+from .models import CodigoConvite, Usuario, UserProfile, Rodada, DestaqueDaSemana, Convite, RecompensaPremium
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
@@ -70,3 +70,40 @@ class DestaqueDaSemanaAdmin(admin.ModelAdmin):
     #     if not obj.total_jogos:
     #         return "0%"
     #     return f"{(obj.acertos / obj.total_jogos) * 100:.1f}%"
+
+@admin.register(CodigoConvite)
+class CodigoConviteAdmin(admin.ModelAdmin):
+    list_display = ['usuario', 'codigo', 'total_usos', 'usos_ativos']
+    search_fields = ['usuario__username', 'codigo']
+    readonly_fields = ['codigo']
+
+    def total_usos(self, obj):
+        return obj.usos.count()
+    total_usos.short_description = 'Total de Usos'
+
+    def usos_ativos(self, obj):
+        return obj.usos.filter(convidado__userprofile__pagamento=True).count()
+    usos_ativos.short_description = 'Convidados Ativos'
+
+@admin.register(Convite)
+class ConviteAdmin(admin.ModelAdmin):
+    list_display = ['codigo', 'convidador', 'convidado', 'pagamento', 'data_aceito']
+    search_fields = ['codigo__codigo', 'convidado__username', 'codigo__usuario__username']
+    list_filter = ['data_aceito', 'codigo__usuario']
+
+    def convidador(self, obj):
+        return obj.codigo.usuario
+    convidador.short_description = 'Convidador'
+
+    def pagamento(self, obj):
+        return obj.convidado.userprofile.pagamento if obj.convidado and hasattr(obj.convidado, 'userprofile') else False
+    pagamento.boolean = True
+    pagamento.short_description = 'Pagamento Ativo'
+
+@admin.register(RecompensaPremium)
+class RecompensaPremiumAdmin(admin.ModelAdmin):
+    list_display = ('usuario', 'data', 'convidados_utilizados_display')
+
+    def convidados_utilizados_display(self, obj):
+        return ", ".join([u.username for u in obj.convidados_utilizados.all()])
+    convidados_utilizados_display.short_description = "Convidados Utilizados"

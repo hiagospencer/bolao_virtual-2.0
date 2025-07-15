@@ -47,6 +47,38 @@
               <input type="text" id="pix" name="pix" value="{{ usuario.chave_pix }}" >
             </div>
 
+            <div class="form-group">
+                <h3>Seu link de convite</h3>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" id="linkConvite" value="{{ link_convite }}" readonly style="width: 100%; padding: 5px;">
+                    <button type="button" id="copy-pix-btn" class="btn-copy-pix">
+                        <i class="far fa-copy"></i> Copiar
+                    </button>
+                </div>
+                <p id="copiado-feedback" style="opacity: 0; color: green; transition: opacity 0.5s;">Link copiado com sucesso!</p>
+            </div>
+
+            <div class="convite-stats-box">
+                <h4><i class="fas fa-gift"></i> Recompensas de Convite</h4>
+
+                {% if boloes_premium > 0 %}
+                    <div class="convite-recompensa">
+                    🎉 Você já ganhou <strong>{{ boloes_premium }}</strong> Bolão Premium!
+                    </div>
+                {% endif %}
+
+                {% if convidados_ativos >= 2 %}
+                    <div class="convite-status convite-disponivel">
+                    ✅ Você tem <strong>{{ convidados_ativos }}</strong> convidados ativos disponíveis.
+                    <br>Seu próximo Bolão Premium será liberado em breve!
+                    </div>
+                {% else %}
+                    <div class="convite-status convite-pendente">
+                    💡 Faltam <strong>{{ faltam_para_premium }}</strong> para liberar um Bolão Premium.
+                    </div>
+                {% endif %}
+            </div>
+
             <div class="form-actions">
               <button type="submit" class="btn btn-primary">
                 <i class="fas fa-save"></i> Salvar Alterações
@@ -125,6 +157,21 @@
         }
     });
 
+    document.getElementById("copy-pix-btn").addEventListener("click", function () {
+        const input = document.getElementById("linkConvite");
+        const feedback = document.getElementById("copiado-feedback");
+
+        buttom = this.innerHTML = '<i class="fas fa-check"></i> Copiado!';
+
+        navigator.clipboard.writeText(input.value).then(function () {
+            feedback.style.opacity = 1;
+            console.log(buttom)
+        setTimeout(() => {
+            feedback.style.opacity = 0;
+            buttom = '<i class="far fa-copy"></i> Copiar';
+        }, 2000); // Oculta após 2 segundos
+        });
+    });
 </script>
 </section>
 {% endblock %}

@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Prefetch
 from django.db.models import Count, Max
 
-from usuarios.models import UserProfile, DestaqueDaSemana
+from usuarios.models import UserProfile, DestaqueDaSemana, Convite
 from premios.models import *
 from premios.conquistas import verificar_conquistas
 from core.models import PremiacaoBolao
@@ -92,7 +92,18 @@ def homepage(request):
 def perfil(request):
     user = request.user
     usuario = UserProfile.objects.get(user=user)
-    context = {"usuario":usuario}
+    codigo_convite, _ = CodigoConvite.objects.get_or_create(usuario=user)
+    link_convite = request.build_absolute_uri(f'/accounts/cadastro/?convite={codigo_convite.codigo}')
+
+    convidados_ativos = user.convidados_pagantes_disponiveis().count()
+    boloes_premium = user.total_boloes_premium()
+    faltam_para_premium = max(0, 3 - convidados_ativos)
+
+    if user.verificar_e_aplicar_recompensa():
+        messages.success(request, "🎉 Você ganhou um Bolão Premium por indicar 3 amigos!")
+
+    context = {"usuario":usuario,'link_convite': link_convite,'convidados_ativos': convidados_ativos,
+        'boloes_premium': boloes_premium,'faltam_para_premium': faltam_para_premium,}
     return render(request, "perfil.html", context)
 
 

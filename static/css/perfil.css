@@ -197,3 +197,35 @@
   font-size: 0.9rem;
   color: #666;
 }
+
+.convite-stats-box {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px dashed #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+.convite-recompensa {
+  font-weight: bold;
+  color: #155724;
+  background: #d4edda;
+  padding: 8px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.convite-status {
+  padding: 8px;
+  border-radius: 5px;
+}
+
+.convite-disponivel {
+  background-color: #e2f0d9;
+  color: #1e4620;
+}
+
+.convite-pendente {
+  background-color: #fff3cd;
+  color: #856404;
+}
