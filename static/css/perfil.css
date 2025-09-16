@@ -1,0 +1,265 @@
+/* ===== PÁGINA DE PERFIL ===== */
+.perfil-page .profile-section {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  padding: 30px;
+  margin-bottom: 40px;
+}
+
+.perfil-page .profile-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--secondary);
+}
+
+.perfil-page .profile-header h1 {
+  color: var(--primary);
+  font-family: var(--font-title);
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.perfil-page .profile-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.perfil-page .profile-picture {
+  flex: 1;
+  min-width: 250px;
+}
+
+.perfil-page .profile-info {
+  flex: 2;
+  min-width: 300px;
+}
+
+/* Upload de Avatar */
+.perfil-page .avatar-upload {
+  position: relative;
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+.perfil-page .avatar-preview {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 5px solid var(--secondary);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.perfil-page .avatar-preview > div {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.perfil-page .avatar-edit {
+  position: absolute;
+  right: -10px;
+  bottom: 10px;
+}
+
+.perfil-page .avatar-edit input {
+  display: none;
+}
+
+.perfil-page .avatar-edit label {
+  display: inline-block;
+  background-color: var(--primary);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s;
+}
+
+.perfil-page .avatar-edit label:hover {
+  background-color: #1b3d0f;
+  transform: translateY(-2px);
+}
+
+/* Formulário de Perfil */
+.perfil-page .profile-form {
+  max-width: 500px;
+}
+
+.perfil-page .form-group {
+  margin-bottom: 20px;
+}
+
+.perfil-page .form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.perfil-page .form-group label i {
+  margin-right: 8px;
+  width: 20px;
+  text-align: center;
+}
+
+.perfil-page .form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+
+.perfil-page .form-group input:focus {
+  border-color: var(--secondary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(249, 168, 37, 0.2);
+}
+
+.perfil-page .form-group input[readonly] {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.perfil-page .form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+/* Estatísticas */
+.perfil-page .stats-section {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  padding: 30px;
+}
+
+.perfil-page .stats-section h2 {
+  color: var(--primary);
+  font-family: var(--font-title);
+  font-size: 2rem;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.perfil-page .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.perfil-page .stat-card {
+  background: linear-gradient(135deg, #f9f9f9, white);
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  border-left: 4px solid var(--secondary);
+}
+
+.perfil-page .stat-icon {
+  width: 50px;
+  height: 50px;
+  background-color: rgba(44, 94, 26, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--primary);
+}
+
+.perfil-page .stat-value {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--primary);
+  line-height: 1;
+  margin-bottom: 5px;
+}
+
+.perfil-page .stat-label {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.convite-stats-box {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px dashed #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+.convite-recompensa {
+  font-weight: bold;
+  color: #155724;
+  background: #d4edda;
+  padding: 8px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.convite-status {
+  padding: 8px;
+  border-radius: 5px;
+}
+
+.convite-disponivel {
+  background-color: #e2f0d9;
+  color: #1e4620;
+}
+
+.convite-pendente {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.modal-premio-convite {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-premio-content {
+  background: #fff;
+  padding: 30px;
+  text-align: center;
+  border-radius: 10px;
+  max-width: 400px;
+  box-shadow: 0 0 15px #000;
+  animation: aparecer 0.4s ease-out;
+}
+
+.modal-premio-close {
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(-30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

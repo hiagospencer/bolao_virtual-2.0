@@ -1,0 +1,161 @@
+{% load static %}
+<header class="main-header">
+    <div class="container">
+        <img class="logo-tipo" src="{% static 'img/bolaovirtual-logo.jpeg' %}" alt="" />
+        <nav class="main-nav">
+            <ul style="align-items: center;">
+                {% if request.resolver_match.url_name in "/homepage" %}
+                    <li><a href="{% url 'homepage' %}" class="active"><i class="fas fa-home"></i> Home</a></li>
+                {% else %}
+                    <li><a href="{% url 'homepage' %}"><i class="fas fa-home"></i> Home</a></li>
+                {% endif %}
+
+                {% if request.resolver_match.url_name in "criar_palpites" or request.resolver_match.url_name in "meus_palpites" %}
+                    <li class="dropdown">
+                        <a href="#" class="active">Palpites <i class="fa-solid fa-caret-down"></i></a>
+                        <!-- Menu dropdown apenas para usuários logados -->
+                        <ul class="dropdown-menu" id="palpites-dropdown">
+                            <li><a href="{% url 'criar_palpites' %}"><i class="fas fa-plus-circle"></i> Criar Palpite</a>
+                            </li>
+                            <li><a href="{% url 'meus_palpites' %}"><i class="fas fa-history"></i> Meus Palpites</a></li>
+                            {% if user.is_superuser %}
+                                <li><a href="{% url 'configuracao' %}"><i class="fa-solid fa-gear"></i>Configurações</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="dropdown">
+                        <a href="#">Palpites <i class="fa-solid fa-caret-down"></i></a>
+                        <!-- Menu dropdown apenas para usuários logados -->
+                        <ul class="dropdown-menu" id="palpites-dropdown">
+                            <li><a href="{% url 'criar_palpites' %}"><i class="fas fa-plus-circle"></i> Criar Palpite</a>
+                            </li>
+                            <li><a href="{% url 'meus_palpites' %}"><i class="fas fa-history"></i> Meus Palpites</a></li>
+                            {% if user.is_superuser %}
+                                <li><a href="{% url 'configuracao' %}"><i class="fa-solid fa-gear"></i>Configurações</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                {% endif %}
+
+                {% if request.resolver_match.url_name in "noticias" or request.resolver_match.url_name in "loja" or request.resolver_match.url_name in "trofeus" %}
+                    <li class="dropdown">
+                        <a href="#" class="active"><i class="fas fa-newspaper"></i> Recompensas <i class="fas fa-caret-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'trofeus' %}"><i class="fas fa-trophy"></i> Troféus</a></li>
+                            <li><a href="{% url 'lista_premios' %}"><i class="fas fa-award"></i> Prêmios</a></li>
+                            <li><a href="{% url 'loja' %}"><i class="fas fa-shopping-cart"></i> Loja</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="dropdown">
+                        <a href="#"><i class="fas fa-newspaper"></i> Recompensas <i class="fas fa-caret-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'trofeus' %}"><i class="fas fa-trophy"></i> Troféus</a></li>
+                            <li><a href="{% url 'lista_premios' %}"><i class="fas fa-award"></i> Prêmios</a></li>
+                            <li><a href="{% url 'loja' %}"><i class="fas fa-shopping-cart"></i> Loja</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+
+                {% if request.resolver_match.url_name in "regras" %}
+                    <li><a href="{% url 'regras' %}" class="active"><i class="fas fa-book"></i> Regras</a></li>
+                {% else %}
+                    <li><a href="{% url 'regras' %}"><i class="fas fa-book"></i> Regras</a></li>
+                {% endif %}
+
+                <!-- {% if request.resolver_match.url_name in "comunidade" %}
+                    <li><a href="{% url 'comunidade' %}" class="active"><i class="fas fa-users"></i> Comunidade</a></li>
+                {% else %}
+                    <li><a href="{% url 'comunidade' %}"><i class="fas fa-users"></i> Comunidade</a></li>
+                {% endif %} -->
+
+                {% if request.resolver_match.url_name in "pagamento" %}
+                    <li><a href="{% url 'pagamento' %}"class="active"><i class="fa-solid fa-credit-card"></i> Pagamentos</a></li>
+                {% else %}
+                    <li><a href="{% url 'pagamento' %}"><i class="fa-solid fa-credit-card"></i> Pagamentos</a></li>
+                {% endif %}
+
+                {% if request.user.is_authenticated %}
+                    {% if request.resolver_match.url_name in "perfil" %}
+                        <li><a href="{% url 'perfil' %}" class="active"><i class="fas fa-user"></i> Perfil</a></li>
+                    {% else %}
+                        <li><a href="{% url 'perfil' %}"><i class="fas fa-user"></i> Perfil</a></li>
+                    {% endif %}
+                {% endif %}
+
+                <div class="user-area" id="user-area" style="display:flex;">
+                    {% if request.user.is_authenticated %}
+                        <li><a href="{% url 'fazer_logout' %}" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+                    {% else %}
+                        <li><a href="{% url 'login_bolao' %}" class="btn-login"><i class="fas fa-sign-in-alt"></i> Entrar</a></li>
+                        <li><a href="{% url 'cadastro' %}" class="btn-register">Cadastre-se</a></li>
+                    {% endif %}
+                </div>
+            </ul>
+        </nav>
+    </div>
+</header>
+<!-- Menu Mobile -->
+<div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+<nav class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu-header">
+        <img src="{% static 'img/logo-bolao-virtual.jpg' %}" alt="Bolão Virtual" class="mobile-logo">
+        <button class="mobile-menu-close" id="mobileMenuClose">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <ul class="mobile-nav-list">
+        <li><a href="{% url 'homepage' %}"><i class="fas fa-home"></i> Home</a></li>
+        <li class="brasileirao-dropdown">
+            <a href="#"><i class="fas fa-clipboard-list"></i> Palpites <i class="fas fa-caret-down brasileirao-dropdown-arrow"></i></a>
+            <!-- Menu dropdown apenas para usuários logados -->
+            <ul class="brasileirao-dropdown-menu" id="palpites-dropdown">
+                <li><a href="{% url 'criar_palpites' %}"><i class="fas fa-plus-circle"></i> Criar Palpite</a></li>
+                <li><a href="{% url 'meus_palpites' %}"><i class="fas fa-history"></i> Meus Palpites</a></li>
+                {% if user.is_superuser %}
+                    <li><a href="{% url 'configuracao' %}"><i class="fa-solid fa-gear"></i>Configurações</a></li>
+                {% endif %}
+            </ul>
+        </li>
+        <!-- Menu Interação -->
+        <li class="brasileirao-dropdown">
+            <a href="#"><i class="fas fa-newspaper"></i> Recompensas <i class="fas fa-caret-down brasileirao-dropdown-arrow"></i></a>
+            <ul class="brasileirao-dropdown-menu">
+                <!-- <li><a href="{% url 'noticias' %}" class="active"><i class="fas fa-newspaper"></i> Notícias</a></li> -->
+                <li><a href="{% url 'trofeus' %}"><i class="fas fa-trophy"></i> Troféus</a></li>
+                <li><a href="{% url 'lista_premios' %}"><i class="fas fa-award"></i> Prêmios</a></li>
+                <li><a href="{% url 'loja' %}"><i class="fas fa-shopping-cart"></i> Loja</a></li>
+            </ul>
+        </li>
+        <li><a href="{% url 'regras' %}"><i class="fas fa-book"></i> Regras</a></li>
+        <li><a href="{% url 'pagamento' %}"><i class="fa-solid fa-credit-card"></i> Pagamento</a></li>
+        <li><a href="{% url 'perfil' %}"><i class="fas fa-user"></i> Perfil</a></li>
+    </ul>
+
+    <div class="mobile-auth-buttons">
+       {% if request.user.is_authenticated %}
+            <li><a href="{% url 'fazer_logout' %}" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+        {% else %}
+            <li><a href="{% url 'login_bolao' %}" class="btn-login"><i class="fas fa-sign-in-alt"></i> Entrar</a></li>
+            <li><a href="{% url 'cadastro' %}" class="btn-register">Cadastre-se</a></li>
+        {% endif %}
+    </div>
+</nav>
+
+<button type="button" class="mobile-menu-toggle" id="mobileMenuToggle">
+    <i class="fas fa-bars"></i>
+</button>
+
+<script>
+// Debug: Verifica todos os estilos aplicados ao dropdown
+document.querySelectorAll('.dropdown').forEach(dropdown => {
+    dropdown.addEventListener('click', function() {
+        console.log('Classes do dropdown:', this.className);
+        console.log('Estilos do dropdown-menu:',
+            window.getComputedStyle(this.querySelector('.dropdown-menu')));
+    });
+});
+</script>

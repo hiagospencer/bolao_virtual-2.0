@@ -1,0 +1,40 @@
+<div class="np-modal-overlay" id="novoPremioPopup">
+  <div class="np-modal-container">
+    <button class="np-close-btn" aria-label="Fechar">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <div class="np-modal-header">
+      <h3 class="np-modal-title">🎁 Novo Prêmio Disponível!</h3>
+      <p class="np-modal-subtitle">Confira nossa última adição à loja</p>
+    </div>
+
+    <div class="np-modal-body">
+      {% if ultimo_premio.imagem %}
+      <div class="np-premio-image-container">
+        <img src="{{ ultimo_premio.imagem.url }}" alt="{{ ultimo_premio.nome }}" class="np-premio-image">
+      </div>
+      {% endif %}
+
+      <div class="np-premio-info">
+        <h4 class="np-premio-name">{{ ultimo_premio.nome }}</h4>
+        <p class="np-premio-desc">{{ ultimo_premio.descricao|safe }}</p>
+        <div class="np-premio-price">
+          <i class="fas fa-coins"></i> {{ ultimo_premio.preco_moedas }} moedas
+        </div>
+      </div>
+    </div>
+
+    <div class="np-modal-footer">
+      <button class="np-btn np-btn-secondary np-btn-close">
+        <i class="fas fa-times"></i> Fechar
+      </button>
+      <button class="np-btn np-btn-disable">
+        <i class="fas fa-eye-slash"></i> Não mostrar mais
+      </button>
+      <a href="{% url 'lista_premios' %}" class="np-btn np-btn-primary">
+        <i class="fas fa-shopping-bag"></i> Ver Prêmios
+      </a>
+    </div>
+  </div>
+</div>

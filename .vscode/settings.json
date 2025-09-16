@@ -1,0 +1,43 @@
+{
+  // 🚀 Configurações de formatação e salvamento automático
+  //   "editor.formatOnSave": true,
+  "files.autoSave": "onFocusChange",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "editor.tabSize": 4,
+  "editor.detectIndentation": false,
+
+  // 🐍 Python
+  "python.defaultInterpreterPath": "${workspaceFolder}/venv/Scripts/python.exe",
+  "python.formatting.provider": "black",
+  "python.linting.enabled": true,
+  "python.linting.flake8Enabled": true,
+  "python.linting.pylintEnabled": true,
+  "python.linting.mypyEnabled": false,
+  "python.analysis.autoSearchPaths": true,
+  "python.analysis.useLibraryCodeForTypes": true,
+
+  // 🧠 Pylance (Melhor intellisense)
+  "python.languageServer": "Pylance",
+
+  // 🌐 Django Templates (Emmet funcionando)
+  "emmet.includeLanguages": {
+    "django-html": "html"
+  },
+
+  // 💅 Prettier (HTML, CSS, JS, JSON)
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "all",
+  "prettier.semi": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // 🔍 Error Lens (Erros visíveis no código)
+  "errorLens.enabled": true,
+  "errorLens.fontWeight": "bold",
+  "errorLens.followCursor": "closestProblem",
+  "errorLens.gutterIconsEnabled": true,
+
+  // 🌈 Outras melhorias visuais
+  "bracketPairColorizer.depreciation-notice": false,
+  "editor.guides.bracketPairs": true
+}

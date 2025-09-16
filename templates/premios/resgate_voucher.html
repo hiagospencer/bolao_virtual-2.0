@@ -1,0 +1,115 @@
+{% extends 'auxiliar/base.html' %}
+{% load static %}
+{% block title %} Bolão virtual | Resgater Voucher {% endblock %}{% load l10n %}{% load humanize %} {% load custom_filters %}
+
+{% block body %}
+
+<div class="container">
+  <div class="voucher-detail-container {% if not valido %}voucher-expirado{% endif %}">
+    <div class="voucher-header">
+      <h2><i class="fas fa-ticket-alt"></i> Seu Voucher</h2>
+      {% if pedido.premio.loja %}
+      <span class="voucher-parceiro">
+        <i class="fas fa-store"></i> {{ pedido.premio.loja.nome }}
+      </span>
+      {% endif %}
+    </div>
+
+    <div class="voucher-body">
+      {% if not valido %}
+      <div class="voucher-alert">
+        <i class="fas fa-exclamation-triangle"></i> Este voucher expirou em {{ pedido.premio.data_expiracao|date:"d/m/Y" }}
+      </div>
+      {% endif %}
+
+      <div class="voucher-value">{{ pedido.premio.nome|default:"15%" }}</div>
+      <p class="voucher-desc">{{ pedido.premio.descricao|safe }}</p>
+
+      <div class="voucher-code-box">
+        <span>Código:</span>
+        <input type="text" id="voucher-code" value="{{ pedido.codigo_voucher }}" readonly>
+        <button id="btn-copiar" class="btn-copiar">
+          <i class="far fa-copy"></i> Copiar
+        </button>
+      </div>
+    </div>
+
+    <div class="voucher-footer">
+      <div class="voucher-meta">
+        <p><i class="far fa-calendar-alt"></i> <strong>Validade:</strong>
+          {% if pedido.premio.data_expiracao %}
+            {{ pedido.premio.data_expiracao|date:"d/m/Y" }}
+          {% else %}
+            Não expira
+          {% endif %}
+        </p>
+        <p><i class="far fa-clock"></i> <strong>Resgatado em:</strong> {{ pedido.data_resgate|date:"d/m/Y" }}</p>
+      </div>
+
+      <div class="voucher-actions">
+        {% if pedido.premio.url_parceiro %}
+        <a href="{{ pedido.premio.url_parceiro }}" class="btn-ir-loja" target="_blank">
+          <i class="fas fa-external-link-alt"></i> Ir para a loja
+        </a>
+        {% endif %}
+
+        {% if whatsapp_link %}
+        <button id="btn-whatsapp" class="btn-whatsapp-voucher">
+          <i class="fab fa-whatsapp"></i> Falar no WhatsApp
+        </button>
+        {% endif %}
+
+        {% if not pedido.utilizado and valido %}
+        <button id="btn-utilizado" class="btn-utilizado" data-pedido-id="{{ pedido.id }}">
+          <i class="fas fa-check"></i> Marcar como usado
+        </button>
+        {% elif pedido.utilizado %}
+        <span class="badge-used">
+          <i class="fas fa-check-circle"></i> Utilizado
+        </span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Copiar código
+document.getElementById('btn-copiar').addEventListener('click', function() {
+  const codeInput = document.getElementById('voucher-code');
+  codeInput.select();
+  document.execCommand('copy');
+
+  // Feedback
+  const originalText = this.innerHTML;
+  this.innerHTML = '<i class="fas fa-check"></i> Copiado!';
+  setTimeout(() => this.innerHTML = originalText, 2000);
+});
+
+// WhatsApp
+document.getElementById('btn-whatsapp')?.addEventListener('click', function() {
+  const codigo = document.getElementById('voucher-code').value;
+  const mensagem = `Olá, resgatei meu voucher {{ pedido.premio.nome}}, código: ${codigo} e gostaria de usá-lo.`;
+  const whatsappUrl = `https://wa.me/+55{{ whatsapp_link }}?text=${encodeURIComponent(mensagem)}`;
+  window.open(whatsappUrl, '_blank');
+});
+
+// Marcar como utilizado
+document.getElementById('btn-utilizado')?.addEventListener('click', function() {
+  const btn = this;
+  fetch("{% url 'marcar_como_utilizado' pedido.id %}", {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': '{{ csrf_token }}',
+      'X-Requested-With': 'XMLHttpRequest'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === 'success') {
+      btn.outerHTML = '<span class="badge-used"><i class="fas fa-check-circle"></i> Utilizado</span>';
+    }
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'auxiliar/base.html' %}
+{% load static %}
+{% block title %} Bolão virtual | Criar Palpites {% endblock %}
+
+{% block body %}
+
+<section class="palpites-page">
+  <main class="container">
+    <section class="page-header">
+      <h1><i class="fas fa-clipboard-check"></i> Faça Seus Palpites</h1>
+      <div class="round-info">
+        <span class="round-badge">{{ verificacao_partida.partida_atual }}ª Rodada</span>
+          <span class="round-status">Envie até: {{ data_preencher_palpites.data_final }}</span>
+      </div>
+    </section>
+
+    <div class="bets-grid">
+      <form class="bets-grid" action="{% url 'criar_palpites' %}" method="POST">
+        {% csrf_token%}
+        {% for rodada in rodadas %}
+          <div class="bet-card">
+              <div class="match-date">
+                <i class="far fa-calendar-alt"></i> {{ rodada.data_jogo }}
+              </div><br/>
+            <div class="match-teams">
+              <div class="team">
+                <img src="{{ rodada.imagem_casa }}" alt="{{ rodada.time_casa}}" class="team-logo">
+                <input type="hidden" name="{{ rodada.time_casa }}" value="{{ rodada.time_casa }}" />
+                <span>{{ rodada.time_casa }}</span>
+              </div>
+
+              <div class="vs">X</div>
+              <div class="team">
+                <img src="{{ rodada.imagem_fora }}" alt="{{ rodada.time_visitante}}" class="team-logo">
+                <input type="hidden" name="{{ rodada.time_visitante }}" value="{{ rodada.time_visitante }}" />
+                <span>{{ rodada.time_visitante }}</span>
+              </div>
+
+            </div>
+            <div class="bet-inputs">
+              <input type="number" name="resultado_casa" placeholder="0" id="placar" value="0"
+                          onfocus="if(this.value == '0') { this.value = ''; }"
+                          onblur="if(this.value === '') { this.value = 0; }" >
+              <span>:</span>
+              <input type="number" name="resultado_visitante" placeholder="0" id="placar" value="0"
+                          onfocus="if(this.value == '0') { this.value = ''; }"
+                          onblur="if(this.value === '') { this.value = 0; }">
+            </div>
+          </div>
+          {% empty %}
+            <div class="bet-card">
+              <h3>As rodadas ainda não foram definidas</h3>
+            </div>
+          {% endfor %}
+    </div>
+
+
+    {% if verificacao_partida.rodada_bloqueada %}
+      <div class="locked-rounds">
+        <h3><i class="fas fa-lock"></i> Rodadas Bloqueadas</h3>
+        <p>As rodadas ficam disponíveis para palpites até o horário do primeiro jogo de cada rodada.</p>
+      </div>
+    {% else %}
+      <div class="form-actions-palpites">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Salvar Palpites</button>
+      </div>
+    {% endif %}
+    </form>
+  </main>
+</section><br/><br/>
+{% endblock %}

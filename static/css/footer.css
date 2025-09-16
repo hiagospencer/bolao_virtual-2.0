@@ -1,0 +1,92 @@
+/* Footer profissional */
+    .main-footer {
+      background-color: #333;
+      color: white;
+      padding: 40px 0 20px;
+      margin-top: 40px;
+    }
+
+    .footer-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .footer-logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-logo i {
+      color: var(--primary);
+    }
+
+    .footer-about p {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: #ccc;
+    }
+
+    .footer-links h3, .footer-contact h3 {
+      font-size: 1.1rem;
+      margin-bottom: 15px;
+      color: white;
+    }
+
+    .footer-links ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-links li {
+      margin-bottom: 8px;
+    }
+
+    .footer-links a {
+      color: #ccc;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+
+    .social-links {
+      display: flex;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .social-links a {
+      color: white;
+      background-color: #444;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+
+    .social-links a:hover {
+      background-color: var(--primary);
+      transform: translateY(-3px);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 20px;
+      margin-top: 30px;
+      border-top: 1px solid #444;
+      font-size: 0.8rem;
+      color: #999;
+    }

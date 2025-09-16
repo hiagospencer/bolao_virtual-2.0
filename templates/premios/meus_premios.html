@@ -1,0 +1,81 @@
+{% extends 'auxiliar/base.html' %}
+{% load static %}
+{% block title %} Bolão virtual | Meus Prêmios {% endblock %} {% load l10n %} {% load humanize %} {% load custom_filters %}
+
+{% block body %}
+
+<div class="container">
+    <section class="rewards-hero">
+      <h1><i class="fas fa-award"></i> Meus Prêmios</h1>
+      <div class="premio-info-box">
+        <i class="fas fa-info-circle"></i>
+        <p>
+          Aqui estão todos os prêmios que você adquiriu. Os <strong>Títulos</strong> podem ser ativados para aparecerem
+          no seu perfil, enquanto <strong>Vouchers</strong> e <strong>Produtos</strong> devem ser resgatados conforme as
+          instruções de cada item.
+        </p>
+      </div>
+    </section>
+
+    <!-- Outros Títulos Adquiridos -->
+    <div class="titulos-grid">
+        {% for pedido in titulos_adquiridos %}
+        <div class="titulo-card {% if pedido.premio.tipo == 'titulo' and titulo_ativo and pedido.premio.id == titulo_ativo.id %}ativo{% endif %}">
+
+          {% if pedido.premio.imagem %}
+            <div class="premio-imagem-container">
+                <img src="{{ pedido.premio.imagem.url }}" alt="{{ pedido.premio.nome }}" class="premio-imagem">
+            </div>
+          {% else %}
+              <div class="premio-sem-imagem">
+                <i class="fas fa-{{ pedido.premio.tipo|default:'award' }}"></i>
+              </div>
+          {% endif %}
+
+            <!-- Badge de Tipo -->
+            <div class="premio-type-badge {{ pedido.premio.tipo }}">
+              {% if pedido.premio.tipo == 'titulo' %}
+                <i class="fas fa-crown"></i> Título
+              {% elif pedido.premio.tipo == 'voucher' %}
+                <i class="fas fa-ticket-alt"></i> Voucher
+              {% else %}
+                <i class="fas fa-gift"></i> Outros
+              {% endif %}
+            </div>
+
+            <h3>{{ pedido.premio.nome }}</h3>
+            <p class="descricao">{{ pedido.premio.descricao|safe }}</p>
+            <p class="data-compra">Adquirido em: {{ pedido.data_compra|date:"d/m/Y" }}</p>
+
+            {% if pedido.premio.tipo == 'titulo' %}
+                {% if not titulo_ativo or pedido.premio.id != titulo_ativo.id %}
+                    <a href="{% url 'ativar_titulo' pedido.id %}" class="btn-ativar">
+                      <i class="fas fa-check-circle"></i> Usar este título
+                    </a>
+                {% else %}
+                    <span class="badge-ativo">
+                      <i class="fas fa-check"></i> TÍTULO ATIVO
+                    </span>
+                {% endif %}
+            {% elif pedido.premio.tipo == 'voucher' %}
+                <a href="{% url 'resgatar_voucher' pedido.id %}" class="btn-resgatar">
+                  <i class="fas fa-exchange-alt"></i> Resgatar Voucher
+                </a>
+            {% endif %}
+        </div>
+        {% empty %}
+        <div class="empty-message">
+          <i class="fas fa-box-open"></i>
+          <p>Sua coleção de prêmios está vazia</p>
+          <small>Visite a loja para adquirir seus primeiros prêmios!</small>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="link-meus-titulos">
+        <a href="{% url 'lista_premios' %}" class="btn-ver-meus">
+          <i class="fas fa-shopping-cart"></i> Ir para a Loja
+        </a>
+    </div>
+</div>
+{% endblock %}

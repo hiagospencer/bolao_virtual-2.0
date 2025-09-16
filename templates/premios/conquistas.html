@@ -1,0 +1,96 @@
+{% extends 'auxiliar/base.html' %}
+{% load static %}
+{% block title %} Bolão virtual | Conquistas {% endblock %}
+{% load mathfilters %}
+
+{% block body %}
+<div class="container">
+
+    <section class="rewards-hero">
+      <h1><i class="fas fa-award"></i> Minhas Conquistas</h1>
+    </section>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab('concluidas')">Concluídas</button>
+        <button class="tab-btn" onclick="openTab('progresso')">Em Progresso</button>
+        <button class="tab-btn" onclick="openTab('disponiveis')">Disponíveis</button>
+    </div>
+
+    <div id="concluidas" class="tab-content" style="display: block;">
+        {% if concluidas %}
+            <div class="conquistas-grid">
+                {% for conquista in concluidas %}
+                <div class="conquista-card concluida">
+                    <i class="fas fa-{{ conquista.meta.tipo_trofeu.icone }}" style="color: {{ conquista.meta.tipo_trofeu.cor }}"></i>
+                    <h3>{{ conquista.meta.nome }}</h3>
+                    <p>{{ conquista.meta.descricao|safe }}</p>
+                    <div class="conquista-meta">
+                        <span>Conquistado em: {{ conquista.data_conquista|date:"d/m/Y" }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Você ainda não conquistou nenhum troféu.</p>
+        {% endif %}
+    </div>
+
+    <div id="progresso" class="tab-content">
+        {% if em_progresso %}
+            <div class="conquistas-grid">
+                {% for conquista in em_progresso %}
+                <div class="conquista-card em-progresso">
+                    <i class="fas fa-{{ conquista.meta.tipo_trofeu.icone }}" style="color: #ccc"></i>
+                    <h3>{{ conquista.meta.nome }}</h3>
+                    <p>{{ conquista.meta.descricao }}</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ conquista.progresso_atual|div:conquista.meta.valor_requerido|mul:100 }}%">
+                            {{ conquista.progresso_atual }}/{{ conquista.meta.valor_requerido }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Nenhuma conquista em progresso no momento.</p>
+        {% endif %}
+    </div>
+
+    <div id="disponiveis" class="tab-content">
+        {% if metas_nao_iniciadas %}
+            <div class="conquistas-grid">
+                {% for meta in metas_nao_iniciadas %}
+                <div class="conquista-card disponivel">
+                    <i class="fas fa-{{ meta.tipo_trofeu.icone }}" style="color: #eee"></i>
+                    <h3>{{ meta.nome }}</h3>
+                    <p>{{ meta.descricao }}</p>
+                    <div class="conquista-meta">
+                        <span>Meta: {{ meta.valor_requerido }} {{ meta.get_tipo_display }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Você já iniciou todas as conquistas disponíveis!</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function openTab(tabName) {
+    const tabContents = document.getElementsByClassName("tab-content");
+    for (let i = 0; i < tabContents.length; i++) {
+        tabContents[i].style.display = "none";
+    }
+
+    const tabButtons = document.getElementsByClassName("tab-btn");
+    for (let i = 0; i < tabButtons.length; i++) {
+        tabButtons[i].classList.remove("active");
+    }
+
+    document.getElementById(tabName).style.display = "block";
+    event.currentTarget.classList.add("active");
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,197 @@
+{% extends 'auxiliar/base.html' %}
+{% load static %}
+{% block title %} Bolão virtual | Regras {% endblock %}
+
+{% block body %}
+
+<section class="regras-page">
+ <main class="container">
+    <section class="rules-hero">
+      <h1><i class="fas fa-gavel"></i> Regras do Bolão Virtual</h1>
+      <p>Entenda como funcionam as pontuações e participe com chance de vencer!</p>
+    </section>
+
+    <section class="rules-section">
+      <h2><i class="fas fa-star"></i> Sistema de Pontuação</h2>
+
+      <div class="rules-grid">
+        <!-- Placar Exato -->
+        <div class="rule-card highlight">
+          <div class="rule-header">
+            <i class="fas fa-bullseye"></i>
+            <h3>Placar Exato</h3>
+            <span class="points-badge">3 pontos</span>
+          </div>
+          <p>Acertar o placar exato com os gols do vencedor e do perdedor ou empate.</p>
+          <div class="rule-example">
+            <div class="example-item">
+              <span class="example-label">Resultado Real:</span>
+              <span class="example-value">2 x 1</span>
+            </div>
+            <div class="example-item">
+              <span class="example-label">Seu Palpite:</span>
+              <span class="example-value correct">2 x 1</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vencedor da Partida -->
+        <div class="rule-card">
+          <div class="rule-header">
+            <i class="fas fa-flag"></i>
+            <h3>Vencedor da Partida</h3>
+            <span class="points-badge">2 pontos</span>
+          </div>
+          <p>Acertar o vencedor da partida, mas errar o número de gols.</p>
+          <div class="rule-example">
+            <div class="example-item">
+              <span class="example-label">Resultado Real:</span>
+              <span class="example-value">2 x 1</span>
+            </div>
+            <div class="example-item">
+              <span class="example-label">Seu Palpite:</span>
+              <span class="example-value partial">2 x 0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empate -->
+        <div class="rule-card">
+          <div class="rule-header">
+            <i class="fas fa-equals"></i>
+            <h3>Empate</h3>
+            <span class="points-badge">2 pontos</span>
+          </div>
+          <p>Acertar o empate da partida, mas errar o número de gols.</p>
+          <div class="rule-example">
+            <div class="example-item">
+              <span class="example-label">Resultado Real:</span>
+              <span class="example-value">2 x 2</span>
+            </div>
+            <div class="example-item">
+              <span class="example-label">Seu Palpite:</span>
+              <span class="example-value partial">1 x 1</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="rules-section">
+      <h2><i class="fas fa-tie"></i> Critérios de Desempate</h2>
+      <div class="tiebreaker-rules">
+        <ol class="tiebreaker-list">
+          <li>
+            <strong>Quantidade de Placeres Exatos</strong>
+            <span>Quem tiver mais acertos exatos leva vantagem</span>
+          </li>
+          <li>
+            <strong>Quantidade de Vitórias Acertadas</strong>
+            <span>Em caso de persistência do empate</span>
+          </li>
+          <li>
+            <strong>Quantidade de Empates Acertados</strong>
+            <span>Último critério para desempate</span>
+          </li>
+        </ol>
+        <div class="note-box delayed-matches">
+          <div class="note-icon">
+            <i class="fas fa-calendar-exclamation"></i>
+          </div>
+          <div class="note-content">
+            <h4>Partidas Adiadas - Como Funciona?</h4>
+            <div class="delayed-matches-grid">
+              <div class="match-status included">
+                <div class="status-header">
+                  <i class="fas fa-check-circle"></i>
+                  <span>Dentro do Bolão</span>
+                </div>
+                <p>Jogos realizados durante o período de vigência do bolão serão avaliados normalmente, mesmo que adiados.</p>
+              </div>
+              <div class="match-status excluded">
+                <div class="status-header">
+                  <i class="fas fa-times-circle"></i>
+                  <span>Fora do Bolão</span>
+                </div>
+                <p>Partidas remarcadas para após o término do bolão não serão consideradas para pontuação.</p>
+              </div>
+            </div>
+            <div class="example-note">
+              <i class="fas fa-lightbulb"></i>
+              <span>Exemplo: Se seu bolão vai até a 7ª rodada, jogos da 8ª rodada em diante não serão computados.</span>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="note-box">
+          <i class="fas fa-info-circle"></i>
+          <div>
+            <p><strong>Tratamento de partidas adiadas:</strong></p>
+            <ul class="note-list">
+              <li>Jogos adiados que forem realizados <strong>dentro do período de vigência do bolão</strong> serão normalmente avaliados e pontuados conforme as regras</li>
+              <li>Jogos adiados para <strong>após o término oficial do bolão</strong> <strong>não serão considerados</strong> para pontuação</li>
+              <li><strong>Exemplo:</strong> Se o bolão vai da 1ª à 7ª rodada, partidas adiadas para a 8ª rodada ou posterior não serão computadas</li>
+              <li>Todas as atualizações de datas e resultados são processadas automaticamente pelo sistema</li>
+            </ul>
+          </div>
+        </div> -->
+      </div>
+    </section>
+
+    <section class="rules-section">
+      <h2><i class="fas fa-question-circle"></i> Como Participar</h2>
+      <div class="participation-steps">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <h3>Cadastro</h3>
+          <p>Realize seu cadastro no sistema do Bolão Virtual</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <h3>Pagamento</h3>
+          <p>Efetue o pagamento da taxa de participação</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <h3>Confirmação</h3>
+          <p>O organizador irá adicionar você ao grupo do bolão</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="rules-section">
+      <h2><i class="fas fa-cogs"></i> Funcionamento do Bolão</h2>
+      <ul class="rules-list">
+        <li>
+          <i class="fas fa-futbol"></i>
+          <span>Todos os jogos da competição serão considerados</span>
+        </li>
+        <li>
+          <i class="fas fa-edit"></i>
+          <span>Cada jogo recebe um palpite do placar final</span>
+        </li>
+        <li>
+          <i class="fas fa-times-circle"></i>
+          <span>Jogos sem palpite não concedem pontos</span>
+        </li>
+        <li>
+          <i class="fas fa-trophy"></i>
+          <span>O Ranking Geral mostra a classificação de todos</span>
+        </li>
+        <li>
+          <i class="fas fa-edit"></i>
+          <span>Durante a semana, um botão de edição estará disponível para alteração de palpites</span>
+        </li>
+        <li>
+          <i class="fas fa-lock"></i>
+          <span>O sistema será bloqueado 1 dia antes do primeiro jogo da rodada, impedindo novas edições</span>
+        </li>
+
+        <li>
+          <i class="fas fa-award"></i>
+          <span>Prêmios são entregues aos melhores colocados</span>
+        </li>
+      </ul>
+    </section>
+  </main>
+</section>
+{% endblock %}

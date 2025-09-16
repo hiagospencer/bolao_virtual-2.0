@@ -1,0 +1,137 @@
+{% extends 'auxiliar/base.html' %}
+{% load static %}
+{% block title %} Bolão virtual | Configurações {% endblock %}
+
+{% block body %}
+
+<section class="admin-page">
+
+    <main class="container">
+        <div class="admin-alert">
+            <i class="fas fa-shield-alt"></i>
+            <strong>Área Restrita:</strong> Apenas administradores têm acesso a estas configurações.
+        </div>
+
+        <section class="admin-section">
+            <h2><i class="fas fa-calendar-alt"></i> Gerenciamento de Rodadas</h2>
+
+            <!-- CONFIGURAR RODADAS -->
+            <div class="admin-card">
+                <h3><i class="fas fa-play-circle"></i> Configurar Rodadas</h3>
+                <form class="admin-form" method="POST" action="{% url 'configurar_rodadas' %}">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="rodada-inicial"><i class="fas fa-flag"></i> Rodada Inicial</label>
+                            <select id="rodada-inicial" name="rodada_inicial" class="admin-select">
+                                <option value="">Selecione...</option>
+                                {% for i in faixa_rodadas %}
+                                <option value="{{ i }}">Rodada {{ i }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="rodada-final"><i class="fas fa-flag-checkered"></i> Rodada Final</label>
+                            <select id="rodada-final" name="rodada_final" class="admin-select">
+                                <option value="">Selecione...</option>
+                                {% for i in faixa_rodadas %}
+                                <option value="{{ i }}">Rodada {{ i }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-admin btn-save">
+                            <i class="fas fa-save"></i> Aplicar Configurações
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- AÇÕES DE RODADA -->
+            <div class="admin-card">
+                <h3><i class="fas fa-calendar-plus"></i> Ações de Rodada</h3>
+                <form method="POST" action="{% url 'acoes_rodada' %}">
+                    {% csrf_token %}
+                    <div class="action-buttons">
+                        <button type="submit" name="acao" value="criar" class="btn btn-admin btn-action">
+                            <i class="fas fa-plus-circle"></i> Criar Rodada Campeonato
+                        </button>
+                        <button type="submit" name="acao" value="apagar" class="btn btn-admin btn-action btn-danger">
+                            <i class="fas fa-trash-alt"></i> Resetar Pontuações Usuários
+                        </button>
+                        <!-- <button type="submit" name="acao" value="restaurar" class="btn btn-admin btn-action">
+                            <i class="fas fa-sync-alt"></i> Restaurar Rodada Original
+                        </button> -->
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- CLASSIFICAÇÃO -->
+        <section class="admin-section">
+            <h2><i class="fas fa-trophy"></i> Gerenciamento de Classificação</h2>
+
+            <div class="admin-card">
+                <h3><i class="fas fa-sync"></i> Atualizar Classificação</h3>
+                <form method="POST" action="{% url 'atualizar_classificacao' %}" class="admin-form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="rodada-atualizar" class="input-rodada-label"><i class="fas fa-hashtag"></i> Atualizar Classificação</label>
+                        <input class="input-rodada" type="number" name="atualizar_classificacao" id="rodada-atualizar" placeholder="Digite o número da rodada" min="1" >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rodada-false" class="input-rodada-label"><i class="fas fa-toggle-off"></i> Criar Rodada Original</label>
+                        <input class="input-rodada" type="number" name="rodada_original" id="rodada-false" placeholder="Digite a rodada para criar a rodada original" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="destaque-rodada" class="input-rodada-label"><i class="fas fa-toggle-off"></i> Criar Destaque da Rodada</label>
+                        <input class="input-rodada" type="number" name="destaque_rodada" id="destaque-rodada" placeholder="Digite a rodada para criar destaque da rodada" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="rodada_false" class="input-rodada-label"><i class="fas fa-toggle-off"></i> Deixar rodada em False</label>
+                        <input class="input-rodada" type="number" name="rodada_false" id="rodada_false" placeholder="Digite a rodada para deixar ela false" min="1">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-admin btn-save">
+                            <i class="fas fa-save"></i> Aplicar Configurações
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- CONTROLE DE PARTIDAS -->
+            <div class="admin-card">
+                <h3><i class="fas fa-lock"></i> Controle de Partidas</h3>
+                <form method="POST" action="{% url 'controle_partidas' %}">
+                    {% csrf_token %}
+                    <div class="action-buttons">
+                        <button type="submit" name="acao" value="bloquear_todas" class="btn btn-admin btn-action">
+                            <i class="fas fa-lock"></i> Bloquear Todas as Palpites
+                        </button>
+                        <button type="submit" name="acao" value="desbloquear_todas" class="btn btn-admin btn-action">
+                            <i class="fas fa-lock-open"></i> Desbloquear Todas as Palpites
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ESTATÍSTICAS -->
+            <div class="admin-card">
+                <h3><i class="fas fa-gear"></i> Estatísticas de Visitas no site</h3>
+                <div class="action-buttons">
+                    <a href="{% url 'estatisticas' %}" target="_blank" class="btn btn-admin btn-action">
+                        <i class="fas fa-clipboard-list"></i> Ver Estatísticas
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+</section>
+
+
+{% endblock %}

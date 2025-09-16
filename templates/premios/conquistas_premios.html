@@ -1,0 +1,131 @@
+{% extends 'auxiliar/base.html' %}
+{% load static %}
+{% block title %} Bolão virtual | Prêmios {% endblock %} {% load l10n %} {% load humanize %} {% load custom_filters %}
+{% block body %}
+  <main class="container-premios">
+    <section class="rewards-hero">
+      <h1><i class="fas fa-award"></i> Prêmios</h1>
+      <p>Compre Prêmios e torne sua experiência mais atrativa.</p>
+    </section>
+
+    <!-- Header (Mesmo estilo da página inicial) -->
+    <section class="user-welcome-bar" style="padding: 20px;">
+      <div class="welcome-content">
+        <div class="welcome-text">
+            <h2><strong>{{ usuario.user.username }}</strong></h2>
+              <div class="user-stats">
+                <span class="stat-item"><i class="fas fa-level-up-alt"></i> Nível: <strong>{{ usuario.level|default:"1" }}</strong></span>
+                <span class="stat-item"><i class="fas fa-coins"></i> Moedas: <strong>{{ usuario.moedas|intcomma }}</strong></span>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filtros -->
+<div class="filters-container">
+      <!-- Abas -->
+      <div class="tabs">
+        <a class="tab-btn active" data-tab="disponiveis">Disponíveis</a>
+        <a href="{% url 'meus_premios' %}" class="tab-btn active" data-tab="disponiveis">Meus prêmios</a>
+      </div>
+
+      <div class="filter-select">
+    <label for="tipo-premio"><i class="fas fa-filter"></i> Filtrar por:</label>
+    <select
+      id="tipo-premio"
+      class="form-select-premios"
+      hx-get="{% url 'lista_premios' %}"
+      hx-target=".titulos-grid"
+      hx-swap="innerHTML"
+      hx-indicator="#htmx-indicator"
+      name="categoria"
+    >
+      <option value="todos">Todos os tipos</option>
+      {% for categoria in categorias_premios %}
+        <option value="{{ categoria.id }}">{{ categoria.nome }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+    <!-- Indicador de Loading (HTMX) -->
+      <div id="htmx-indicator" class="htmx-indicator" style="display: block;">
+        <div class="loading-spinner"></div>
+        <p>Carregando prêmios...</p>
+      </div>
+
+    <!-- Lista de Prêmios -->
+    <div class="titulos-grid">
+
+        {% for premio in premios_disponiveis %}
+          <div class="titulo-card" data-categoria="{{ premio.categoria.id }}">
+            <!-- Imagem do prêmio -->
+            {% if premio.imagem %}
+              <div class="premio-imagem-container">
+                  <img src="{{ premio.imagem.url }}" alt="{{ premio.nome }}" class="premio-imagem">
+              </div>
+            {% else %}
+              <div class="premio-sem-imagem">
+                  <i class="fas fa-award"></i>
+              </div>
+            {% endif %}
+
+            <div class="premio-type-badge {{ premio.tipo }}">
+              {% if premio.tipo == 'titulo' %}
+                <i class="fas fa-crown"></i> Título
+              {% elif premio.tipo == 'voucher' %}
+                <i class="fas fa-ticket-alt"></i> Voucher
+              {% else %}
+                <i class="fas fa-gift"></i> Outros
+              {% endif %}
+            </div>
+
+            <h3 style="margin-top:10px;">{{ premio.nome }}</h3>
+            <p class="descricao">{{ premio.descricao|safe }}</p>
+            <div class="preco-estoque">
+              <span class="preco">{{ premio.preco_moedas|intcomma }} moedas</span>
+              {% if premio.estoque > 0 or premio.estoque == -1 %}
+                <span class="estoque">
+                  {% if premio.estoque == -1 %}Ilimitado{% else %}{{ premio.estoque }} restantes{% endif %}
+                </span>
+              {% else %}
+                <span class="estoque esgotado">ESGOTADO</span>
+              {% endif %}
+            </div>
+            <a href="{% url 'comprar_premio' premio.id %}" class="btn-comprar">Comprar</a>
+          </div>
+          {% empty %}
+          <p class="sem-titulos">Nenhum prêmio encontrado nesta categoria.</p>
+          {% endfor %}
+      </div>
+
+    <!-- Títulos Adquiridos (Link para Meus Títulos) -->
+    </main>
+
+  <script>
+    // Lógica para filtrar por abas
+    document.getElementById('tipo-premio').addEventListener('change', function() {
+      const tipoSelecionado = this.value;
+      const cards = document.querySelectorAll('.titulo-card');
+
+      cards.forEach(card => {
+        if (tipoSelecionado === 'todos' || card.dataset.tipo === tipoSelecionado) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+
+    // Adiciona parâmetros à URL sem recarregar
+    document.getElementById('tipo-premio').addEventListener('change', function() {
+      const params = new URLSearchParams(window.location.search);
+      if (this.value === 'todos') {
+        params.delete('categoria');
+      } else {
+        params.set('categoria', this.value);
+      }
+      window.history.pushState({}, '', '?' + params.toString());
+    });
+
+  </script>
+{% endblock %}

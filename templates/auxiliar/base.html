@@ -1,0 +1,144 @@
+{% load static %} {% include 'global/modal_alerts.html' %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="{% static 'img/bolaovirtual-logo.jpeg' %}" rel="icon" />
+
+    <meta
+      name="description"
+      content="Bolão Virtual - O jogo onde seus palpites no Brasileirão valem prêmios reais! Participe do bolão mais emocionante, compete com amigos e ganhe dinheiro acertando resultados."
+    />
+    <meta
+      name="keywords"
+      content="bolão virtual, bolão brasileirão, palpites futebol, apostas esportivas, campeonato brasileiro, bolão premiado, competição futebol, jogo de apostas, bolão online, futebol virtual"
+    />
+    <meta name="author" content="Hiago Souza" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#128C28" />
+
+    <!-- Open Graph / Facebook -->
+    <meta
+      property="og:title"
+      content="Bolão Virtual | O bolão premiado do Brasileirão"
+    />
+    <meta
+      property="og:description"
+      content="Transforme seu conhecimento de futebol em prêmios! Participe do Bolão Virtual do Brasileirão, desafie amigos e ganhe dinheiro com seus palpites."
+    />
+    <meta
+      property="og:image"
+      content="{% static 'img/bolaovirtual-logo.jpeg' %}"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="https://bolaovirtual.site/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Bolão Virtual" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Bolão Virtual | O bolão premiado do Brasileirão"
+    />
+    <meta
+      name="twitter:description"
+      content="Seu bolão online do Campeonato Brasileiro! Palpite, compete e ganhe prêmios reais com o Bolão Virtual."
+    />
+    <meta
+      name="twitter:image"
+      content="{% static 'img/logo-brasileirao.png' %}"
+    />
+    <meta name="twitter:site" content="@bolaovirtual" />
+
+    <!-- Apple Touch Icon -->
+    <link
+      rel="apple-touch-icon"
+      href="{% static 'img/apple-touch-icon.png' %}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+
+    <title>{% block title %} {% endblock %}</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/autenticacao.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/palpites.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/meus_palpites.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/noticias.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/regras.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/perfil.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/loja.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/configuracao.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/comunidade.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/premios.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/pagamento.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/termos.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/conquistas_premios.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/novo_premio_popup.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/aposta.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/level_up.css' %}" />
+  </head>
+
+  <body class="home-page">
+    {% include 'auxiliar/header.html' %} {% block body %} {% endblock %}
+    {%include 'auxiliar/footer.html' %}
+
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/shop-scripts.js' %}"></script>
+    <script src="{% static 'js/pagamento.js' %}"></script>
+    <script src="{% static 'js/comunidade.js' %}"></script>
+    <script src="{% static 'js/premios.js' %}"></script>
+    <script src="{% static 'js/novo_premio_popup.js' %}"></script>
+    <script src="{% static 'js/aposta.js' %}"></script>
+    <script src="{% static 'js/level_up.js' %}"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const csrftoken = document.querySelector(
+          '[name=csrfmiddlewaretoken]',
+        )?.value;
+        if (csrftoken) {
+          fetchDefaults = {
+            headers: {
+              'X-CSRFToken': csrftoken,
+            },
+          };
+        }
+      });
+
+      // Lógica para filtrar por abas
+      document
+        .getElementById('tipo-premio')
+        .addEventListener('change', function () {
+          const tipoSelecionado = this.value;
+          const cards = document.querySelectorAll('.titulo-card');
+
+          cards.forEach((card) => {
+            if (
+              tipoSelecionado === 'todos' ||
+              card.dataset.tipo === tipoSelecionado
+            ) {
+              card.style.display = 'block';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,64 @@
+{% extends 'auxiliar/base.html' %}
+{% load static %}
+{% block title %}Bolão virtual | Loja{% endblock %}
+{% load l10n %} {% load humanize %}
+{% block body %}
+
+<section class="shop-page">
+  <main class="container">
+    <section class="shop-hero">
+      <h1><i class="fas fa-store-alt"></i> Loja do Bolão</h1>
+      <p>Confira produtos de todas as nossas lojas parceiras</p>
+    </section>
+
+    <div class="shop-filters">
+      <div class="filter-group">
+        <label for="category-filter"><i class="fas fa-filter"></i> Categoria:</label>
+        <select id="category-filter" name="categoria" class="shop-select"
+                hx-get="{% url 'loja' %}"
+                hx-target=".shop-grid"
+                hx-indicator=".htmx-indicator">
+          <option value="all">Todos os itens</option>
+          {% for categoria in categorias %}
+            <option value="{{ categoria.id }}" {% if categoria_selecionada == categoria.id|stringformat:"s" %}selected{% endif %}>
+              {{ categoria.nome }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="loja-filter"><i class="fas fa-store"></i> Lojas:</label>
+        <select id="loja-filter" name="loja" class="shop-select"
+                hx-get="{% url 'loja' %}"
+                hx-target=".shop-grid"
+                hx-indicator=".htmx-indicator">
+          <option value="all">Todas as lojas</option>
+          {% for loja in lojas %}
+            <option value="{{ loja.id }}" {% if loja_selecionada == loja.id|stringformat:"s" %}selected{% endif %}>
+              {{ loja.nome }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <!-- Indicador de carregamento -->
+    <div class="htmx-indicator" style="text-align: center; margin: 20px 0; display: block;">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Carregando...</span>
+      </div>
+      <p>Carregando produtos...</p>
+    </div>
+
+    <!-- Grid de produtos que será atualizado via HTMX -->
+    <div class="shop-grid" id="products-container">
+      {% include "outros/partials/produtos_grid.html" %}
+    </div>
+  </main>
+</section>
+
+<!-- Adicione o HTMX antes do seu script -->
+<script src="{% static 'shop-scripts.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,286 @@
+{% extends 'auxiliar/base.html' %}
+{% load static %}
+{% block title %} Bolão virtual | Home {% endblock %} {% load l10n %} {% load humanize %} {% load custom_filters %}
+
+{% block body %}
+<!-- Nova seção de informações do usuário -->
+    {% if user.is_authenticated %}
+        <section class="user-welcome-bar">
+            <div class="container">
+                <div class="welcome-content">
+                    <div class="welcome-text">
+                        <h2>Bem vindo, <strong>{{ usuario.user.username }}</strong>!</h2>
+                        <div class="user-stats">
+                            <span class="stat-item"><i class="fas fa-medal"></i> Posição atual: <strong>{{ usuario.user.classificacao.posicao_atual|default:"-" }}º</strong></span>
+                            <span class="stat-item"><i class="fas fa-level-up-alt"></i> Nível: <strong>{{ usuario.level|default:"1" }}</strong></span>
+                            <span class="stat-item"><i class="fas fa-coins"></i> Moedas: <strong>{{ usuario.moedas|intcomma }}</strong></span>
+                        </div>
+                    </div>
+            </div>
+        </section>
+    {% endif %}
+
+    <main class="container">
+        <section class="rules-container">
+            <div class="rule-card">
+                <i class="fas fa-check-circle"></i>
+                <h3>Acerto do Vencedor/Empate</h3>
+                <p>Ganhe <strong>2 pontos</strong> por acertar o resultado da partida</p>
+            </div>
+
+            <div class="rule-card">
+                <i class="fas fa-bullseye"></i>
+                <h3>Placar Exato</h3>
+                <p>Ganhe <strong>3 pontos adicionais</strong> (total 5) por acertar o placar exato</p>
+            </div>
+
+            <div class="rule-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>Classificação</h3>
+                <p>Suba no ranking e concorra a prêmios em dinheiro via PIX</p>
+            </div>
+        </section>
+
+        {% if destaque %}
+            <div class="tab-content" id="destaques" style="display: block;">
+                <h2><i class="fas fa-star"></i> Destaques da Comunidade</h2>
+                <div class="featured-section">
+                    <h3><i class="fas fa-crown"></i> Palpiteiro da Rodada</h3>
+                    <div class="featured-user">
+                    <div class="user-profile">
+                        <img src="{% if destaque.usuario.foto_perfil %}{{ destaque.usuario.foto_perfil.url }}{% else %}{% static 'img/perfil-null.png' %}{%endif%}" alt="{{ destaque.usuario.username }}" class="user-avatar">
+                        <div class="user-info">
+                        <h4>{{ destaque.usuario.username }}
+                            {% if destaque.usuario.tituloativo.titulo.premio.nome  %}
+                                "{{ destaque.usuario.tituloativo.titulo.premio.nome }}"
+                            {% endif %}
+                            </h4>
+                        <p>Acertou {{ destaque.acertos }} dos {{ destaque.total_jogos }} jogos da {{ destaque.rodada }}ª rodada totalizando {{ pontuacao_rodada.pontos }} pontos!</p>
+                        <div class="user-stats">
+                            <span><i class="fas fa-check-circle"></i> {{ destaque.porcentagem_acertos }}% de acertos</span>
+                        </div>
+                        </div>
+                    </div>
+                    {% if destaque.usuario.tituloativo.titulo.premio.descricao %}
+                        <div class="user-tips">
+                            <h5>Dica do Mestre:</h5>
+                            <p>{{ destaque.usuario.tituloativo.titulo.premio.descricao }}</p>
+                        </div>
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <div class="ranking-container">
+            <div class="ranking-header">
+                <h2 class="section-title"><i class="fas fa-medal"></i> Classificação</h2>
+                <div class="ranking-actions">
+                    <a href="{% url 'trofeus' %}" class="btn btn-trophies"><i class="fas fa-trophy"></i> Ver Troféus</a>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th>Posição</th>
+                            <th>Jogador</th>
+                            <th >Variação</th>
+                            <th>Pontos</th>
+                            <th >Placar Exato</th>
+                            <th >Vitórias</th>
+                            <th >Empates</th>
+                            <th >Conquistas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for usuario in classificacao %}
+                            <tr class="{% if forloop.counter == 1 %}gold{% elif forloop.counter == 2 %}silver{% elif forloop.counter == 3 %}bronze{% endif %}">
+                                <td>
+                                    {{ forloop.counter }}
+                                    {% if forloop.counter == 1 %}
+                                        <i class="fas fa-trophy gold" style="color:rgb(246, 214, 32);"></i>
+                                    {% elif forloop.counter == 2 %}
+                                        <i class="fas fa-medal silver" style="color: #C0C0C0;"></i>
+                                    {% elif forloop.counter == 3 %}
+                                        <i class="fas fa-medal bronze" style="color: #CD7F32;"></i>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="player-info">
+                                        <img src="{% if usuario.usuario.foto_perfil %}{{ usuario.usuario.foto_perfil.url }}{% else %}{% static 'img/perfil-null.png' %}{% endif %}" alt="{{ usuario.usuario.username }}" class="player-avatar">
+                                        <div class="player-details">
+                                            <span class="player-name">{{ usuario.usuario.username }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if usuario.posicao_variacao > 0 %}
+                                        <i class="fa-solid fa-up-long" style="color: #12c161;"></i> {{ usuario.posicao_variacao }}
+                                    {% elif usuario.posicao_variacao < 0 %}
+                                        <i class="fa-solid fa-down-long" style="color: rgb(228, 43, 43);"></i> {{ usuario.posicao_variacao|absolute }}
+                                    {% else %}
+                                        <i class="fa-solid fa-minus"></i>
+                                    {% endif %}
+                                </td>
+                                <td>{{ usuario.pontos }}</td>
+                                <td>{{ usuario.placar_exato }}</td>
+                                <td>{{ usuario.vitorias }}</td>
+                                <td>{{ usuario.empates }}</td>
+                                <td>
+                                    <div class="achievement-icons">
+                                        {% for conquista in usuario.usuario.conquistas_ativas %}
+                                            <i class="fas {{ conquista.meta.tipo_trofeu.icone }}"
+                                            title="{{ conquista.meta.nome }}"
+                                            style="color: {{ conquista.meta.tipo_trofeu.cor }};"></i>
+                                        {% empty %}
+                                            <span><i class="fa-solid fa-minus"></i></span>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="8" style="text-align: center;">Nenhum jogador cadastrado no momento</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="ranking-footer">
+                <a href="{% url 'perfil' %}" class="btn btn-my-position">
+                    <i class="fas fa-user"></i> Ver minha posição
+                </a>
+            </div>
+        </div>
+
+        <!-- Mostrar os campeões -->
+        <div class="champions-container">
+            <h2 class="section-title">🏆 Hall dos Campeões</h2>
+
+            <div class="table-responsive">
+                <table class="champions-table">
+                    <thead>
+                        <tr class="champions-header">
+                            <th class="champion-col champion-col--photo"></th>
+                            <th class="champion-col champion-col--name">Campeão</th>
+                            <th class="champion-col champion-col--titles">Títulos</th>
+                            <th class="champion-col champion-col--details">Histórico</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for campeao in campeoes_agrupados %}
+                        <tr class="champion-row">
+                            <td class="champion-col champion-col--photo">
+                                {% if campeao.usuario__foto_perfil %}
+                                <img src="{{ campeao.usuario__foto_perfil.url }}"
+                                    alt="{{ campeao.usuario__username }}"
+                                    class="champion-avatar">
+                                {% else %}
+                                <div class="champion-avatar-initial">
+                                    {{ campeao.usuario__username|first|upper }}
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td class="champion-col champion-col--name">
+                                {{ campeao.usuario__username }}
+                            </td>
+                            <td class="champion-col champion-col--titles">
+                                <span class="titles-badge">{{ campeao.total_titulos }}</span>
+                            </td>
+                            <td class="champion-col champion-col--details">
+                                <div class="champion-details-toggle"
+                                    data-user-id="{{ campeao.usuario__id }}">
+                                    ▼ Detalhes
+                                </div>
+                                <div class="champion-details"
+                                    id="details-{{ campeao.usuario__id }}"
+                                    style="display:none;">
+                                    {% for titulo in titulos_por_usuario|get_item:campeao.usuario__id %}
+                                    <div class="edition-detail">
+                                        <span class="edition">{{ titulo.edicao }}ª Edição</span>
+                                        <span class="points">{{ titulo.pontos }} pts</span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="no-champions">Nenhum campeão registrado ainda</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <section class="prizes-section">
+            <h2><i class="fas fa-gift"></i> Premiações</h2>
+            <p>Quanto mais participantes, maiores os prêmios! Pagamentos via PIX ao final de cada bolão.</p>
+
+            <div class="prize-cards">
+                {% for premiacao in premiacoes %}
+                <div class="prize-card">
+                    <h3>{{premiacao.posicao}}º Lugar</h3>
+                    <div class="prize-value">R$ {{ premiacao.premiacao|intcomma }}</div>
+                    <p>+ Troféu virtual</p>
+                    <div class="prize-badges">
+                        <span class="pix-badge"><i class="fa-brands fa-pix"></i> PIX</span>
+                    </div>
+                </div>
+                {% empty %}
+                    <div class="prize-card">
+                        <h3>As premiações ainda não foram definidas</h3>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+{% if ultimo_premio %}
+  {% include 'premios/novo_premio_popup.html' %}
+{% endif %}
+
+
+<div id="level-up-data"
+     data-level-up="{{ level_up|default:'False' }}"
+     data-new-level="{{ new_level|default:'0' }}"
+     style="display: none;">
+</div>
+
+    {% if request.session.mostrar_modal_recompensa %}
+        <div id="modal-premio-convite" class="modal-premio-convite show">
+        <div class="modal-premio-content">
+            <span class="modal-premio-close" onclick="fecharModalPremio()">&times;</span>
+            <h2>🎉 Parabéns!</h2>
+            <p>Você ganhou um <strong>Bolão Premium</strong> por indicar 3 amigos que ativaram a conta!</p>
+            <p>Continue compartilhando seu link para ganhar ainda mais recompensas.</p>
+            <button onclick="fecharModalPremio()">Fechar</button>
+        </div>
+        </div>
+        <script>
+        function fecharModalPremio() {
+            const modal = document.getElementById('modal-premio-convite');
+            modal.classList.remove('show');
+            fetch("{% url 'limpar_modal_sessao' %}");
+        }
+        </script>
+    {% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.champion-details-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            const userId = this.dataset.userId;
+            const details = document.getElementById(`details-${userId}`);
+            const isHidden = details.style.display !== 'block';
+
+            details.style.display = isHidden ? 'block' : 'none';
+            this.textContent = isHidden ? '▲ Ocultar' : '▼ Detalhes';
+        });
+    });
+});
+</script>
+
+{% endblock %}

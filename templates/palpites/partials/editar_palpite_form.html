@@ -1,0 +1,45 @@
+{% load static %}
+<div class="bolao-edit-form">
+    <div class="bolao-edit-header">
+        <h4>Editar Palpite</h4>
+        <span class="bolao-close-modal" onclick="closeBolaoModal()">&times;</span>
+    </div>
+
+    <div class="bolao-teams-display">
+        <div class="bolao-team-modal">
+            <img src="{{ palpite.imagem_casa }}" alt="{{ palpite.time_casa }}" class="bolao-team-logo-modal">
+            <span class="bolao-team-name-modal">{{ palpite.time_casa }}</span>
+        </div>
+
+        <span class="bolao-vs-separator">X</span>
+
+        <div class="bolao-team-modal">
+            <img src="{{ palpite.imagem_fora }}" alt="{{ palpite.time_visitante }}" class="bolao-team-logo-modal">
+            <span class="bolao-team-name-modal">{{ palpite.time_visitante }}</span>
+        </div>
+    </div>
+
+    <form id="bolaoEditForm" class="bolao-score-input-modal">
+        {% csrf_token %}
+        <div class="bolao-score-input">
+            <input type="number" class="bolao-score-input-field" name="placar_casa" value="{{ palpite.placar_casa }}" min="0" required>
+            <span class="bolao-score-separator">X</span>
+            <input type="number" class="bolao-score-input-field" name="placar_visitante" value="{{ palpite.placar_visitante }}" min="0" required>
+        </div>
+        <div class="bolao-form-actions">
+            <button type="button" class="bolao-cancel-btn" onclick="closeBolaoModal()">
+                <i class="fas fa-times"></i> Cancelar
+            </button>
+            <button type="submit" class="bolao-save-btn">
+                <i class="fas fa-check"></i> Salvar Palpite
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.getElementById('bolaoEditForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    submitBolaoEditForm(this, {{ palpite.id }});
+});
+</script>

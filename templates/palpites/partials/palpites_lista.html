@@ -1,0 +1,66 @@
+<div class="bets-results" id="palpites-container">
+  <div class="results-header">
+    <h3>{{ rodada_atual }}ª Rodada - Palpites de {{ usuario.user.username }}</h3>
+  </div>
+
+  <div class="bets-list">
+    {% for rodada in rodadas %}
+      {% if rodada %}
+        <div class="bet-item {{ rodada.tipo_class }} {% if not is_own_profile %}other-user{% endif %}" id="palpite-{{ rodada.id }}">
+          <div class="match-info">
+            <div class="teams">
+              <span class="team home-team">
+                <img src="{{ rodada.imagem_casa }}" alt="{{ rodada.time_casa }}" class="team-logo">
+                {{ rodada.time_casa }}
+              </span>
+              <span class="vs">X</span>
+              <span class="team away-team">
+                <img src="{{ rodada.imagem_fora }}" alt="{{ rodada.time_visitante }}" class="team-logo">
+                {{ rodada.time_visitante }}
+              </span>
+            </div>
+            {% if editavel and is_own_profile %}
+            <button class="bolao-edit-button" onclick="openBolaoEditModal({{ rodada.id }})">
+              <i class="fas fa-edit"></i> Editar Rodada
+            </button>
+            {% endif %}
+          </div>
+
+          <div class="bet-comparison">
+            <div class="user-bet">
+              <span>Seu palpite:</span>
+              <strong>{{ rodada.placar_casa }} - {{ rodada.placar_visitante }}</strong>
+            </div>
+            <div class="actual-result">
+              <span>Resultado Original:</span>
+              {% for partida in rodadas_original %}
+                {% if partida.rodada_atual == rodada.rodada_atual and partida.time_casa == rodada.time_casa and partida.time_visitante == rodada.time_visitante %}
+                  <strong>{{ partida.placar_casa }} - {{ partida.placar_visitante }}</strong>
+                {% endif %}
+              {% endfor %}
+            </div>
+
+            <div class="bet-points">
+              <span>Pontos:</span>
+              {% if rodada.tipo_class == 'exact-correct' %}
+                <strong class="points">5</strong>
+              {% elif rodada.tipo_class == 'result-correct' %}
+                <strong class="points">2</strong>
+              {% else %}
+                <strong class="points">0</strong>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <div class="locked-rounds">
+          <h3>Usuários {{ usuario.user.username }} ainda não tem rodadas salvas.</h3>
+        </div>
+      {% endif %}
+    {% empty %}
+          <div class="locked-rounds">
+            <h3>Usuários ainda não tem rodadas salvas.</h3>
+          </div>
+    {% endfor %}
+  </div>
+</div>

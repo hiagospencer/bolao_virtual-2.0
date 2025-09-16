@@ -1,0 +1,136 @@
+{% extends 'auxiliar/base.html' %}
+{% load static %}
+{% block title %} Bolão virtual | Notícias {% endblock %}
+
+{% block body %}
+<section class="news-page">
+
+  <main class="container">
+    <section class="news-hero">
+      <h1><i class="fas fa-newspaper"></i> Notícias e Atualizações</h1>
+      <p>Fique por dentro das últimas novidades do mundo do futebol e do nosso bolão</p>
+    </section>
+
+    <div class="news-categories">
+      <button class="news-category-btn active" data-category="all">Todas</button>
+      <button class="news-category-btn" data-category="news">Notícias</button>
+      <button class="news-category-btn" data-category="analysis">Análises</button>
+      <button class="news-category-btn" data-category="updates">Atualizações</button>
+      <button class="news-category-btn" data-category="tips">Dicas</button>
+    </div>
+
+    <div class="news-grid">
+      <!-- Notícia 1 -->
+      <div class="news-card" data-category="news">
+        <div class="news-image" style="background-image: url('https://source.unsplash.com/random/600x400/?soccer,team');"></div>
+        <div class="news-content">
+          <span class="news-category">Notícias</span>
+          <h3 class="news-title">Flamengo anuncia novo reforço para o ataque</h3>
+          <p class="news-excerpt">O clube rubro-negro confirmou a contratação do atacante argentino para a sequência da temporada...</p>
+          <div class="news-meta">
+            <span><i class="far fa-clock"></i> 2 horas atrás</span>
+            <span><i class="far fa-eye"></i> 245</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notícia 2 -->
+      <div class="news-card" data-category="analysis">
+        <div class="news-image" style="background-image: url('https://source.unsplash.com/random/600x400/?soccer,match');"></div>
+        <div class="news-content">
+          <span class="news-category">Análise</span>
+          <h3 class="news-title">Palmeiras x Corinthians: Análise Tática Pré-Jogo</h3>
+          <p class="news-excerpt">Confira como os times chegam para o clássico e quais as possíveis estratégias para o confronto...</p>
+          <div class="news-meta">
+            <span><i class="far fa-clock"></i> 1 dia atrás</span>
+            <span><i class="far fa-eye"></i> 512</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notícia 3 -->
+      <div class="news-card" data-category="updates">
+        <div class="news-image" style="background-image: url('https://source.unsplash.com/random/600x400/?technology,app');"></div>
+        <div class="news-content">
+          <span class="news-category">Atualizações</span>
+          <h3 class="news-title">Novo sistema de pontuação no Bolão Virtual</h3>
+          <p class="news-excerpt">A partir da próxima rodada, implementaremos um novo sistema de bonificação para palpites arriscados...</p>
+          <div class="news-meta">
+            <span><i class="far fa-clock"></i> 3 dias atrás</span>
+            <span><i class="far fa-eye"></i> 1.2k</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notícia 4 -->
+      <div class="news-card" data-category="tips">
+        <div class="news-image" style="background-image: url('https://source.unsplash.com/random/600x400/?strategy,chess');"></div>
+        <div class="news-content">
+          <span class="news-category">Dicas</span>
+          <h3 class="news-title">5 estratégias para melhorar seus palpites</h3>
+          <p class="news-excerpt">Confira as dicas dos melhores palpiteiros do nosso bolão para aumentar sua pontuação...</p>
+          <div class="news-meta">
+            <span><i class="far fa-clock"></i> 5 dias atrás</span>
+            <span><i class="far fa-eye"></i> 892</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notícia 5 -->
+      <div class="news-card" data-category="news">
+        <div class="news-image" style="background-image: url('https://source.unsplash.com/random/600x400/?stadium,soccer');"></div>
+        <div class="news-content">
+          <span class="news-category">Notícias</span>
+          <h3 class="news-title">CBF anuncia datas do próximo Brasileirão</h3>
+          <p class="news-excerpt">Confira o calendário completo da próxima edição do campeonato brasileiro...</p>
+          <div class="news-meta">
+            <span><i class="far fa-clock"></i> 1 semana atrás</span>
+            <span><i class="far fa-eye"></i> 1.5k</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notícia 6 -->
+      <div class="news-card" data-category="analysis">
+        <div class="news-image" style="background-image: url('https://source.unsplash.com/random/600x400/?soccer,player');"></div>
+        <div class="news-content">
+          <span class="news-category">Análise</span>
+          <h3 class="news-title">Retrospecto dos times na Libertadores</h3>
+          <p class="news-excerpt">Como os times brasileiros têm se saído contra equipes de outros países na competição...</p>
+          <div class="news-meta">
+            <span><i class="far fa-clock"></i> 2 semanas atrás</span>
+            <span><i class="far fa-eye"></i> 987</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Filtro de categorias
+    document.querySelectorAll('.news-category-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        // Remove active de todos os botões
+        document.querySelectorAll('.news-category-btn').forEach(b => b.classList.remove('active'));
+        // Adiciona active no clicado
+        this.classList.add('active');
+
+        const category = this.dataset.category;
+        const newsCards = document.querySelectorAll('.news-card');
+
+        if(category === 'all') {
+          newsCards.forEach(card => card.style.display = 'block');
+        } else {
+          newsCards.forEach(card => {
+            if(card.dataset.category === category) {
+              card.style.display = 'block';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        }
+      });
+    });
+  </script>
+</sectio>
+{% endblock %}

@@ -1,0 +1,194 @@
+{% extends 'auxiliar/base.html' %}
+{% load static %}
+{% block title %} Bolão virtual | Troféus {% endblock %}
+
+{% block body %}
+
+<section class="rewards-page">
+
+  <main class="container">
+    <section class="rewards-hero">
+      <h1><i class="fas fa-award"></i> Prêmios e Conquistas</h1>
+      <p>Seu progresso e reconhecimento no Bolão Virtual</p>
+      <div class="user-level">
+    <div class="level-progress">
+        <div class="progress-bar"
+             style="width: {% if participante.nivel_maximo_atingido %}100{% else %}{{ participante.progresso }}{% endif %}%;
+                    background-color: {% if participante.nivel_maximo_atingido %}#FFD700{% else %}#4CAF50{% endif %};">
+        </div>
+    </div>
+    <div class="level-info">
+        <span class="current-level">
+            Nível {{ participante.level }}
+            {% if participante.nivel_maximo_atingido %}
+                <i class="fas fa-crown" style="color: #FFD700;"></i> (Máximo)
+            {% endif %}
+        </span>
+        <span class="points-to-next">
+            {% if participante.nivel_maximo_atingido %}
+                Nível máximo conquistado!
+            {% else %}
+                {{ participante.xp }}/{{ participante.xp_necessario }} pontos
+            {% endif %}
+        </span>
+    </div>
+</div>
+    </section>
+
+    <div class="rewards-tabs">
+      <button class="tab-btn active" data-tab="conquistas">Minhas Conquistas</button>
+      <button class="tab-btn" data-tab="trofeus">Troféus Disponíveis</button>
+    </div>
+
+    <div class="tab-content active" id="conquistas">
+      <h2><i class="fas fa-medal"></i> Badges e Emblemas Conquistados</h2>
+
+      <div class="achievements-grid">
+        {% for conquista in conquistas_concluidas %}
+          <div class="achievement-card unlocked">
+            <div class="achievement-badge" style="color: {{ conquista.meta.tipo_trofeu.cor }};">
+              <i class="fas {{ conquista.meta.tipo_trofeu.icone }}"></i>
+              <div class="badge-level">
+                {% if conquista.meta.tipo_trofeu.nivel == 1 %}Ouro
+                {% elif conquista.meta.tipo_trofeu.nivel == 2 %}Prata
+                {% elif conquista.meta.tipo_trofeu.nivel == 3 %}Bronze
+                {% else %}Diamante{% endif %}
+              </div>
+            </div>
+            <div class="achievement-info">
+              <h3>{{ conquista.meta.nome }}</h3>
+              <p>{{ conquista.meta.descricao }}</p>
+              <div class="achievement-meta">
+                <span><i class="fas fa-calendar-alt"></i> Conquistado em: {{ conquista.data_conquista|date:"d/m/Y" }}</span>
+              </div>
+            </div>
+          </div>
+        {% empty %}
+          <div class="achievement-card">
+            <h3>Nenhuma conquista encontrada</h3>
+          </div>
+        {% endfor %}
+      </div>
+
+      <h3 class="history-title"><i class="fas fa-history"></i> Histórico de Conquistas</h3>
+      <div class="achievements-history">
+        {% for registro in historico_conquistas %}
+          <div class="history-item">
+            <div class="history-icon" style="color: {{ registro.meta.tipo_trofeu.cor }};">
+              <i class="fas {{ registro.meta.tipo_trofeu.icone }}"></i>
+            </div>
+            <div class="history-details">
+              <h4>Conquista: {{ registro.meta.nome }}</h4>
+              <p>{{ registro.meta.descricao }}</p>
+              <span class="history-date">
+                {{ registro.data_conquista|date:"d/m/Y" }} |
+                +{{ registro.xp_ganho }} XP |
+                +{{ registro.moedas_ganhas }} moedas
+              </span>
+            </div>
+          </div>
+        {% empty %}
+          <div class="history-item">
+            <h3>Nenhum registro de conquista encontrado</h3>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="tab-content" id="disponiveis">
+      <h2><i class="fas fa-gift"></i> Prêmios Disponíveis para Conquistar</h2>
+
+      <div class="available-filters">
+        <div class="filter-group">
+          <label for="type-filter">Filtrar por:</label>
+          <select id="type-filter" class="reward-select">
+            <option value="all">Todos</option>
+            <option value="badges">Badges</option>
+            <option value="rewards">Prêmios</option>
+            <option value="bonuses">Bônus</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="difficulty-filter">Dificuldade:</label>
+          <select id="difficulty-filter" class="reward-select">
+            <option value="all">Todas</option>
+            <option value="easy">Fácil</option>
+            <option value="medium">Médio</option>
+            <option value="hard">Difícil</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="available-grid">
+        {% for conquista in conquistas_em_progresso %}
+          <div class="available-card">
+            <div class="available-badge locked">
+              <i class="fas {{ conquista.meta.tipo_trofeu.icone }}"></i>
+              <div class="badge-level">
+                {% if conquista.meta.tipo_trofeu.nivel == 1 %}Bronze
+                {% elif conquista.meta.tipo_trofeu.nivel == 2 %}Prata
+                {% else %}Ouro{% endif %}
+              </div>
+            </div>
+            <div class="available-info">
+              <h3>{{ conquista.meta.nome }}</h3>
+              <p>{{ conquista.meta.descricao }}</p>
+              <div class="progress-container">
+                <span>Progresso: {{ conquista.progresso_atual }}/{{ conquista.meta.valor_requerido }}</span>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: {% widthratio conquista.progresso_atual conquista.meta.valor_requerido 100 %}%"></div>
+                </div>
+              </div>
+              <div class="reward-details">
+                <span><i class="fas fa-star"></i> +{{ conquista.meta.xp_recompensa }} XP</span>
+                <span><i class="fas fa-coins"></i> +{{ conquista.meta.moedas_recompensa }} moedas</span>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <!-- Fim do ava -->
+    <div class="tab-content" id="trofeus">
+      <h2><i class="fas fa-trophy"></i> Seus Troféus Virtuais</h2>
+      <p class="trophies-description">Colecione troféus por conquistas especiais no Bolão Virtual</p>
+
+      <div class="trophies-grid">
+        {% for trofeu in todos_trofeus %}
+          <div class="trophy-card unlocked">
+            <div class="trophy-icon"
+              style="color: {{ trofeu.tipo_trofeu.cor }};"
+            ><i class="fas {{ trofeu.tipo_trofeu.icone }}"></i>
+            </div>
+            <div class="trophy-info">
+              <h3>{{ trofeu.nome }}</h3>
+              <p>{{ trofeu.descricao }}</p>
+            </div>
+            <span class="history-date">
+                Recompesas:
+                +{{ trofeu.xp_recompensa }} XP |
+                +{{ trofeu.moedas_recompensa }} moedas
+              </span>
+          </div>
+        {% endfor %}
+    </div>
+
+      <div class="trophies-stats">
+        <div class="stat-box">
+          <div class="stat-value">{{ conquistados }}</div>
+          <div class="stat-label">Troféus Conquistados</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">{{ total_trofeus }}</div>
+          <div class="stat-label">Troféus Disponíveis</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">{{ porcentagem }}%</div>
+          <div class="stat-label">Coleção Completa</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</section>
+{% endblock %}

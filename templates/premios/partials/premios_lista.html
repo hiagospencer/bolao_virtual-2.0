@@ -1,0 +1,40 @@
+{% load l10n %} {% load humanize %} {% load custom_filters %}
+{% for premio in premios_disponiveis %}
+<div class="titulo-card" data-categoria="{{ premio.categoria.id }}">
+
+  {% if premio.imagem %}
+      <div class="premio-imagem-container">
+          <img src="{{ premio.imagem.url }}" alt="{{ premio.nome }}" class="premio-imagem">
+      </div>
+    {% else %}
+        <div class="premio-sem-imagem">
+          <i class="fas fa-award"></i>
+        </div>
+    {% endif %}
+
+  <div class="premio-type-badge {{ premio.tipo }}">
+    {% if premio.tipo == 'titulo' %}
+      <i class="fas fa-crown"></i> Título
+    {% elif premio.tipo == 'voucher' %}
+      <i class="fas fa-ticket-alt"></i> Voucher
+    {% else %}
+       <i class="fas fa-gift"></i> Outros
+    {% endif %}
+  </div>
+  <h3 style="margin-top:10px;">{{ premio.nome }}</h3>
+  <p class="descricao">{{ premio.descricao|safe }}</p>
+  <div class="preco-estoque">
+    <span class="preco">{{ premio.preco_moedas|intcomma }} moedas</span>
+    {% if premio.estoque > 0 or premio.estoque == -1 %}
+      <span class="estoque">
+        {% if premio.estoque == -1 %}Ilimitado{% else %}{{ premio.estoque }} restantes{% endif %}
+      </span>
+    {% else %}
+      <span class="estoque esgotado">ESGOTADO</span>
+    {% endif %}
+  </div>
+  <a href="{% url 'comprar_premio' premio.id %}" class="btn-comprar">Comprar</a>
+</div>
+{% empty %}
+<p class="sem-titulos">Nenhum prêmio encontrado nesta categoria.</p>
+{% endfor %}
