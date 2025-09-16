@@ -1,0 +1,194 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Bolão Virtual</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/autenticacao.css' %}">
+</head>
+
+<body class="auth-page register-page">
+    <div class="auth-wrapper">
+        <div class="auth-container">
+            <div class="auth-logo-container">
+                <img  src="{% static 'img/logo-bolao-virtual.jpg' %}" alt="" />
+                <h1 class="auth-title">Bolão Virtual</h1>
+            </div>
+
+            <div class="auth-header">
+                <p class="auth-subtitle">Crie sua conta e comece a apostar</p>
+            </div>
+
+            {% if messages %}
+            <ul class="auth-messages">
+                {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            <form method="POST" class="auth-form">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="input-with-icon">
+                            <i class="fas fa-user-tag"></i>
+                            <input
+                                type="text"
+                                id="register-username"
+                                name="username"
+                                placeholder="Nome de usuário"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-with-icon">
+                            <i class="fas fa-envelope"></i>
+                            <input
+                                type="email"
+                                id="register-email"
+                                name="email"
+                                placeholder="seu@email.com"
+                                required
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="input-with-icon">
+                            <i class="fab fa-whatsapp"></i>
+                            <input
+                                type="tel"
+                                id="whatsapp"
+                                name="telefone"
+                                placeholder="(00) 00000-0000"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-with-icon">
+                            <i class="fa-brands fa-pix"></i>
+                            <input
+                                type="text"
+                                id="pix"
+                                name="chave_pix"
+                                placeholder="Chave Pix (Opcional)"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock"></i>
+                                <input
+                                    type="password"
+                                    id="register-password"
+                                    name="password"
+                                    placeholder="Crie uma senha forte"
+                                    required
+                                >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock"></i>
+                                <input
+                                    type="password"
+                                    id="register-confirm-password"
+                                    name="confirm_password"
+                                    placeholder="Confirme sua senha"
+                                    required
+                                >
+                        </div>
+                    </div>
+                </div>
+
+                {% if convite %}
+                    <input type="hidden" name="convite" value="{{ convite }}">
+                {% endif %}
+
+                <div class="form-terms">
+                    <label class="terms-check">
+                        <input type="checkbox" id="terms" required>
+                        <span class="checkmark"></span>
+                        Eu concordo com os <a href="{% url 'termos' %}" target="_blank" class="terms-link">Termos de Serviço</a> e <a href="{% url 'privacidade' %}" target="_blank" class="terms-link">Política de Privacidade</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-auth">
+                    <i class="fas fa-user-plus"></i> Criar Conta
+                </button>
+
+                <div class="auth-footer">
+                    <p>Já tem uma conta? <a href="{% url 'login_bolao' %}" class="auth-link">Faça login</a></p>
+                </div>
+            </form>
+        </div>
+
+        <div class="auth-decoration">
+            <div class="decoration-image"></div>
+            <div class="decoration-overlay"></div>
+        </div>
+    </div>
+
+    <script>
+        // Formatação do campo WhatsApp
+        var celular = document.getElementById("whatsapp");
+
+        celular.addEventListener("input", () => {
+            var limparValor = celular.value.replace(/\D/g, "").substring(0, 11);
+            var numerosArray = limparValor.split("");
+            var numeroFormatado = "";
+
+            if (numerosArray.length > 0) {
+                numeroFormatado += `(${numerosArray.slice(0, 2).join("")})`;
+            }
+
+            if (numerosArray.length > 2) {
+                numeroFormatado += ` ${numerosArray.slice(2, 7).join("")}`;
+            }
+
+            if (numerosArray.length > 7) {
+                numeroFormatado += `-${numerosArray.slice(7, 11).join("")}`;
+            }
+
+            celular.value = numeroFormatado;
+        });
+
+        // Toggle password visibility
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.previousElementSibling;
+                const icon = this.querySelector('i');
+
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.replace('fa-eye', 'fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.replace('fa-eye-slash', 'fa-eye');
+                }
+            });
+        });
+    </script>
+
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+
+</html>
