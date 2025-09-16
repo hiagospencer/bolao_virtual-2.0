@@ -19,10 +19,10 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-# ALLOWED_HOSTS = ["bolaovirtual.site", "www.bolaovirtual.site"]
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["bolaovirtual.site", "www.bolaovirtual.site"]
+# ALLOWED_HOSTS = ["*"]
 
 # CSRF_COOKIE_SECURE = False  # Em dev
 # SESSION_COOKIE_SECURE = False  # Em dev
@@ -125,23 +125,23 @@ TEMPLATES = [
 WSGI_APPLICATION = 'bolao_virtual.wsgi.application'
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.getenv("POSTGRES_NAME"),
-#         'USER': os.getenv("POSTGRES_USER"),
-#         'PASSWORD': os.getenv("POSTGRES_PASSWORD"),
-#         'HOST': os.getenv("POSTGRES_HOST"),
-#         'PORT': os.getenv("POSTGRES_PORT"),
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv("POSTGRES_NAME"),
+        'USER': os.getenv("POSTGRES_USER"),
+        'PASSWORD': os.getenv("POSTGRES_PASSWORD"),
+        'HOST': os.getenv("POSTGRES_HOST"),
+        'PORT': os.getenv("POSTGRES_PORT"),
+    }
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -187,5 +187,3 @@ EMAIL_PORT = int(os.getenv("EMAIL_PORT"))  # convertendo para inteiro
 EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS") == 'True'  # convertendo para booleano
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-
-
